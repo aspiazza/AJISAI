@@ -45,14 +45,22 @@ def make_webapp(project_name):  # Function to make Web-App files and directories
             continue
 
 
+def populate_nucleus(project_name):
+    with open(f'Nucleus_{project_name}.py', 'a') as nucleus_file:
+        nucleus_file.write('''
+''')  # TODO: Create nucleus shell text
+
+
 project_name_input = input('Please enter project name: ')
 webapp_bool = input('Would you like a webapp dir (y/n): ')
 
 if webapp_bool.lower() == 'y':  # Bool if you want Web files
     make_project(project_name_input)
+    populate_nucleus(project_name_input)
     print('\nProject files successfully created')
     make_webapp(project_name_input)
     print('Web-App files successfully created')
 else:
     make_project(project_name_input)
+    populate_nucleus(project_name_input)
     print('Project files successfully created')
