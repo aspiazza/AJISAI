@@ -47,10 +47,13 @@ class CatDogModel:  # Include logging and data viz throughout
         # generator can generate at least `steps_per_epoch * epochs` batches (in this case, 100 batches).
         # You may need to use the repeat() function when building your dataset.
 
+        # TODO: Update README
+
 
 # Executor
 if __name__ == '__main__':
     current_time = datetime.now().strftime('%H-%M-%S')
+
     data_directory = 'F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir'
     model_instance = CatDogModel("dog_cat", data_directory)
     model_instance.preprocess()
