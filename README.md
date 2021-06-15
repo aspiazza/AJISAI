@@ -29,18 +29,18 @@ project:
         - Model-Data_{model name}
             + Logs
             + Metric-Graphs
-    + Nucleus-Files
     + Pipeline
         - Baseline-Models
         - Data-Visual
         - Models
         - Preprocess
-    + Saved-Models
     + Web-Apps
         - Web-App_{model name}
+    + Nucleus_{model name}.py
     + Project_Initializer.py
     + README.md
 - /F:/Data-Warehouse
+- /F:/Saved-Models
 
 ### What The Directories Contain:
 
@@ -62,13 +62,12 @@ project:
       > - Will come from preprocessing, baselines, training, and other processes
       > - Model subdirectory will just be used for organization
 
-- Nucleus-Files
+- Nucleus.py
     + os, datetime, custom libraries
-      > - Contains all the nucleus.py files for each model
       > - A nucleus file executes all functions related to training/testing
       > - Will be a complex class that does all the above steps
       > - Will call functions to preprocess, train, visualize, tune, and save model/data
-      > - Implement logging maybe with tensorboard
+      > - Implement logging
 
 - Pipeline\Baseline-Models
     + SciKitLearn, Keras, Tensorflow, numpy, pandas, numba
@@ -88,7 +87,7 @@ project:
       > - Training and grid tuning of model, testing, and displaying metrics
       > - Will contain the actual models and there parameters
       > - Code will contain functions that will train, validate, and test model
-      > - Models will be made using functional API
+      > - Models will be made using functional API and sequential
       > - Results of training should be outputted to Data Visual directory
       > - Take in boolean argument of save model
       > - Implement Callbacks, Freezing, Pretrained layers (Maybe later on)
@@ -100,10 +99,6 @@ project:
       > - Data PP will be broken up into different functions within a single custom library
       > - Not sure if each preprocessing step will be unique to an ML model/problem
       > - Generator? Feature engineering?
-
-- Saved-Models
-    + SciKitLearn, Keras, Tensorflow, numpy, Plotly, numba
-      > - Will contain model weights and nucleus.py files from previous projects
 
 - Web-Apps
     + Docker, Azure, AWS, pipreq, Fast-API, html, css, requests, plotly, jinja, templates
@@ -124,6 +119,10 @@ project:
     + None
       > - Contains data used in training models and visualization
 
+- Saved-Models
+    + SciKitLearn, Keras, Tensorflow, numpy, Plotly, numba
+      > - Will contain model weights and nucleus.py files from previous projects
+      
 ### Logic Steps:
 
 > 1. Use web scraping libraries that extract data online and saves to the Data-Warehouse directory
