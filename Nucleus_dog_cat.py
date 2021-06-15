@@ -1,10 +1,10 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
-from datetime import datetime
 from keras.callbacks import CSVLogger
 import keras
 import sys
+from datetime import datetime
 
 
 # Model class
@@ -13,7 +13,6 @@ class CatDogModel:  # Include logging and data viz throughout
         self.model_name = model_name
         self.datafile = 'F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir'
         self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{model_name}_{str(current_time)}'
-        self.loss_csv = CSVLogger(f'{self.log_dir}_loss.csv', append=True, separator=',')
 
     def preprocess(self):
         self.train_gen = procDogCat.train_image_gen(self.datafile)
@@ -21,16 +20,18 @@ class CatDogModel:  # Include logging and data viz throughout
 
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn()
-        self.callback = keras.callbacks.ModelCheckpoint(f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5',
-                                                        save_best_only=True)
+        self.model_checkpoint = keras.callbacks.ModelCheckpoint(
+            f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5',
+            save_best_only=True)
+        self.loss_csv = CSVLogger(f'{self.log_dir}_loss.csv', append=True, separator=',')
 
     def training(self):
-        self.history = self.model.fit(self.train_gen,  # TODO: Output training results to screen and file
+        self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
                                       steps_per_epoch=25,  # TODO: Plot and log metrics and training
                                       epochs=25,
                                       validation_steps=100,
-                                      callbacks=[self.callback,
+                                      callbacks=[self.model_checkpoint,
                                                  self.loss_csv])
 
     def metric_logs(self):
