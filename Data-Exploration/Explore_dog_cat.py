@@ -9,7 +9,7 @@ from PIL import Image
 from plotly.subplots import make_subplots
 
 image_directory = 'F:\\Data-Warehouse\\Dog-Cat-Data\\Image_Vault'
-graph_storage_directory = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\Kraken_Project\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog-cat\\Metric-Graphs\\'
+graph_storage_directory = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\Kraken_Project\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Metric-Graphs\\'
 os.chdir(image_directory)
 random.seed(3)
 

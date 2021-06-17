@@ -20,36 +20,39 @@ class CatDogModel:  # Include logging and data viz throughout
 
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn()
+
         self.model_checkpoint = keras.callbacks.ModelCheckpoint(
-            f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5',
-            save_best_only=True)
+            f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5', save_best_only=True)
+
         self.loss_csv = CSVLogger(f'{self.log_dir}_loss.csv', append=True, separator=',')
 
-    def training(self):
+    def training(self):  # TODO: Find out why training takes so long
         self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
-                                      steps_per_epoch=25,  # TODO: Plot and log metrics and training
-                                      epochs=25,
+                                      steps_per_epoch=25,
+                                      epochs=2,
                                       validation_steps=100,
                                       callbacks=[self.model_checkpoint,
                                                  self.loss_csv])
 
-    def metric_logs(self):
+    def model_summary(self):
         with open(f'{self.log_dir}_summary.txt', 'a') as log_file:
             sys.stdout = log_file
             self.model.summary()
             log_file.close()
 
     def metric_graph(self):
-        return None
+        data_visualization = datavizDogCat.DataVis(self.history, self.model_name)
+        data_visualization.loss_graph()
+        data_visualization.subplot_creation()
 
 
 # Executor
 if __name__ == '__main__':
     current_time = datetime.now().strftime('%H-%M-%S')
-
     model_instance = CatDogModel("dog_cat")
+
     model_instance.preprocess()
     model_instance.model()
     model_instance.training()
-    model_instance.metric_logs()
+    model_instance.metric_graph()

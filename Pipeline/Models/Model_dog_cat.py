@@ -15,7 +15,9 @@ def seq_maxpool_cnn():
         keras.layers.Dense(512, activation='relu'),
         keras.layers.Dense(1, activation='sigmoid')],
         name='seq_maxpool_cnn')
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='adam',
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
     return model
 
 

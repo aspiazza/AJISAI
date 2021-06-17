@@ -12,7 +12,7 @@ def train_image_gen(data_directory):
         target_size=(150, 150),
         batch_size=10,
         class_mode='binary',
-        shuffle=True
+        shuffle=False
     )
     return train_iterator
 
@@ -26,7 +26,7 @@ def valid_image_gen(data_directory):
         target_size=(150, 150),
         batch_size=10,
         class_mode='binary',
-        shuffle=True
+        shuffle=False
     )
     return valid_iterator
 
