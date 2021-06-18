@@ -17,12 +17,26 @@ class DataVis:
     def loss_graph(self):
         self.loss_fig = go.Figure()
 
-        self.loss_fig.add_traces(
-            [go.Scatter(x=self.epoch_list, y=self.val_loss_list, mode='lines', name='Validation Loss'),
-             go.Scatter(x=self.epoch_list, y=self.loss_list, mode='lines', name='Loss')]
-        )  # Loss line
+        ic(self.epoch_list)
+        ic(self.accuracy_list)
+        ic(self.loss_list)
 
-        ic(self.loss_fig)
+        self.loss_fig.add_traces(
+            [go.Scatter(x=self.epoch_list, y=self.val_loss_list,
+                        mode='lines',
+                        name='Validation Loss'),
+             go.Scatter(x=self.epoch_list, y=self.loss_list,
+                        mode='lines',
+                        name='Loss')]
+        )
+        self.loss_fig.update_layout(
+            font_color='black',
+            title_font_color='black',
+            title='Loss Curve'
+        )
+        self.loss_fig.show()
+
+        # ic(self.loss_fig)  # TODO: plot_model
 
     def subplot_creation(self):
         metric_figure = make_subplots(

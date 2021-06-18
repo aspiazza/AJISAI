@@ -7,6 +7,8 @@ import sys
 from datetime import datetime
 
 
+# TODO: Clean code, add comments
+# TODO: Use Numba somehow
 # Model class
 class CatDogModel:  # Include logging and data viz throughout
     def __init__(self, model_name):
@@ -26,14 +28,18 @@ class CatDogModel:  # Include logging and data viz throughout
 
         self.loss_csv = CSVLogger(f'{self.log_dir}_loss.csv', append=True, separator=',')
 
-    def training(self):  # TODO: Find out why training takes so long
+    def training(self, callback_bool):  # TODO: Find out why training takes so long
+        if callback_bool:
+            callback_list = [self.model_checkpoint, self.loss_csv]
+        else:
+            callback_list = []
+
         self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
                                       steps_per_epoch=25,
-                                      epochs=2,
+                                      epochs=25,
                                       validation_steps=100,
-                                      callbacks=[self.model_checkpoint,
-                                                 self.loss_csv])
+                                      callbacks=callback_list)
 
     def model_summary(self):
         with open(f'{self.log_dir}_summary.txt', 'a') as log_file:
@@ -44,15 +50,15 @@ class CatDogModel:  # Include logging and data viz throughout
     def metric_graph(self):
         data_visualization = datavizDogCat.DataVis(self.history, self.model_name)
         data_visualization.loss_graph()
-        data_visualization.subplot_creation()
+        # data_visualization.subplot_creation()
 
 
 # Executor
 if __name__ == '__main__':
     current_time = datetime.now().strftime('%H-%M-%S')
     model_instance = CatDogModel("dog_cat")
-
     model_instance.preprocess()
     model_instance.model()
-    model_instance.training()
+    # model_instance.model_summary()
+    model_instance.training(True)
     model_instance.metric_graph()
