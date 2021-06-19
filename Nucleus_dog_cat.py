@@ -28,15 +28,16 @@ class CatDogModel:  # Include logging and data viz throughout
 
         self.loss_csv = CSVLogger(f'{self.log_dir}_loss.csv', append=True, separator=',')
 
-    def training(self, callback_bool):  # TODO: Find out why training takes so long
+    def training(self, callback_bool):
         if callback_bool:
             callback_list = [self.model_checkpoint, self.loss_csv]
         else:
             callback_list = []
 
-        self.history = self.model.fit(self.train_gen,
+        self.history = self.model.fit(self.train_gen,  # TODO: Adjust parameters and improve accuracy
                                       validation_data=self.valid_gen,
-                                      steps_per_epoch=25,
+                                      batch_size=20,
+                                      steps_per_epoch=10,
                                       epochs=25,
                                       validation_steps=100,
                                       callbacks=callback_list)
@@ -47,6 +48,7 @@ class CatDogModel:  # Include logging and data viz throughout
             self.model.summary()
             log_file.close()
 
+    # TODO: Add loss, AUC, F1, mAP, Recall, Precision, Specificity, ROC, Error Rate, Kappa graphs and data
     def metric_graph(self):
         data_visualization = datavizDogCat.DataVis(self.history, self.model_name)
         data_visualization.loss_graph()
@@ -61,4 +63,4 @@ if __name__ == '__main__':
     model_instance.model()
     # model_instance.model_summary()
     model_instance.training(True)
-    model_instance.metric_graph()
+    # model_instance.metric_graph()

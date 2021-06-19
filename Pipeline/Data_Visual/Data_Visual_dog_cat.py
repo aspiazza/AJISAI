@@ -17,9 +17,6 @@ class DataVis:
     def loss_graph(self):
         self.loss_fig = go.Figure()
 
-        ic(self.epoch_list)
-        ic(self.accuracy_list)
-        ic(self.loss_list)
 
         self.loss_fig.add_traces(
             [go.Scatter(x=self.epoch_list, y=self.val_loss_list,
