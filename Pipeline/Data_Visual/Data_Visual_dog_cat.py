@@ -2,7 +2,6 @@
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-from icecream import ic
 
 
 class DataVis:
@@ -15,25 +14,34 @@ class DataVis:
         self.val_loss_list = history.history['val_loss']
 
     def loss_graph(self):
-        self.loss_fig = go.Figure()
+        self.loss_figure = go.Figure()
 
-
-        self.loss_fig.add_traces(
-            [go.Scatter(x=self.epoch_list, y=self.val_loss_list,
+        self.loss_figure.add_traces(
+            [go.Scatter(x=self.epoch_list,
+                        y=self.val_loss_list,
                         mode='lines',
-                        name='Validation Loss'),
-             go.Scatter(x=self.epoch_list, y=self.loss_list,
+                        name='Validation Loss',
+                        line=dict(width=4)),
+             go.Scatter(x=self.epoch_list,
+                        y=self.loss_list,
                         mode='lines',
-                        name='Loss')]
+                        name='Loss',
+                        line=dict(width=4))
+             ]
         )
-        self.loss_fig.update_layout(
+        self.loss_figure.update_layout(
             font_color='black',
             title_font_color='black',
-            title='Loss Curve'
+            title=dict(text='Loss Curve',
+                       font_size=30),
+            xaxis_title=dict(text='Epochs',
+                             font_size=25),
+            yaxis_title=dict(text='loss',
+                             font_size=25),
+            legend=dict(font_size=15)
         )
-        self.loss_fig.show()
-
-        # ic(self.loss_fig)  # TODO: plot_model
+        self.loss_figure.show()
+        return self.loss_figure
 
     def subplot_creation(self):
         metric_figure = make_subplots(
@@ -41,7 +49,7 @@ class DataVis:
             specs=[[{'rowspan': 1}, {}]],
             subplot_titles='Dog Cat Loss Graph')
 
-        metric_figure.add_traces(self.loss_fig)  # TODO: Doesn't like data
+        metric_figure.add_traces(self.loss_figure)  # TODO: Work on subplot in workbench
 
         plotly.offline.plot(metric_figure,
                             filename=f'{self.graph_storage_directory}Metric_graph_dog_cat.html',

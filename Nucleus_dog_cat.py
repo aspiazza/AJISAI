@@ -3,6 +3,7 @@ from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from keras.callbacks import CSVLogger
 import keras
+import tensorflow as tf
 import sys
 from datetime import datetime
 
@@ -30,16 +31,15 @@ class CatDogModel:  # Include logging and data viz throughout
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = [self.model_checkpoint, self.loss_csv]
+            callback_list = [self.loss_csv]  # self.model_checkpoint
         else:
             callback_list = []
 
-        self.history = self.model.fit(self.train_gen,  # TODO: Adjust parameters and improve accuracy
+        self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
                                       batch_size=20,
-                                      steps_per_epoch=10,
-                                      epochs=25,
-                                      validation_steps=100,
+                                      steps_per_epoch=40,
+                                      epochs=30,
                                       callbacks=callback_list)
 
     def model_summary(self):
@@ -48,7 +48,7 @@ class CatDogModel:  # Include logging and data viz throughout
             self.model.summary()
             log_file.close()
 
-    # TODO: Add loss, AUC, F1, mAP, Recall, Precision, Specificity, ROC, Error Rate, Kappa graphs and data
+    # TODO: F1, mAP, Recall, Precision, Specificity, ROC, Error Rate, Kappa graphs, CM in workbench
     def metric_graph(self):
         data_visualization = datavizDogCat.DataVis(self.history, self.model_name)
         data_visualization.loss_graph()

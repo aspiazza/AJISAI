@@ -1,4 +1,4 @@
-# Data Exploration for dog-cat model
+# Data Exploration for dog-cat model  # TODO: Convert into class
 import glob
 import os
 import random
@@ -9,7 +9,7 @@ from PIL import Image
 from plotly.subplots import make_subplots
 
 image_directory = 'F:\\Data-Warehouse\\Dog-Cat-Data\\Image_Vault'
-graph_storage_directory = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\Kraken_Project\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Metric-Graphs\\'
+graph_storage_directory = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Metric-Graphs'
 os.chdir(image_directory)
 random.seed(3)
 
@@ -29,6 +29,9 @@ def width_height(animal, sample_size):
 
 dog_width, dog_height = width_height('dog*', 200)
 cat_width, cat_height = width_height('cat*', 200)
+
+average_width = int(sum(dog_width + cat_width) / len(dog_width + cat_width))
+average_height = int(sum(dog_height + cat_height) / len(dog_height + cat_height))
 
 
 # Display two images side by side
@@ -50,7 +53,18 @@ exploration_figure.add_trace(go.Image(z=raw_comparison('dog*')), row=1, col=1)
 exploration_figure.add_trace(go.Image(z=raw_comparison('cat*')), row=1, col=2)
 exploration_figure.add_trace(go.Scatter(x=dog_width, y=dog_height, mode='markers', name='Dogs'), row=2, col=1)
 exploration_figure.add_trace(go.Scatter(x=cat_width, y=cat_height, mode='markers', name='Cats'), row=3, col=1)
+exploration_figure.update_annotations(
+    text=f'Average Image Size: <br> {average_width}x{average_height}',
+    align='left',
+    showarrow=False,
+    xref='paper',
+    yref='paper',
+    x=0.5,
+    y=0.8,
+    bordercolor='grey',
+    borderwidth=1)
 os.chdir(graph_storage_directory)
+
 plotly.offline.plot(exploration_figure,
-                    filename=f'{graph_storage_directory}Exploration_dog-cat.html',
+                    filename=f'{graph_storage_directory}\\Exploration_dog-cat.html',
                     auto_open=False)
