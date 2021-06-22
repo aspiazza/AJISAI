@@ -8,6 +8,9 @@ import sys
 from datetime import datetime
 
 
+from icecream import ic
+
+
 # TODO: Clean code, add comments
 # TODO: Use Numba somehow
 # Model class
@@ -20,6 +23,7 @@ class CatDogModel:  # Include logging and data viz throughout
     def preprocess(self):
         self.train_gen = procDogCat.train_image_gen(self.datafile)
         self.valid_gen = procDogCat.valid_image_gen(self.datafile)
+        self.test_gen = procDogCat.test_image_gen(self.datafile)
 
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn()
@@ -27,7 +31,7 @@ class CatDogModel:  # Include logging and data viz throughout
         self.model_checkpoint = keras.callbacks.ModelCheckpoint(
             f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5', save_best_only=True)
 
-        self.loss_csv = CSVLogger(f'{self.log_dir}_loss.csv', append=True, separator=',')
+        self.loss_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
 
     def training(self, callback_bool):
         if callback_bool:
@@ -48,11 +52,14 @@ class CatDogModel:  # Include logging and data viz throughout
             self.model.summary()
             log_file.close()
 
-    # TODO: F1, mAP, Recall, Precision, Specificity, ROC, Error Rate, Kappa graphs, CM in workbench
-    def metric_graph(self):
-        data_visualization = datavizDogCat.DataVis(self.history, self.model_name)
-        data_visualization.loss_graph()
+    # TODO: F1, mAP, Recall/Precision curve, Specificity, Kappa graphs, ROC, CM in workbench
+    def metrics_graph(self):
+        self.train_data_visualization = datavizDogCat.TrainingDataVis(self.history, self.model_name)
+        self.train_data_visualization.loss_graph()
         # data_visualization.subplot_creation()
+
+    def predict(self):
+        test_labels = self.test_gen.classes
 
 
 # Executor
@@ -63,4 +70,4 @@ if __name__ == '__main__':
     model_instance.model()
     # model_instance.model_summary()
     model_instance.training(True)
-    # model_instance.metric_graph()
+    # model_instance.metrics_graph()

@@ -4,7 +4,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 
-class DataVis:
+class TrainingDataVis:
     def __init__(self, history, model_name):
         self.graph_storage_directory = f'C:\\Users\\17574\\PycharmProjects\\Kraken\\Kraken_Project\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\'
         self.epoch_list = history['epoch']
@@ -51,10 +51,9 @@ class DataVis:
                              font_size=25),
             legend=dict(font_size=15)
         )
-        self.loss_figure.show()
         return self.loss_figure
 
-    def roc_curve(self):
+    def roc_curve(self):  # TODO: Move to testing class?
 
         def true_positive_rate(false_negatives, true_positives):
             true_positive_rates = []
@@ -73,19 +72,16 @@ class DataVis:
         x_val_true_positive_rate = true_positive_rate(self.val_false_negatives, self.val_false_positives)
         y_val_false_positive_rate = false_positive_rate(self.val_false_positives, self.val_true_negatives)
 
-        # x_true_positive_rate.reverse()
-        # y_false_positive_rate.reverse()
-        # x_val_true_positive_rate.reverse()
-        # y_val_false_positive_rate.reverse()
-
         self.roc_figure = go.Figure()
         self.roc_figure.add_traces(
             [go.Scatter(x=x_true_positive_rate,
                         y=y_false_positive_rate,
-                        mode='lines'),
+                        mode='lines',
+                        name='ROC Curve'),
              go.Scatter(x=x_val_true_positive_rate,
                         y=y_val_false_positive_rate,
-                        mode='lines')])
+                        mode='lines',
+                        name='Validation ROC Curve')])
 
         self.roc_figure.update_layout(
             font_color='black',
@@ -105,7 +101,7 @@ class DataVis:
 
         self.roc_figure.update_xaxes(constrain='domain')
 
-        self.roc_figure.show()
+        return self.roc_figure
 
     def subplot_creation(self):
         metric_figure = make_subplots(
@@ -116,3 +112,8 @@ class DataVis:
         plotly.offline.plot(metric_figure,
                             filename=f'Metric_graph_dog_cat.html',
                             auto_open=False)
+
+
+class TestingDataVis:
+    def __init__(self):
+        return
