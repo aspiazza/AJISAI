@@ -1,7 +1,7 @@
 # Model Architectures
 import keras
 from keras.optimizers import SGD, RMSprop
-from keras.metrics import TruePositives as Tp, FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn
+from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn
 
 
 def seq_maxpool_cnn():
@@ -20,7 +20,7 @@ def seq_maxpool_cnn():
     model.compile(optimizer=RMSprop(lr=0.001),
                   loss='binary_crossentropy',
                   metrics=['accuracy', 'AUC', 'Recall', 'Precision',
-                           Tp(), Fp(), Tn(), Fn()])
+                           Fp(), Tn(), Fn()])
     return model
 
 
