@@ -52,7 +52,7 @@ class CatDogModel:  # Include logging and data viz throughout
             self.model.summary()
             log_file.close()
 
-    # TODO: F1, mAP, Recall/Precision curve, Specificity, Kappa graphs, ROC, CM in workbench
+    # TODO: F1, mAP, Recall/Precision curve, ROC, Specificity, Kappa graphs, CM, cluster
     def metrics_graph(self):
         self.train_data_visualization = datavizDogCat.TrainingDataVis(self.history, self.model_name)
         self.train_data_visualization.loss_graph()
