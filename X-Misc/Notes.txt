@@ -1,0 +1,26 @@
+. Confusion Matrix
+. False Positive Rate | Fall-out
+. False Negative Rate
+. True Negative Rate | Specificity
+. Negative Predictive Value
+. False Discovery Rate
+. F Beta Score
+. F2 Score
+. Cohen Kappa
+. Matthews Correlation Coefficient
+. ROC Curve
+. ROC AUC Score
+. Precision-Recall Curve
+. PR AUC | Average Precision
+. Brier Score
+. Cumulative Gain Chart
+. Lift Curve | Lift Chart
+. Kolmogorov-Smirnov Plot
+. Kolmogorov Smirnov Statistics
+. Cluster?
+. mAP?
+
+
+We do not want to miss any fraud transactions. Therefore, we want False-Negative to be as low as possible. In these situations, we can compromise with the low precision, but recall should be high.
+
+In the detection of spam mail, it is okay if any spam mail remains undetected (false negative), but what if we miss any critical mail because it is classified as spam (false positive). In this situation, False Positive should be as low as possible.

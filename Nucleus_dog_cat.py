@@ -6,8 +6,6 @@ import keras
 import tensorflow as tf
 import sys
 from datetime import datetime
-
-
 from icecream import ic
 
 
@@ -31,14 +29,15 @@ class CatDogModel:  # Include logging and data viz throughout
         self.model_checkpoint = keras.callbacks.ModelCheckpoint(
             f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5', save_best_only=True)
 
-        self.loss_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
+        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = [self.loss_csv]  # self.model_checkpoint
+            callback_list = [self.metric_csv]  # self.model_checkpoint
         else:
             callback_list = []
 
+        # TODO: Find out why metrics go to zero sometimes
         self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
                                       batch_size=20,
@@ -52,14 +51,19 @@ class CatDogModel:  # Include logging and data viz throughout
             self.model.summary()
             log_file.close()
 
-    # TODO: F1, mAP, Recall/Precision curve, ROC, Specificity, Kappa graphs, CM, cluster
-    def metrics_graph(self):
-        self.train_data_visualization = datavizDogCat.TrainingDataVis(self.history, self.model_name)
+    # TODO: Subplot module
+    def training_graphs(self):
+        self.train_data_visualization = datavizDogCat.DataVisualization(self.history, self.model_name)
         self.train_data_visualization.loss_graph()
+        self.train_data_visualization.error_rate_graph()
+        self.train_data_visualization.recall_graph()
+        self.train_data_visualization.precision_graph()
+        self.train_data_visualization.f1_graph()
         # data_visualization.subplot_creation()
 
-    def predict(self):
+    def predict(self):  # TODO: Prediction graphing
         test_labels = self.test_gen.classes
+        print(test_labels)
 
 
 # Executor
@@ -70,4 +74,5 @@ if __name__ == '__main__':
     model_instance.model()
     # model_instance.model_summary()
     model_instance.training(True)
-    # model_instance.metrics_graph()
+    # model_instance.training_graphs()
+    model_instance.predict()

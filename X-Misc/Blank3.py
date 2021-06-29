@@ -1,37 +1,56 @@
+import plotly.express as px
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_recall_curve, auc
+from sklearn.datasets import make_classification
+from icecream import ic
+
+X, y = make_classification(n_samples=500, random_state=0)
+
+model = LogisticRegression()
+model.fit(X, y)
+y_score = model.predict_proba(X)[:, 1]
+
+precision, recall, thresholds = precision_recall_curve(y, y_score)
+
+ic(precision)
+ic(recall)
+
+# Testing Data Viz
+'''
 # Data Visualization
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import plotly.express as px
+from icecream import ic
+import pandas as pd
 
 
-class DataVisualization:
-    def __init__(self, history, model_name):
-        self.graph_storage_directory = f'C:\\Users\\17574\\PycharmProjects\\Kraken\\Kraken_Project\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\'
+class DataVis:
+    def __init__(self, history):
         self.epoch_list = history['epoch']
 
-        self.accuracy_list = history.history['accuracy']
-        self.loss_list = history.history['loss']
-        self.recall = history.history['recall']  # true_positives
-        self.precision = history.history['precision']
-        self.true_positives = history.history['true_positives']
-        self.true_negatives = history.history['true_negatives']
-        self.false_positives = history.history['false_positives']
-        self.false_negatives = history.history['false_negatives']
-        self.last_auc_score = history.history['auc'].iloc[-1]
+        self.accuracy_list = history['accuracy']
+        self.loss_list = history['loss']
+        self.recall = history['recall']  # true_positives
+        self.precision = history['precision']
+        self.false_positives = history['false_positives']
+        self.true_negatives = history['true_negatives']
+        self.false_negatives = history['false_negatives']
+        self.last_auc_score = history['auc'].iloc[-1]
 
-        self.val_accuracy_list = history.history['val_accuracy']
-        self.val_loss_list = history.history['val_loss']
-        self.val_recall = history.history['val_recall']
-        self.val_precision = history.history['val_precision']
-        self.val_true_positives = history.history['val_true_positives']
-        self.val_true_negatives = history.history['val_true_negatives']
-        self.val_false_positives = history.history['val_false_positives']
-        self.val_false_negatives = history.history['val_false_negatives']
-        self.val_last_auc_score = history.history['val_auc'].iloc[-1]
+        self.val_accuracy_list = history['val_accuracy']
+        self.val_loss_list = history['val_loss']
+        self.val_recall = history['val_recall']
+        self.val_precision = history['val_precision']
+        self.val_false_positives = history['val_false_positives']
+        self.val_true_negatives = history['val_true_negatives']
+        self.val_false_negatives = history['val_false_negatives']
+        self.val_last_auc_score = history['val_auc'].iloc[-1]
 
     def loss_graph(self):
-        self.loss_graph = go.Figure()
-        self.loss_graph.add_traces(
+        self.loss_figure = go.Figure()
+        self.loss_figure.add_traces(
             [go.Scatter(x=self.epoch_list,
                         y=self.loss_list,
                         mode='lines',
@@ -43,7 +62,7 @@ class DataVisualization:
                         name='Validation Loss',
                         line=dict(width=4))])
 
-        self.loss_graph.update_layout(
+        self.loss_figure.update_layout(
             font_color='black',
             title_font_color='black',
             title=dict(text='Loss Graph',
@@ -53,8 +72,7 @@ class DataVisualization:
             yaxis_title=dict(text='Loss',
                              font_size=25),
             legend=dict(font_size=15))
-
-        return self.loss_graph
+        return self.loss_figure
 
     def error_rate_graph(self):
         def error_rate_computation(accuracy):
@@ -90,8 +108,6 @@ class DataVisualization:
                              font_size=25),
             legend=dict(font_size=15))
 
-        return self.error_rate_figure
-
     def recall_graph(self):
         self.recall_figure = go.Figure()
         self.recall_figure.add_traces(
@@ -116,8 +132,6 @@ class DataVisualization:
             yaxis_title=dict(text='Recall',
                              font_size=25),
             legend=dict(font_size=15))
-
-        return self.recall_figure
 
     def precision_graph(self):
         self.precision_figure = go.Figure()
@@ -144,8 +158,6 @@ class DataVisualization:
                              font_size=25),
             legend=dict(font_size=15))
 
-        return self.precision_figure
-
     def f1_graph(self):
         def f1_score_computation(precision, recall):
             f1_score_list = []
@@ -166,7 +178,7 @@ class DataVisualization:
              go.Scatter(x=self.epoch_list,
                         y=val_f1_scores,
                         mode='lines',
-                        name='Validation F! Score',
+                        name='Validation F1 Score',
                         line=dict(width=4))])
 
         self.f1_figure.update_layout(
@@ -180,14 +192,40 @@ class DataVisualization:
                              font_size=25),
             legend=dict(font_size=15))
 
-        return self.f1_figure
+    def subplot_creation(self, context_bool, model_name='dog_cat'):
 
-    def subplot_creation(self):
+        if context_bool:
+            context = 'Training'
+        else:
+            context = 'Testing'
+
         metric_figure = make_subplots(
-            subplot_titles='Dog Cat Loss Graph')
+            rows=3, cols=2,
+            specs=[[{}, {}],
+                   [{}, {}],
+                   [{'colspan': 2}, {}]])
 
-        metric_figure.add_traces(self.precision_graph)
+        metric_figure.append_trace(self.loss_figure, row=1, col=1)
+        metric_figure.append_trace(self.error_rate_figure, row=1, col=2)
+        metric_figure.append_trace(self.recall_figure, row=2, col=1)
+        metric_figure.append_trace(self.precision_figure, row=2, col=2)
+        metric_figure.append_trace(self.f1_figure, row=3, col=1)
+        metric_figure.show()
 
         plotly.offline.plot(metric_figure,
-                            filename=f'Metric_graph_dog_cat.html',
+                            filename=f'{context}_metric_graph_{model_name}.html',
                             auto_open=False)
+
+
+dir = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs'
+csv_file = 'dog_cat_13-48-44_training_metrics.csv'
+csv = pd.read_csv(f'{dir}\\{csv_file}')
+test = DataVis(csv)
+test.loss_graph()
+test.error_rate_graph()
+test.recall_graph()
+test.precision_graph()
+test.f1_graph()
+test.subplot_creation(True)
+
+'''
