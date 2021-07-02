@@ -1,3 +1,5 @@
+# Storing versions of data viz code
+
 import plotly.express as px
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_curve, auc
@@ -49,18 +51,18 @@ class DataVis:
         self.val_last_auc_score = history['val_auc'].iloc[-1]
 
     def loss_graph(self):
-        self.loss_figure = go.Figure()
-        self.loss_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=self.loss_list,
-                        mode='lines',
-                        name='Loss',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=self.val_loss_list,
-                        mode='lines',
-                        name='Validation Loss',
-                        line=dict(width=4))])
+        loss_plots = [go.Scatter(x=self.epoch_list,
+                                 y=self.loss_list,
+                                 mode='lines',
+                                 name='Loss',
+                                 line=dict(width=4)),
+                      go.Scatter(x=self.epoch_list,
+                                 y=self.val_loss_list,
+                                 mode='lines',
+                                 name='Validation Loss',
+                                 line=dict(width=4))]
+
+        self.loss_figure = go.Figure(data=loss_plots)
 
         self.loss_figure.update_layout(
             font_color='black',
@@ -84,18 +86,18 @@ class DataVis:
         train_error_rate = error_rate_computation(self.accuracy_list)
         valid_error_rate = error_rate_computation(self.val_accuracy_list)
 
-        self.error_rate_figure = go.Figure()
-        self.error_rate_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=train_error_rate,
-                        mode='lines',
-                        name='Error Rate',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=valid_error_rate,
-                        mode='lines',
-                        name='Validation Error Rate',
-                        line=dict(width=4))])
+        error_rate_plots = [go.Scatter(x=self.epoch_list,
+                                       y=train_error_rate,
+                                       mode='lines',
+                                       name='Error Rate',
+                                       line=dict(width=4)),
+                            go.Scatter(x=self.epoch_list,
+                                       y=valid_error_rate,
+                                       mode='lines',
+                                       name='Validation Error Rate',
+                                       line=dict(width=4))]
+
+        self.error_rate_figure = go.Figure(data=error_rate_plots)
 
         self.error_rate_figure.update_layout(
             font_color='black',
@@ -109,18 +111,18 @@ class DataVis:
             legend=dict(font_size=15))
 
     def recall_graph(self):
-        self.recall_figure = go.Figure()
-        self.recall_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=self.recall,
-                        mode='lines',
-                        name='Recall',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=self.val_recall,
-                        mode='lines',
-                        name='Validation Recall',
-                        line=dict(width=4))])
+        recall_plots = [go.Scatter(x=self.epoch_list,
+                                   y=self.recall,
+                                   mode='lines',
+                                   name='Recall',
+                                   line=dict(width=4)),
+                        go.Scatter(x=self.epoch_list,
+                                   y=self.val_recall,
+                                   mode='lines',
+                                   name='Validation Recall',
+                                   line=dict(width=4))]
+
+        self.recall_figure = go.Figure(data=recall_plots)
 
         self.recall_figure.update_layout(
             font_color='black',
@@ -134,18 +136,18 @@ class DataVis:
             legend=dict(font_size=15))
 
     def precision_graph(self):
-        self.precision_figure = go.Figure()
-        self.precision_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=self.precision,
-                        mode='lines',
-                        name='Precision',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=self.val_precision,
-                        mode='lines',
-                        name='Validation Precision',
-                        line=dict(width=4))])
+        precision_plots = [go.Scatter(x=self.epoch_list,
+                                      y=self.precision,
+                                      mode='lines',
+                                      name='Precision',
+                                      line=dict(width=4)),
+                           go.Scatter(x=self.epoch_list,
+                                      y=self.val_precision,
+                                      mode='lines',
+                                      name='Validation Precision',
+                                      line=dict(width=4))]
+
+        self.precision_figure = go.Figure(data=precision_plots)
 
         self.precision_figure.update_layout(
             font_color='black',
@@ -168,18 +170,18 @@ class DataVis:
         f1_scores = f1_score_computation(self.precision, self.recall)
         val_f1_scores = f1_score_computation(self.val_precision, self.val_recall)
 
-        self.f1_figure = go.Figure()
-        self.f1_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=f1_scores,
-                        mode='lines',
-                        name='F1 Score',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=val_f1_scores,
-                        mode='lines',
-                        name='Validation F1 Score',
-                        line=dict(width=4))])
+        f1_plots = [go.Scatter(x=self.epoch_list,
+                               y=f1_scores,
+                               mode='lines',
+                               name='F1 Score',
+                               line=dict(width=4)),
+                    go.Scatter(x=self.epoch_list,
+                               y=val_f1_scores,
+                               mode='lines',
+                               name='Validation F1 Score',
+                               line=dict(width=4))]
+
+        self.f1_figure = go.Figure(data=f1_plots)
 
         self.f1_figure.update_layout(
             font_color='black',
@@ -227,5 +229,4 @@ test.recall_graph()
 test.precision_graph()
 test.f1_graph()
 test.subplot_creation(True)
-
 '''

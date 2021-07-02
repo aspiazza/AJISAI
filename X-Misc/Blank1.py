@@ -2,6 +2,7 @@
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from ipywidgets import VBox, HBox
 import plotly.express as px
 from icecream import ic
 import pandas as pd
@@ -10,6 +11,7 @@ import pandas as pd
 class DataVis:
     def __init__(self, history):
         self.epoch_list = history['epoch']
+        self.subplot_list = []
 
         self.accuracy_list = history['accuracy']
         self.loss_list = history['loss']
@@ -53,7 +55,7 @@ class DataVis:
             yaxis_title=dict(text='Loss',
                              font_size=25),
             legend=dict(font_size=15))
-        return self.loss_figure
+        self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
         def error_rate_computation(accuracy):
@@ -88,6 +90,7 @@ class DataVis:
             yaxis_title=dict(text='Error Rate',
                              font_size=25),
             legend=dict(font_size=15))
+        self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
         recall_plots = [go.Scatter(x=self.epoch_list,
@@ -113,6 +116,7 @@ class DataVis:
             yaxis_title=dict(text='Recall',
                              font_size=25),
             legend=dict(font_size=15))
+        self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
         precision_plots = [go.Scatter(x=self.epoch_list,
@@ -138,6 +142,7 @@ class DataVis:
             yaxis_title=dict(text='Precision',
                              font_size=25),
             legend=dict(font_size=15))
+        self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
         def f1_score_computation(precision, recall):
@@ -172,30 +177,35 @@ class DataVis:
             yaxis_title=dict(text='F1 Score',
                              font_size=25),
             legend=dict(font_size=15))
+        self.subplot_list.append(self.f1_figure)
 
-    def subplot_creation(self, context_bool, model_name='dog_cat'):
+    def subplot_creation(self, context_bool, row_size, col_size, model_name='dog_cat'):
 
         if context_bool:
             context = 'Training'
         else:
             context = 'Testing'
 
-        metric_figure = make_subplots(
-            rows=3, cols=2,
-            specs=[[{}, {}],
-                   [{}, {}],
-                   [{'colspan': 2}, {}]])
+        metric_figure = make_subplots(rows=row_size, cols=col_size)
 
-        metric_figure.append_trace(self.loss_figure, row=1, col=1)
-        metric_figure.append_trace(self.error_rate_figure, row=1, col=2)
-        metric_figure.append_trace(self.recall_figure, row=2, col=1)
-        metric_figure.append_trace(self.precision_figure, row=2, col=2)
-        metric_figure.append_trace(self.f1_figure, row=3, col=1)
+        '''for t in self.loss_figure.data:   WORKS
+            metric_figure.append_trace(t, row=1, col=1)
+        for t in self.error_rate_figure.data:
+            metric_figure.append_trace(t, row=1, col=2)
+        metric_figure.show()'''
+
+        for row_index in range(col_size):
+            fixed_row_index = row_index + 1
+            for (col_index, figure) in zip(range(row_size), self.subplot_list):
+                fixed_col_index = col_index + 1
+                for fig in figure.data:
+                    metric_figure.append_trace(fig, row=fixed_row_index, col=fixed_col_index)
+
         metric_figure.show()
 
-        plotly.offline.plot(metric_figure,
+        '''plotly.offline.plot(metric_subplot,
                             filename=f'{context}_metric_graph_{model_name}.html',
-                            auto_open=False)
+                            auto_open=False)'''
 
 
 dir = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs'
@@ -207,4 +217,4 @@ test.error_rate_graph()
 test.recall_graph()
 test.precision_graph()
 test.f1_graph()
-test.subplot_creation(True)
+test.subplot_creation(True, 3, 2, model_name='hh')
