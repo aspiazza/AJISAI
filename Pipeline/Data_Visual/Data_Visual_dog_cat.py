@@ -5,32 +5,39 @@ import plotly.graph_objects as go
 
 
 class DataVisualization:
-    def __init__(self, history, metric_dir):
+    def __init__(self, training_information, metric_dir):
         self.metric_dir = metric_dir
-
         self.subplot_name_list = []
         self.subplot_list = []
-        self.epoch_list = history.history['epoch']
 
-        self.accuracy_list = history.history['accuracy']
-        self.loss_list = history.history['loss']
-        self.recall = history.history['recall']  # true_positives
-        self.precision = history.history['precision']
-        self.true_positives = history.history['true_positives']
-        self.true_negatives = history.history['true_negatives']
-        self.false_positives = history.history['false_positives']
-        self.false_negatives = history.history['false_negatives']
-        self.last_auc_score = history.history['auc'].iloc[-1]
+        if str(type(training_information)) == "<class 'tensorflow.python.keras.callbacks.History'>":
+            self.epoch_list = training_information.epoch
+            training_information = training_information.history
+            self.last_auc_score = training_information['auc'][-1]
+            self.val_last_auc_score = training_information['val_auc'][-1]
+        elif str(type(training_information)) == "<class 'pandas.core.frame.DataFrame'>":
+            self.epoch_list = training_information['epoch']
+            self.last_auc_score = training_information['auc'].iloc[-1]
+            self.val_last_auc_score = training_information['val_auc'].iloc[-1]
 
-        self.val_accuracy_list = history.history['val_accuracy']
-        self.val_loss_list = history.history['val_loss']
-        self.val_recall = history.history['val_recall']
-        self.val_precision = history.history['val_precision']
-        self.val_true_positives = history.history['val_true_positives']
-        self.val_true_negatives = history.history['val_true_negatives']
-        self.val_false_positives = history.history['val_false_positives']
-        self.val_false_negatives = history.history['val_false_negatives']
-        self.val_last_auc_score = history.history['val_auc'].iloc[-1]
+        self.accuracy_list = training_information['accuracy']
+        self.loss_list = training_information['loss']
+        self.recall = training_information['recall']  # true_positives
+        self.precision = training_information['precision']
+        self.true_positives = training_information['true_positives']
+        self.true_negatives = training_information['true_negatives']
+        self.false_positives = training_information['false_positives']
+        self.false_negatives = training_information['false_negatives']
+
+        self.val_accuracy_list = training_information['val_accuracy']
+        self.val_loss_list = training_information['val_loss']
+        self.val_recall = training_information['val_recall']
+        self.val_precision = training_information['val_precision']
+        self.val_true_positives = training_information['val_true_positives']
+        self.val_true_negatives = training_information['val_true_negatives']
+        self.val_false_positives = training_information['val_false_positives']
+        self.val_false_negatives = training_information['val_false_negatives']
+
 
     def loss_graph(self):
         loss_plots = [go.Scatter(x=self.epoch_list,
@@ -135,7 +142,7 @@ class DataVisualization:
 
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        row_col_index_list = []  # TODO: Find a better way to move over layouts
+        row_col_index_list = []  # TODO: Find a better way to move over layouts (Waiting on stackoverflow)
         row_size -= 1
         col_size += 1
         for row_index in range(col_size):

@@ -135,7 +135,7 @@ class DataVis:
 
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        row_col_index_list = []  # TODO: Find a way to move over layouts
+        row_col_index_list = []
         row_size -= 1
         col_size += 1
         for row_index in range(col_size):
@@ -159,10 +159,11 @@ class DataVis:
 dir = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs'
 csv_file = 'dog_cat_13-48-44_training_metrics.csv'
 csv = pd.read_csv(f'{dir}\\{csv_file}')
-test = DataVis(csv)
+print(f'|{type(csv)}|')
+'''test = DataVis(csv)
 test.loss_graph()
 test.error_rate_graph()
 test.recall_graph()
 test.precision_graph()
 test.f1_graph()
-test.subplot_creation('Training', row_size=3, col_size=2, model_name='dog_cat')
+test.subplot_creation('Training', row_size=3, col_size=2, model_name='dog_cat')'''

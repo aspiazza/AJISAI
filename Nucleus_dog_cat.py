@@ -5,7 +5,7 @@ from keras.callbacks import CSVLogger
 import keras
 import tensorflow as tf
 import sys
-from datetime import datetime
+import pandas as pd
 from icecream import ic
 
 
@@ -17,7 +17,7 @@ class CatDogModel:  # Include logging and data viz throughout
         self.model_name = model_name
         self.version = version
         self.datafile = datafile
-        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{model_name}_{version}'
+        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs'
         self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{model_name}_{version}'
 
     def preprocess(self):
@@ -31,11 +31,12 @@ class CatDogModel:  # Include logging and data viz throughout
         self.model_checkpoint = keras.callbacks.ModelCheckpoint(
             f'F:\\Saved-Models\\{self.version}_{self.model_name}.h5', save_best_only=True)
 
-        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
+        self.metric_csv = CSVLogger(f'{self.log_dir}\\{self.model_name}_{self.version}_training_metrics.csv',
+                                    append=True, separator=',')
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = [self.metric_csv]  # self.model_checkpoint
+            callback_list = [self.metric_csv, self.model_checkpoint]
         else:
             callback_list = []
 
@@ -52,9 +53,15 @@ class CatDogModel:  # Include logging and data viz throughout
             self.model.summary()
             log_file.close()
 
-    # TODO: Subplot module and implement more metrics
-    def training_graphs(self):  # TODO: Implement csv option argument
-        self.data_visualization = datavizDogCat.DataVisualization(self.history, self.metric_dir)
+    # TODO: Implement more metrics
+    def training_graphs(self, csv_bool, csv_file):  # TODO: Implement csv option argument
+        if csv_bool:
+            training_information = pd.read_csv(csv_file)
+        else:
+            training_information = self.history
+            print(f'|{type(self.history)}|')
+
+        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir)
         self.data_visualization.loss_graph()
         self.data_visualization.error_rate_graph()
         self.data_visualization.recall_graph()
@@ -62,7 +69,7 @@ class CatDogModel:  # Include logging and data viz throughout
         self.data_visualization.f1_graph()
         self.data_visualization.subplot_creation(context='Training', row_size=3, col_size=2)
 
-    def predict(self):  # TODO: Prediction graphing and implement more metrics
+    def predict(self):  # TODO: Prediction graphing module and implement more metrics
         test_labels = self.test_gen.classes
         print(test_labels)
 
@@ -75,5 +82,5 @@ if __name__ == '__main__':
     model_instance.model()
     # model_instance.model_summary()
     model_instance.training(callback_bool=True)
-    model_instance.training_graphs()
+    model_instance.training_graphs(csv_bool=False, csv_file=None)
     # model_instance.predict()

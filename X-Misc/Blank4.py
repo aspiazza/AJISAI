@@ -22,37 +22,39 @@ ic(recall)
 
 # Data Visualization WIP
 '''
+# Data Visualization
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-from icecream import ic
-import pandas as pd
 
 
-class DataVis:
-    def __init__(self, history):
-        self.epoch_list = history['epoch']
+class DataVisualization:
+    def __init__(self, training_information, metric_dir):
+        self.metric_dir = metric_dir
         self.subplot_name_list = []
-        self.subplot_layout_list = []
         self.subplot_list = []
 
-        self.accuracy_list = history['accuracy']
-        self.loss_list = history['loss']
-        self.recall = history['recall']  # true_positives
-        self.precision = history['precision']
-        self.false_positives = history['false_positives']
-        self.true_negatives = history['true_negatives']
-        self.false_negatives = history['false_negatives']
-        self.last_auc_score = history['auc'].iloc[-1]
+        self.epoch_list = training_information.epoch
 
-        self.val_accuracy_list = history['val_accuracy']
-        self.val_loss_list = history['val_loss']
-        self.val_recall = history['val_recall']
-        self.val_precision = history['val_precision']
-        self.val_false_positives = history['val_false_positives']
-        self.val_true_negatives = history['val_true_negatives']
-        self.val_false_negatives = history['val_false_negatives']
-        self.val_last_auc_score = history['val_auc'].iloc[-1]
+        self.accuracy_list = training_information.history['accuracy']
+        self.loss_list = training_information.history['loss']
+        self.recall = training_information.history['recall']  # true_positives
+        self.precision = training_information.history['precision']
+        self.true_positives = training_information.history['true_positives']
+        self.true_negatives = training_information.history['true_negatives']
+        self.false_positives = training_information.history['false_positives']
+        self.false_negatives = training_information.history['false_negatives']
+        self.last_auc_score = training_information.history['auc'][-1]
+
+        self.val_accuracy_list = training_information.history['val_accuracy']
+        self.val_loss_list = training_information.history['val_loss']
+        self.val_recall = training_information.history['val_recall']
+        self.val_precision = training_information.history['val_precision']
+        self.val_true_positives = training_information.history['val_true_positives']
+        self.val_true_negatives = training_information.history['val_true_negatives']
+        self.val_false_positives = training_information.history['val_false_positives']
+        self.val_false_negatives = training_information.history['val_false_negatives']
+        self.val_last_auc_score = training_information.history['val_auc'][-1]
 
     def loss_graph(self):
         loss_plots = [go.Scatter(x=self.epoch_list,
@@ -65,19 +67,9 @@ class DataVis:
                                  mode='lines',
                                  name='Validation Loss',
                                  line=dict(width=4))]
-        loss_layout = dict(font_color='black',
-                           title_font_color='black',
-                           title=dict(text='Loss Graph',
-                                      font_size=30),
-                           xaxis_title=dict(text='Epochs',
-                                            font_size=25),
-                           yaxis_title=dict(text='Loss',
-                                            font_size=25),
-                           legend=dict(font_size=15))
 
         self.loss_figure = go.Figure(data=loss_plots)
         self.subplot_name_list.append('Loss Graph')
-        self.subplot_layout_list.append(loss_layout)
         self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
@@ -101,19 +93,9 @@ class DataVis:
                                        mode='lines',
                                        name='Validation Error Rate',
                                        line=dict(width=4))]
-        error_rate_layout = dict(font_color='black',
-                                 title_font_color='black',
-                                 title=dict(text='Error Rate Graph',
-                                            font_size=30),
-                                 xaxis_title=dict(text='Epochs',
-                                                  font_size=25),
-                                 yaxis_title=dict(text='Error Rate',
-                                                  font_size=25),
-                                 legend=dict(font_size=15))
 
         self.error_rate_figure = go.Figure(data=error_rate_plots)
         self.subplot_name_list.append('Error Rate Graph')
-        self.subplot_layout_list.append(error_rate_layout)
         self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
@@ -127,18 +109,9 @@ class DataVis:
                                    mode='lines',
                                    name='Validation Recall',
                                    line=dict(width=4))]
-        recall_layout = dict(font_color='black',
-                             title_font_color='black',
-                             title=dict(text='Recall Graph',
-                                        font_size=30),
-                             xaxis_title=dict(text='Epochs',
-                                              font_size=25),
-                             yaxis_title=dict(text='Recall',
-                                              font_size=25), )
 
         self.recall_figure = go.Figure(data=recall_plots)
         self.subplot_name_list.append('Recall Graph')
-        self.subplot_layout_list.append(recall_layout)
         self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
@@ -152,19 +125,9 @@ class DataVis:
                                       mode='lines',
                                       name='Validation Precision',
                                       line=dict(width=4))]
-        precision_layout = dict(font_color='black',
-                                title_font_color='black',
-                                title=dict(text='Precision Graph',
-                                           font_size=30),
-                                xaxis_title=dict(text='Epochs',
-                                                 font_size=25),
-                                yaxis_title=dict(text='Precision',
-                                                 font_size=25),
-                                legend=dict(font_size=15))
 
         self.precision_figure = go.Figure(data=precision_plots)
         self.subplot_name_list.append('Precision Graph')
-        self.subplot_layout_list.append(precision_layout)
         self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
@@ -187,26 +150,16 @@ class DataVis:
                                mode='lines',
                                name='Validation F1 Score',
                                line=dict(width=4))]
-        f1_layout = dict(font_color='black',
-                         title_font_color='black',
-                         title=dict(text='F1 Graph',
-                                    font_size=30),
-                         xaxis_title=dict(text='Epochs',
-                                          font_size=25),
-                         yaxis_title=dict(text='F1 Score',
-                                          font_size=25),
-                         legend=dict(font_size=15))
 
         self.f1_figure = go.Figure(data=f1_plots)
         self.subplot_name_list.append('F1 Graph')
-        self.subplot_layout_list.append(f1_layout)
         self.subplot_list.append(self.f1_figure)
 
-    def subplot_creation(self, context, row_size, col_size, model_name):
+    def subplot_creation(self, context, row_size, col_size):
 
-        metric_figure = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
+        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        row_col_index_list = []  # TODO: Find a way to move over layouts
+        row_col_index_list = []  # TODO: Find a better way to move over layouts
         row_size -= 1
         col_size += 1
         for row_index in range(col_size):
@@ -220,29 +173,10 @@ class DataVis:
             row_index = int(row_col[0])
             col_index = int(row_col[1])
             for trace in plot.data:
-                metric_figure.append_trace(trace, row=row_index, col=col_index)
+                metric_subplot.append_trace(trace, row=row_index, col=col_index)
 
-        for (figure, fig_layout) in zip(self.subplot_list, self.subplot_layout_list):
-            figure.update_layout(fig_layout)
-            metric_figure.show()
-            exit()
-
-        #metric_figure.show()
-
-        # plotly.offline.plot(metric_subplot,
-        #                     filename=f'{context}_metric_graph_{model_name}.html',
-        #                     auto_open=False)
-
-
-dir = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs'
-csv_file = 'dog_cat_13-48-44_training_metrics.csv'
-csv = pd.read_csv(f'{dir}\\{csv_file}')
-test = DataVis(csv)
-test.loss_graph()
-test.error_rate_graph()
-test.recall_graph()
-test.precision_graph()
-test.f1_graph()
-test.subplot_creation('Training', row_size=3, col_size=2, model_name='dog_cat')
+        plotly.offline.plot(metric_subplot,
+                            filename=f'{self.metric_dir}_{context}_metrics.html',
+                            auto_open=False)
 
 '''
