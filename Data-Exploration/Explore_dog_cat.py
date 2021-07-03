@@ -1,4 +1,4 @@
-# Data Exploration for dog-cat model  # TODO: Convert into class
+# Data Exploration for dog-cat model
 import glob
 import os
 import random

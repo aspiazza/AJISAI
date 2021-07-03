@@ -11,6 +11,7 @@ import pandas as pd
 class DataVis:
     def __init__(self, history):
         self.epoch_list = history['epoch']
+        self.subplot_name_list = []
         self.subplot_list = []
 
         self.accuracy_list = history['accuracy']
@@ -44,20 +45,11 @@ class DataVis:
                                  line=dict(width=4))]
 
         self.loss_figure = go.Figure(data=loss_plots)
-
-        self.loss_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Loss Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Loss',
-                             font_size=25),
-            legend=dict(font_size=15))
+        self.subplot_name_list.append('Loss Graph')
         self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
+
         def error_rate_computation(accuracy):
             error_rate_list = []
             for accuracy_instance in accuracy:
@@ -79,17 +71,7 @@ class DataVis:
                                        line=dict(width=4))]
 
         self.error_rate_figure = go.Figure(data=error_rate_plots)
-
-        self.error_rate_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Error Rate Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Error Rate',
-                             font_size=25),
-            legend=dict(font_size=15))
+        self.subplot_name_list.append('Error Rate Graph')
         self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
@@ -105,17 +87,7 @@ class DataVis:
                                    line=dict(width=4))]
 
         self.recall_figure = go.Figure(data=recall_plots)
-
-        self.recall_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Recall Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Recall',
-                             font_size=25),
-            legend=dict(font_size=15))
+        self.subplot_name_list.append('Recall Graph')
         self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
@@ -131,17 +103,7 @@ class DataVis:
                                       line=dict(width=4))]
 
         self.precision_figure = go.Figure(data=precision_plots)
-
-        self.precision_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Precision Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Precision',
-                             font_size=25),
-            legend=dict(font_size=15))
+        self.subplot_name_list.append('Precision Graph')
         self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
@@ -166,55 +128,42 @@ class DataVis:
                                line=dict(width=4))]
 
         self.f1_figure = go.Figure(data=f1_plots)
-
-        self.f1_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='F1 Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='F1 Score',
-                             font_size=25),
-            legend=dict(font_size=15))
+        self.subplot_name_list.append('F1 Graph')
         self.subplot_list.append(self.f1_figure)
 
-    def subplot_creation(self, context_bool, row_size, col_size, model_name='dog_cat'):
+    def subplot_creation(self, context, row_size, col_size, model_name):
 
-        if context_bool:
-            context = 'Training'
-        else:
-            context = 'Testing'
+        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        metric_figure = make_subplots(rows=row_size, cols=col_size)
-
-        '''for t in self.loss_figure.data:   WORKS
-            metric_figure.append_trace(t, row=1, col=1)
-        for t in self.error_rate_figure.data:
-            metric_figure.append_trace(t, row=1, col=2)
-        metric_figure.show()'''
-
+        row_col_index_list = []
+        row_size -= 1
+        col_size += 1
         for row_index in range(col_size):
-            fixed_row_index = row_index + 1
-            for (col_index, figure) in zip(range(row_size), self.subplot_list):
-                fixed_col_index = col_index + 1
-                for fig in figure.data:
-                    metric_figure.append_trace(fig, row=fixed_row_index, col=fixed_col_index)
+            row_index += 1
+            for col_index in range(row_size):
+                col_index += 1
+                row_col_index_list.append(f'{row_index},{col_index}')
 
-        metric_figure.show()
+        for plot, row_col in zip(self.subplot_list, row_col_index_list):
+            row_col = row_col.split(',')
+            row_index = int(row_col[0])
+            col_index = int(row_col[1])
+            for trace in plot.data:
+                metric_subplot.append_trace(trace, row=row_index, col=col_index)
 
-        '''plotly.offline.plot(metric_subplot,
-                            filename=f'{context}_metric_graph_{model_name}.html',
-                            auto_open=False)'''
+        plotly.offline.plot(metric_subplot,
+                            filename=f'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\Model-Graphs&Logs\\Model-Data_dog_cat\\Metric-Graphs\\{context}_metric_graph_{model_name}.html',
+                            auto_open=False)
 
 
 dir = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs'
 csv_file = 'dog_cat_13-48-44_training_metrics.csv'
 csv = pd.read_csv(f'{dir}\\{csv_file}')
-test = DataVis(csv)
+print(f'|{type(csv)}|')
+'''test = DataVis(csv)
 test.loss_graph()
 test.error_rate_graph()
 test.recall_graph()
 test.precision_graph()
 test.f1_graph()
-test.subplot_creation(True, 3, 2, model_name='hh')
+test.subplot_creation('Training', row_size=3, col_size=2, model_name='dog_cat')'''

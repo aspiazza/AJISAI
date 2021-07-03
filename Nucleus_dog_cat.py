@@ -5,7 +5,7 @@ from keras.callbacks import CSVLogger
 import keras
 import tensorflow as tf
 import sys
-from datetime import datetime
+import pandas as pd
 from icecream import ic
 
 
@@ -13,10 +13,12 @@ from icecream import ic
 # TODO: Use Numba somehow
 # Model class
 class CatDogModel:  # Include logging and data viz throughout
-    def __init__(self, model_name):
+    def __init__(self, model_name, version, datafile):
         self.model_name = model_name
-        self.datafile = 'F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir'
-        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{model_name}_{str(current_time)}'
+        self.version = version
+        self.datafile = datafile
+        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs'
+        self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{model_name}_{version}'
 
     def preprocess(self):
         self.train_gen = procDogCat.train_image_gen(self.datafile)
@@ -27,52 +29,58 @@ class CatDogModel:  # Include logging and data viz throughout
         self.model = modelDogCat.seq_maxpool_cnn()
 
         self.model_checkpoint = keras.callbacks.ModelCheckpoint(
-            f'F:\\Saved-Models\\{str(current_time)}_{self.model_name}.h5', save_best_only=True)
+            f'F:\\Saved-Models\\{self.version}_{self.model_name}.h5', save_best_only=True)
 
-        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
+        self.metric_csv = CSVLogger(f'{self.log_dir}\\{self.model_name}_{self.version}_training_metrics.csv',
+                                    append=True, separator=',')
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = [self.metric_csv]  # self.model_checkpoint
+            callback_list = [self.metric_csv, self.model_checkpoint]
         else:
             callback_list = []
 
-        # TODO: Find out why metrics go to zero sometimes
         self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=30,
+                                      epochs=3,
                                       callbacks=callback_list)
 
-    def model_summary(self):
+    def model_summary(self):  # TODO: Make into callback
         with open(f'{self.log_dir}_summary.txt', 'a') as log_file:
             sys.stdout = log_file
             self.model.summary()
             log_file.close()
 
-    # TODO: Subplot module
-    def training_graphs(self):
-        self.train_data_visualization = datavizDogCat.DataVisualization(self.history, self.model_name)
-        self.train_data_visualization.loss_graph()
-        self.train_data_visualization.error_rate_graph()
-        self.train_data_visualization.recall_graph()
-        self.train_data_visualization.precision_graph()
-        self.train_data_visualization.f1_graph()
-        # data_visualization.subplot_creation()
+    # TODO: Implement more metrics
+    def training_graphs(self, csv_bool, csv_file):  # TODO: Implement csv option argument
+        if csv_bool:
+            training_information = pd.read_csv(csv_file)
+        else:
+            training_information = self.history
+            print(f'|{type(self.history)}|')
 
-    def predict(self):  # TODO: Prediction graphing
+        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir)
+        self.data_visualization.loss_graph()
+        self.data_visualization.error_rate_graph()
+        self.data_visualization.recall_graph()
+        self.data_visualization.precision_graph()
+        self.data_visualization.f1_graph()
+        self.data_visualization.subplot_creation(context='Training', row_size=3, col_size=2)
+
+    def predict(self):  # TODO: Prediction graphing module and implement more metrics
         test_labels = self.test_gen.classes
         print(test_labels)
 
 
 # Executor
 if __name__ == '__main__':
-    current_time = datetime.now().strftime('%H-%M-%S')
-    model_instance = CatDogModel("dog_cat")
+    model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
+                                 datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
     model_instance.model()
     # model_instance.model_summary()
-    model_instance.training(True)
-    # model_instance.training_graphs()
-    model_instance.predict()
+    model_instance.training(callback_bool=True)
+    model_instance.training_graphs(csv_bool=False, csv_file=None)
+    # model_instance.predict()
