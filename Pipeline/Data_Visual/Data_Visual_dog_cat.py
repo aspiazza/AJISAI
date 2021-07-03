@@ -5,9 +5,12 @@ import plotly.graph_objects as go
 
 
 class DataVisualization:
-    def __init__(self, history, model_name):
-        self.graph_storage_directory = f'C:\\Users\\17574\\PycharmProjects\\Kraken\\Kraken_Project\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\'
-        self.epoch_list = history['epoch']
+    def __init__(self, history, metric_dir):
+        self.metric_dir = metric_dir
+
+        self.subplot_name_list = []
+        self.subplot_list = []
+        self.epoch_list = history.history['epoch']
 
         self.accuracy_list = history.history['accuracy']
         self.loss_list = history.history['loss']
@@ -30,33 +33,23 @@ class DataVisualization:
         self.val_last_auc_score = history.history['val_auc'].iloc[-1]
 
     def loss_graph(self):
-        self.loss_graph = go.Figure()
-        self.loss_graph.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=self.loss_list,
-                        mode='lines',
-                        name='Loss',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=self.val_loss_list,
-                        mode='lines',
-                        name='Validation Loss',
-                        line=dict(width=4))])
+        loss_plots = [go.Scatter(x=self.epoch_list,
+                                 y=self.loss_list,
+                                 mode='lines',
+                                 name='Loss',
+                                 line=dict(width=4)),
+                      go.Scatter(x=self.epoch_list,
+                                 y=self.val_loss_list,
+                                 mode='lines',
+                                 name='Validation Loss',
+                                 line=dict(width=4))]
 
-        self.loss_graph.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Loss Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Loss',
-                             font_size=25),
-            legend=dict(font_size=15))
-
-        return self.loss_graph
+        self.loss_figure = go.Figure(data=loss_plots)
+        self.subplot_name_list.append('Loss Graph')
+        self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
+
         def error_rate_computation(accuracy):
             error_rate_list = []
             for accuracy_instance in accuracy:
@@ -66,85 +59,52 @@ class DataVisualization:
         train_error_rate = error_rate_computation(self.accuracy_list)
         valid_error_rate = error_rate_computation(self.val_accuracy_list)
 
-        self.error_rate_figure = go.Figure()
-        self.error_rate_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=train_error_rate,
-                        mode='lines',
-                        name='Error Rate',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=valid_error_rate,
-                        mode='lines',
-                        name='Validation Error Rate',
-                        line=dict(width=4))])
+        error_rate_plots = [go.Scatter(x=self.epoch_list,
+                                       y=train_error_rate,
+                                       mode='lines',
+                                       name='Error Rate',
+                                       line=dict(width=4)),
+                            go.Scatter(x=self.epoch_list,
+                                       y=valid_error_rate,
+                                       mode='lines',
+                                       name='Validation Error Rate',
+                                       line=dict(width=4))]
 
-        self.error_rate_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Error Rate Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Error Rate',
-                             font_size=25),
-            legend=dict(font_size=15))
-
-        return self.error_rate_figure
+        self.error_rate_figure = go.Figure(data=error_rate_plots)
+        self.subplot_name_list.append('Error Rate Graph')
+        self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
-        self.recall_figure = go.Figure()
-        self.recall_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=self.recall,
-                        mode='lines',
-                        name='Recall',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=self.val_recall,
-                        mode='lines',
-                        name='Validation Recall',
-                        line=dict(width=4))])
+        recall_plots = [go.Scatter(x=self.epoch_list,
+                                   y=self.recall,
+                                   mode='lines',
+                                   name='Recall',
+                                   line=dict(width=4)),
+                        go.Scatter(x=self.epoch_list,
+                                   y=self.val_recall,
+                                   mode='lines',
+                                   name='Validation Recall',
+                                   line=dict(width=4))]
 
-        self.recall_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Recall Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Recall',
-                             font_size=25),
-            legend=dict(font_size=15))
-
-        return self.recall_figure
+        self.recall_figure = go.Figure(data=recall_plots)
+        self.subplot_name_list.append('Recall Graph')
+        self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
-        self.precision_figure = go.Figure()
-        self.precision_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=self.precision,
-                        mode='lines',
-                        name='Precision',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=self.val_precision,
-                        mode='lines',
-                        name='Validation Precision',
-                        line=dict(width=4))])
+        precision_plots = [go.Scatter(x=self.epoch_list,
+                                      y=self.precision,
+                                      mode='lines',
+                                      name='Precision',
+                                      line=dict(width=4)),
+                           go.Scatter(x=self.epoch_list,
+                                      y=self.val_precision,
+                                      mode='lines',
+                                      name='Validation Precision',
+                                      line=dict(width=4))]
 
-        self.precision_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='Precision Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='Precision',
-                             font_size=25),
-            legend=dict(font_size=15))
-
-        return self.precision_figure
+        self.precision_figure = go.Figure(data=precision_plots)
+        self.subplot_name_list.append('Precision Graph')
+        self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
         def f1_score_computation(precision, recall):
@@ -156,38 +116,41 @@ class DataVisualization:
         f1_scores = f1_score_computation(self.precision, self.recall)
         val_f1_scores = f1_score_computation(self.val_precision, self.val_recall)
 
-        self.f1_figure = go.Figure()
-        self.f1_figure.add_traces(
-            [go.Scatter(x=self.epoch_list,
-                        y=f1_scores,
-                        mode='lines',
-                        name='F1 Score',
-                        line=dict(width=4)),
-             go.Scatter(x=self.epoch_list,
-                        y=val_f1_scores,
-                        mode='lines',
-                        name='Validation F! Score',
-                        line=dict(width=4))])
+        f1_plots = [go.Scatter(x=self.epoch_list,
+                               y=f1_scores,
+                               mode='lines',
+                               name='F1 Score',
+                               line=dict(width=4)),
+                    go.Scatter(x=self.epoch_list,
+                               y=val_f1_scores,
+                               mode='lines',
+                               name='Validation F1 Score',
+                               line=dict(width=4))]
 
-        self.f1_figure.update_layout(
-            font_color='black',
-            title_font_color='black',
-            title=dict(text='F1 Graph',
-                       font_size=30),
-            xaxis_title=dict(text='Epochs',
-                             font_size=25),
-            yaxis_title=dict(text='F1 Score',
-                             font_size=25),
-            legend=dict(font_size=15))
+        self.f1_figure = go.Figure(data=f1_plots)
+        self.subplot_name_list.append('F1 Graph')
+        self.subplot_list.append(self.f1_figure)
 
-        return self.f1_figure
+    def subplot_creation(self, context, row_size, col_size):
 
-    def subplot_creation(self):
-        metric_figure = make_subplots(
-            subplot_titles='Dog Cat Loss Graph')
+        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        metric_figure.add_traces(self.precision_graph)
+        row_col_index_list = []  # TODO: Find a better way to move over layouts
+        row_size -= 1
+        col_size += 1
+        for row_index in range(col_size):
+            row_index += 1
+            for col_index in range(row_size):
+                col_index += 1
+                row_col_index_list.append(f'{row_index},{col_index}')
 
-        plotly.offline.plot(metric_figure,
-                            filename=f'Metric_graph_dog_cat.html',
+        for plot, row_col in zip(self.subplot_list, row_col_index_list):
+            row_col = row_col.split(',')
+            row_index = int(row_col[0])
+            col_index = int(row_col[1])
+            for trace in plot.data:
+                metric_subplot.append_trace(trace, row=row_index, col=col_index)
+
+        plotly.offline.plot(metric_subplot,
+                            filename=f'{self.metric_dir}_{context}_metrics.html',
                             auto_open=False)

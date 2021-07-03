@@ -37,6 +37,9 @@ project:
         + Preprocess
     + Web-Apps
         + Web-App_{model name}
+    + X-Misc
+        + Blank{n}.py
+        + Notes.txt
     + Nucleus_{model name}.py
     + Project_Initializer.py
     + README.md
@@ -100,6 +103,10 @@ project:
       > - Will need to create docker file to set up container
       > - Will need to create a requirements.txt to download packages
       > - Maybe mount this on a cloud service
+
+- X-Misc
+    + Whatever Needed
+      > - Contains scratch files and notes when testing before reflecting on Pipline code
 
 - Nucleus.py
     + custom libraries, datetime, keras, numba, os, sys, tensorflow
