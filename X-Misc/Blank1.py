@@ -1,169 +1,160 @@
-# Data Visualization
-import plotly
+# Nucleus example code
+
+# Nucleus code
+import os
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-from ipywidgets import VBox, HBox
-import plotly.express as px
-from icecream import ic
-import pandas as pd
 
 
-class DataVis:
-    def __init__(self, history):
-        self.epoch_list = history['epoch']
-        self.subplot_name_list = []
-        self.subplot_list = []
+# Model class
+class catdogModel:  # Include logging and data viz throughout
+    def __init__(self, model_name, datafile):
+        self.datafile = pd.read_csv(datafile)
+        self.model_name = model_name
 
-        self.accuracy_list = history['accuracy']
-        self.loss_list = history['loss']
-        self.recall = history['recall']  # true_positives
-        self.precision = history['precision']
-        self.false_positives = history['false_positives']
-        self.true_negatives = history['true_negatives']
-        self.false_negatives = history['false_negatives']
-        self.last_auc_score = history['auc'].iloc[-1]
+    def preprocess(self, test_size):
+        X = np.array(self.datafile[['Humidity', 'Pressure (millibars)']])
+        y = np.array(self.datafile['Temperature (C)'])
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size,
+                                                                                random_state=42)
+        # Plot data exploration metrics
 
-        self.val_accuracy_list = history['val_accuracy']
-        self.val_loss_list = history['val_loss']
-        self.val_recall = history['val_recall']
-        self.val_precision = history['val_precision']
-        self.val_false_positives = history['val_false_positives']
-        self.val_true_negatives = history['val_true_negatives']
-        self.val_false_negatives = history['val_false_negatives']
-        self.val_last_auc_score = history['val_auc'].iloc[-1]
+    def baseline(self, pp_data):
+        RNN.train(pp_data)
+        # Plot results in subplot
+        Tree.train(pp_data)
+        # Plot results in subplot
 
-    def loss_graph(self):
-        loss_plots = [go.Scatter(x=self.epoch_list,
-                                 y=self.loss_list,
-                                 mode='lines',
-                                 name='Loss',
-                                 line=dict(width=4)),
-                      go.Scatter(x=self.epoch_list,
-                                 y=self.val_loss_list,
-                                 mode='lines',
-                                 name='Validation Loss',
-                                 line=dict(width=4))]
+    def fit(self):
+        self.model = self.random_forest.fit(self.X_train, self.y_train)
+        # plotting fit data
+        # Saving model
 
-        self.loss_figure = go.Figure(data=loss_plots)
-        self.subplot_name_list.append('Loss Graph')
-        self.subplot_list.append(self.loss_figure)
+    def predict(self, input_value):
+        if input_value == None:
+            result = self.random_forest.fit(self.X_test)
+        else:
+            result = self.random_forest.fit(np.array([input_value]))
+        return result
+        # Plotting prediction data
 
-    def error_rate_graph(self):
+    def saving(self):
+        log_dir = 'Model-Graphs&Logs\\' + self.model_name + '\\Logs'
+        metric_dir = 'Model-Graphs&Logs\\' + self.model_name + '\\Metric-Graphs'
+        if not os.path.isfile(log_dir):
+            os.mkdir(log_dir)
 
-        def error_rate_computation(accuracy):
-            error_rate_list = []
-            for accuracy_instance in accuracy:
-                error_rate_list.append(1 - accuracy_instance)
-            return error_rate_list
-
-        train_error_rate = error_rate_computation(self.accuracy_list)
-        valid_error_rate = error_rate_computation(self.val_accuracy_list)
-
-        error_rate_plots = [go.Scatter(x=self.epoch_list,
-                                       y=train_error_rate,
-                                       mode='lines',
-                                       name='Error Rate',
-                                       line=dict(width=4)),
-                            go.Scatter(x=self.epoch_list,
-                                       y=valid_error_rate,
-                                       mode='lines',
-                                       name='Validation Error Rate',
-                                       line=dict(width=4))]
-
-        self.error_rate_figure = go.Figure(data=error_rate_plots)
-        self.subplot_name_list.append('Error Rate Graph')
-        self.subplot_list.append(self.error_rate_figure)
-
-    def recall_graph(self):
-        recall_plots = [go.Scatter(x=self.epoch_list,
-                                   y=self.recall,
-                                   mode='lines',
-                                   name='Recall',
-                                   line=dict(width=4)),
-                        go.Scatter(x=self.epoch_list,
-                                   y=self.val_recall,
-                                   mode='lines',
-                                   name='Validation Recall',
-                                   line=dict(width=4))]
-
-        self.recall_figure = go.Figure(data=recall_plots)
-        self.subplot_name_list.append('Recall Graph')
-        self.subplot_list.append(self.recall_figure)
-
-    def precision_graph(self):
-        precision_plots = [go.Scatter(x=self.epoch_list,
-                                      y=self.precision,
-                                      mode='lines',
-                                      name='Precision',
-                                      line=dict(width=4)),
-                           go.Scatter(x=self.epoch_list,
-                                      y=self.val_precision,
-                                      mode='lines',
-                                      name='Validation Precision',
-                                      line=dict(width=4))]
-
-        self.precision_figure = go.Figure(data=precision_plots)
-        self.subplot_name_list.append('Precision Graph')
-        self.subplot_list.append(self.precision_figure)
-
-    def f1_graph(self):
-        def f1_score_computation(precision, recall):
-            f1_score_list = []
-            for (precision_score, recall_score) in zip(precision, recall):
-                f1_score_list.append(2 * ((precision_score * recall_score) / (precision_score + recall_score)))
-            return f1_score_list
-
-        f1_scores = f1_score_computation(self.precision, self.recall)
-        val_f1_scores = f1_score_computation(self.val_precision, self.val_recall)
-
-        f1_plots = [go.Scatter(x=self.epoch_list,
-                               y=f1_scores,
-                               mode='lines',
-                               name='F1 Score',
-                               line=dict(width=4)),
-                    go.Scatter(x=self.epoch_list,
-                               y=val_f1_scores,
-                               mode='lines',
-                               name='Validation F1 Score',
-                               line=dict(width=4))]
-
-        self.f1_figure = go.Figure(data=f1_plots)
-        self.subplot_name_list.append('F1 Graph')
-        self.subplot_list.append(self.f1_figure)
-
-    def subplot_creation(self, context, row_size, col_size, model_name):
-
-        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
-
-        row_col_index_list = []
-        row_size -= 1
-        col_size += 1
-        for row_index in range(col_size):
-            row_index += 1
-            for col_index in range(row_size):
-                col_index += 1
-                row_col_index_list.append(f'{row_index},{col_index}')
-
-        for plot, row_col in zip(self.subplot_list, row_col_index_list):
-            row_col = row_col.split(',')
-            row_index = int(row_col[0])
-            col_index = int(row_col[1])
-            for trace in plot.data:
-                metric_subplot.append_trace(trace, row=row_index, col=col_index)
-
-        plotly.offline.plot(metric_subplot,
-                            filename=f'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\Model-Graphs&Logs\\Model-Data_dog_cat\\Metric-Graphs\\{context}_metric_graph_{model_name}.html',
-                            auto_open=False)
+        if not os.path.isfile(metric_dir):
+            os.mkdir(metric_dir)
+        return None
 
 
-dir = 'C:\\Users\\17574\\PycharmProjects\\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs'
-csv_file = 'dog_cat_13-48-44_training_metrics.csv'
-csv = pd.read_csv(f'{dir}\\{csv_file}')
-print(f'|{type(csv)}|')
-'''test = DataVis(csv)
-test.loss_graph()
-test.error_rate_graph()
-test.recall_graph()
-test.precision_graph()
-test.f1_graph()
-test.subplot_creation('Training', row_size=3, col_size=2, model_name='dog_cat')'''
+# Executor
+if __name__ == '__main__':
+    model_instance = catdogModel("CatDog_Model", "data.csv")
+    model_instance.preprocess(0.2)
+    model_instance.fit()
+    print(model_instance.predict(1))
+    print("Accuracy: ", model_instance.model.score(model_instance.X_test, model_instance.y_test))
+
+# print out requirements.txt
+'''
+pipreqs AJISAI-Project\Web-App\
+'''
+
+# Useful stuff to know
+'''
+- Guides
+    + Fast-API Templates:
+        > https://www.youtube.com/watch?v=JC5q22g3yQM
+
+    + ML Model on Fast-API
+        > https://www.youtube.com/watch?v=Mw9etoRz0Ic
+
+    + Docker and Fast-API
+        > https://fastapi.tiangolo.com/deployment/docker/
+        > https://towardsdatascience.com/tensorflow-model-deployment-using-fastapi-docker-4b398251af75
+        > https://medium.com/swlh/python-with-docker-fastapi-c4c304c7a93b
+        > https://www.youtube.com/watch?v=2a5414BsYqw
+
+    + Metric information
+        > https://neptune.ai/blog/evaluation-metrics-binary-classification
+'''
+
+# Code
+'''
+. MinMaxScaler (sklearn.preprocessing) = Normalizing binary data to 1 or 0
+. OnehotEncoder (sklearn.preprocessing) = One hot encode categorical data
+. random.sample(glob.blob('cat*'), 100) = Grabs 100 files containing word cat
+. shutil.move(source, dest) = Moves files
+. random.choice(os.listdir('example/directory')) = choose random file/image
+. StratifiedShuffleSplit(n_splts=, test_size=) = When you want your data stratified
+. SimpleImputer(strategy= "median") = Handling missing data
+
+
+.vectorizer = CountVectorizer()
+ vectorizer.fit_transform(train_x)
+ vectorizer.transform(test_x)       #To vectorized words
+
+
+. #Normalize data with tensorflow (Categories and numeric)
+ CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
+                   'embark_town', 'alone']
+   NUMERIC_COLUMNS = ['age', 'fare']
+   feature_columns = []
+
+   for feature_name in CATEGORICAL_COLUMNS:
+        # gets a list of all unique values from given feature column
+        vocabulary = dftrain[feature_name].unique()
+        #Maps categorey with unique values
+        feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary))
+
+   for feature_name in NUMERIC_COLUMNS:
+        feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
+'''
+
+# Plotting average image
+'''import os
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras.preprocessing import image
+
+# making n X m matrix
+def img2np(path, list_of_filename, size = (64, 64)):
+    # iterating through each file
+    for fn in list_of_filename:
+        fp = path + fn
+        current_image = image.load_img(fp, target_size = size,
+                                       color_mode = 'grayscale')
+        # covert image to a matrix
+        img_ts = image.img_to_array(current_image)
+        # turn that into a vector / 1D array
+        img_ts = [img_ts.ravel()]
+        try:
+            # concatenate different images
+            full_mat = np.concatenate((full_mat, img_ts))
+        except UnboundLocalError:
+            # if not assigned yet, assign one
+            full_mat = img_ts
+    return full_mat
+
+# run it on our folders
+normal_images = img2np(f'{train_dir}/NORMAL/', normal_imgs)
+pnemonia_images = img2np(f'{train_dir}/PNEUMONIA/', pneumo_imgs)
+
+def find_mean_img(full_mat, title, size = (64, 64)):
+    # calculate the average
+    mean_img = np.mean(full_mat, axis = 0)
+    # reshape it back to a matrix
+    mean_img = mean_img.reshape(size)
+    plt.imshow(mean_img, vmin=0, vmax=255, cmap='Greys_r')
+    plt.title(f'Average {title}')
+    plt.axis('off')
+    plt.show()
+    return mean_img
+
+norm_mean = find_mean_img(normal_images, 'NORMAL')
+pneu_mean = find_mean_img(pnemonia_images, 'PNEUMONIA')'''

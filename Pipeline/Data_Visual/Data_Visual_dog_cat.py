@@ -15,6 +15,7 @@ class DataVisualization:
             training_information = training_information.history
             self.last_auc_score = training_information['auc'][-1]
             self.val_last_auc_score = training_information['val_auc'][-1]
+
         elif str(type(training_information)) == "<class 'pandas.core.frame.DataFrame'>":
             self.epoch_list = training_information['epoch']
             self.last_auc_score = training_information['auc'].iloc[-1]
@@ -37,7 +38,6 @@ class DataVisualization:
         self.val_true_negatives = training_information['val_true_negatives']
         self.val_false_positives = training_information['val_false_positives']
         self.val_false_negatives = training_information['val_false_negatives']
-
 
     def loss_graph(self):
         loss_plots = [go.Scatter(x=self.epoch_list,
