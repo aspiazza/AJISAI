@@ -52,7 +52,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=1,
+                                      epochs=2,
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics
@@ -79,8 +79,8 @@ class CatDogModel:
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    model_instance.preprocess()
-    model_instance.model()
-    model_instance.training(callback_bool=True)
-    # model_instance.training_graphs(csv_file=None)
+    # model_instance.preprocess()
+    # model_instance.model()
+    # model_instance.training(callback_bool=True)
+    model_instance.training_graphs(csv_file=None)
     # model_instance.predict()

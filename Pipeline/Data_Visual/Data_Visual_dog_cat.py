@@ -2,12 +2,15 @@
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from icecream import ic
 
 
 class DataVisualization:
     def __init__(self, training_information, metric_dir):
         self.metric_dir = metric_dir
         self.subplot_name_list = []
+        self.figure_xaxes_list = []
+        self.figure_yaxes_list = []
         self.subplot_list = []
 
         if str(type(training_information)) == "<class 'tensorflow.python.keras.callbacks.History'>":
@@ -53,6 +56,8 @@ class DataVisualization:
 
         self.loss_figure = go.Figure(data=loss_plots)
         self.subplot_name_list.append('Loss Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Loss")
         self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
@@ -79,6 +84,8 @@ class DataVisualization:
 
         self.error_rate_figure = go.Figure(data=error_rate_plots)
         self.subplot_name_list.append('Error Rate Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Error Rate")
         self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
@@ -95,6 +102,8 @@ class DataVisualization:
 
         self.recall_figure = go.Figure(data=recall_plots)
         self.subplot_name_list.append('Recall Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Recall")
         self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
@@ -111,6 +120,8 @@ class DataVisualization:
 
         self.precision_figure = go.Figure(data=precision_plots)
         self.subplot_name_list.append('Precision Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Precision")
         self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
@@ -136,13 +147,15 @@ class DataVisualization:
 
         self.f1_figure = go.Figure(data=f1_plots)
         self.subplot_name_list.append('F1 Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
     def subplot_creation(self, context, row_size, col_size):
 
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        row_col_index_list = []  # TODO: Find a better way to move over layouts (Waiting on stackoverflow)
+        row_col_index_list = []  # TODO: Optimize this shit
         row_size -= 1
         col_size += 1
         for row_index in range(col_size):
@@ -151,10 +164,22 @@ class DataVisualization:
                 col_index += 1
                 row_col_index_list.append(f'{row_index},{col_index}')
 
-        for plot, row_col in zip(self.subplot_list, row_col_index_list):
+        x_y_axes = []
+        for (xaxes, yaxes) in zip(self.figure_xaxes_list, self.figure_yaxes_list):
+            x_y_axes.append(f'{xaxes},{yaxes}')
+
+        for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
+            x_y_ax = x_y_ax.split(',')
+            x_axes = x_y_ax[0]
+            y_axes = x_y_ax[1]
+
             row_col = row_col.split(',')
             row_index = int(row_col[0])
             col_index = int(row_col[1])
+
+            metric_subplot.update_xaxes(title_text=x_axes, row=row_index, col=col_index)
+            metric_subplot.update_yaxes(title_text=y_axes, row=row_index, col=col_index)
+
             for trace in plot.data:
                 metric_subplot.append_trace(trace, row=row_index, col=col_index)
 
