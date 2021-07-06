@@ -155,27 +155,31 @@ class DataVisualization:
 
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        row_col_index_list = []  # TODO: Optimize this shit
-        row_size -= 1
-        col_size += 1
-        for row_index in range(col_size):
-            row_index += 1
-            for col_index in range(row_size):
-                col_index += 1
-                row_col_index_list.append(f'{row_index},{col_index}')
+        def row_index_creator(row_size, col_size):
+            row_col_index_list = []  # TODO: Optimize this shit
+            row_size -= 1
+            col_size += 1
+            for row_index in range(col_size):
+                row_index += 1
+                for col_index in range(row_size):
+                    col_index += 1
+                    row_col_index_list.append([row_index, col_index])
+            return row_col_index_list
 
-        x_y_axes = []
-        for (xaxes, yaxes) in zip(self.figure_xaxes_list, self.figure_yaxes_list):
-            x_y_axes.append(f'{xaxes},{yaxes}')
+        def axes_title_creator(xaxes_list, yaxes_list):
+            x_y_axes = []
+            for (xaxes, yaxes) in zip(xaxes_list, yaxes_list):
+                x_y_axes.append([xaxes, yaxes])
+            return x_y_axes
+
+        row_col_index_list = row_index_creator(row_size, col_size)
+        x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
 
         for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
-            x_y_ax = x_y_ax.split(',')
             x_axes = x_y_ax[0]
             y_axes = x_y_ax[1]
-
-            row_col = row_col.split(',')
-            row_index = int(row_col[0])
-            col_index = int(row_col[1])
+            row_index = row_col[0]
+            col_index = row_col[1]
 
             metric_subplot.update_xaxes(title_text=x_axes, row=row_index, col=col_index)
             metric_subplot.update_yaxes(title_text=y_axes, row=row_index, col=col_index)

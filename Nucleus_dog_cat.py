@@ -27,11 +27,10 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn()
 
-        self.model_checkpoint = keras.callbacks.ModelCheckpoint(
-            f'F:\\Saved-Models\\{self.version_model_name}.h5', save_best_only=True)
+        self.model_checkpoint = keras.callbacks.ModelCheckpoint(f'F:\\Saved-Models\\{self.version_model_name}.h5',
+                                                                save_best_only=True)
 
-        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv',
-                                    append=True, separator=',')
+        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
 
         class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Turn Model summary into a callback
             def model_summary_creation(self):
@@ -39,7 +38,6 @@ class CatDogModel:
                     sys.stdout = summary_file
                     self.model.summary()
                     summary_file.close()
-
         self.model_summary = ModelSummaryCallback()
 
     def training(self, callback_bool):
@@ -79,8 +77,8 @@ class CatDogModel:
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    # model_instance.preprocess()
-    # model_instance.model()
-    # model_instance.training(callback_bool=True)
-    model_instance.training_graphs(csv_file=None)
+    model_instance.preprocess()
+    model_instance.model()
+    model_instance.training(callback_bool=True)
+    # model_instance.training_graphs(csv_file='C:\\Users\\17574\\PycharmProjects\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\dog_cat_13-48-44_training_metrics.csv')
     # model_instance.predict()
