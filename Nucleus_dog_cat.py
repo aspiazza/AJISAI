@@ -38,7 +38,7 @@ class CatDogModel:
                     sys.stdout = summary_file
                     self.model.summary()
                     summary_file.close()
-        self.model_summary = ModelSummaryCallback()
+        self.model_summary = ModelSummaryCallback().model_summary_creation()
 
     def training(self, callback_bool):
         if callback_bool:
@@ -50,7 +50,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=2,
+                                      epochs=1,
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics

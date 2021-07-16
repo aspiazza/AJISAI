@@ -142,3 +142,7 @@ project:
 > 10. Create a backend api with Fast-API to be able to take in and serve model results
 > 11. Package Web app into Docker container using Docker file
 > 12. Place container on cloud platform
+
+### Graph of ML Web-App Creation Pipeline
+
+# TODO: Create and insert image of pipeline

@@ -54,14 +54,37 @@ self.f1_figure.update_layout(
     legend=dict(font_size=15))
 '''
 
-empty_list = []
-row = [2, 4, 6, 8, 10]
-col = [1, 3, 5, 7, 9]
+from icecream import ic
 
-for (r, c) in zip(row, col):
-    empty_list.append([r, c])
+'''
+class TestClass:
+    def __init__(self):
+        self.variable = 1
+        self.string = "Andrew"
 
-for pair in empty_list:
-    print(pair[0])
-    print(pair[1])
-    print('------')
+    def printer(self):
+        print("Executed printer()")
+
+        class AndrewPrinter:
+            print("Executed andrewPrinter")
+
+            def function_printer(self, outer_class):
+                print(f'Executed function_printer')
+                print(outer_class.self.string)
+
+        ap = AndrewPrinter().function_printer(TestClass)
+        return ap
+
+
+TestClass().printer()'''
+
+
+class Outer:
+    def __init__(self, file_list):
+        self.file_list = file_list
+        self.inner = self.Inner(self)
+
+    class Inner:
+        def __init__(self, outer_parent):
+            print(outer_parent.file_list)
+            pass
