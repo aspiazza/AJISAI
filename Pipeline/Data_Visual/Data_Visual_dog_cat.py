@@ -2,12 +2,15 @@
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from icecream import ic
 
 
 class DataVisualization:
     def __init__(self, training_information, metric_dir):
         self.metric_dir = metric_dir
         self.subplot_name_list = []
+        self.figure_xaxes_list = []
+        self.figure_yaxes_list = []
         self.subplot_list = []
 
         if str(type(training_information)) == "<class 'tensorflow.python.keras.callbacks.History'>":
@@ -15,6 +18,7 @@ class DataVisualization:
             training_information = training_information.history
             self.last_auc_score = training_information['auc'][-1]
             self.val_last_auc_score = training_information['val_auc'][-1]
+
         elif str(type(training_information)) == "<class 'pandas.core.frame.DataFrame'>":
             self.epoch_list = training_information['epoch']
             self.last_auc_score = training_information['auc'].iloc[-1]
@@ -38,7 +42,6 @@ class DataVisualization:
         self.val_false_positives = training_information['val_false_positives']
         self.val_false_negatives = training_information['val_false_negatives']
 
-
     def loss_graph(self):
         loss_plots = [go.Scatter(x=self.epoch_list,
                                  y=self.loss_list,
@@ -53,6 +56,8 @@ class DataVisualization:
 
         self.loss_figure = go.Figure(data=loss_plots)
         self.subplot_name_list.append('Loss Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Loss")
         self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
@@ -79,6 +84,8 @@ class DataVisualization:
 
         self.error_rate_figure = go.Figure(data=error_rate_plots)
         self.subplot_name_list.append('Error Rate Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Error Rate")
         self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
@@ -95,6 +102,8 @@ class DataVisualization:
 
         self.recall_figure = go.Figure(data=recall_plots)
         self.subplot_name_list.append('Recall Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Recall")
         self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
@@ -111,6 +120,8 @@ class DataVisualization:
 
         self.precision_figure = go.Figure(data=precision_plots)
         self.subplot_name_list.append('Precision Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("Precision")
         self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
@@ -136,25 +147,43 @@ class DataVisualization:
 
         self.f1_figure = go.Figure(data=f1_plots)
         self.subplot_name_list.append('F1 Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
     def subplot_creation(self, context, row_size, col_size):
 
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        row_col_index_list = []  # TODO: Find a better way to move over layouts (Waiting on stackoverflow)
-        row_size -= 1
-        col_size += 1
-        for row_index in range(col_size):
-            row_index += 1
-            for col_index in range(row_size):
-                col_index += 1
-                row_col_index_list.append(f'{row_index},{col_index}')
+        def row_index_creator(row_size, col_size):
+            row_col_index_list = []  # TODO: Optimize this shit
+            row_size -= 1
+            col_size += 1
+            for row_index in range(col_size):
+                row_index += 1
+                for col_index in range(row_size):
+                    col_index += 1
+                    row_col_index_list.append([row_index, col_index])
+            return row_col_index_list
 
-        for plot, row_col in zip(self.subplot_list, row_col_index_list):
-            row_col = row_col.split(',')
-            row_index = int(row_col[0])
-            col_index = int(row_col[1])
+        def axes_title_creator(xaxes_list, yaxes_list):
+            x_y_axes = []
+            for (xaxes, yaxes) in zip(xaxes_list, yaxes_list):
+                x_y_axes.append([xaxes, yaxes])
+            return x_y_axes
+
+        row_col_index_list = row_index_creator(row_size, col_size)
+        x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
+
+        for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
+            x_axes = x_y_ax[0]
+            y_axes = x_y_ax[1]
+            row_index = row_col[0]
+            col_index = row_col[1]
+
+            metric_subplot.update_xaxes(title_text=x_axes, row=row_index, col=col_index)
+            metric_subplot.update_yaxes(title_text=y_axes, row=row_index, col=col_index)
+
             for trace in plot.data:
                 metric_subplot.append_trace(trace, row=row_index, col=col_index)
 

@@ -1,185 +1,67 @@
-# Nucleus example code
+'''self.loss_graph.update_layout(
+    font_color='black',
+    title_font_color='black',
+    title=dict(text='Loss Graph',
+               font_size=30),
+    xaxis_title=dict(text='Epochs',
+                     font_size=25),
+    yaxis_title=dict(text='Loss',
+                     font_size=25),
+    legend=dict(font_size=15))
 
-# Nucleus code
-import os
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
+self.error_rate_figure.update_layout(
+    font_color='black',
+    title_font_color='black',
+    title=dict(text='Error Rate Graph',
+               font_size=30),
+    xaxis_title=dict(text='Epochs',
+                     font_size=25),
+    yaxis_title=dict(text='Error Rate',
+                     font_size=25),
+    legend=dict(font_size=15))
 
+self.recall_figure.update_layout(
+    font_color='black',
+    title_font_color='black',
+    title=dict(text='Recall Graph',
+               font_size=30),
+    xaxis_title=dict(text='Epochs',
+                     font_size=25),
+    yaxis_title=dict(text='Recall',
+                     font_size=25),
+    legend=dict(font_size=15))
 
-# Model class
-class catdogModel:  # Include logging and data viz throughout
-    def __init__(self, model_name, datafile):
-        self.datafile = pd.read_csv(datafile)
-        self.model_name = model_name
+self.precision_figure.update_layout(
+    font_color='black',
+    title_font_color='black',
+    title=dict(text='Precision Graph',
+               font_size=30),
+    xaxis_title=dict(text='Epochs',
+                     font_size=25),
+    yaxis_title=dict(text='Precision',
+                     font_size=25),
+    legend=dict(font_size=15))
 
-    def preprocess(self, test_size):
-        X = np.array(self.datafile[['Humidity', 'Pressure (millibars)']])
-        y = np.array(self.datafile['Temperature (C)'])
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size,
-                                                                                random_state=42)
-        # Plot data exploration metrics
-
-    def baseline(self, pp_data):
-        RNN.train(pp_data)
-        # Plot results in subplot
-        Tree.train(pp_data)
-        # Plot results in subplot
-
-    def fit(self):
-        self.model = self.random_forest.fit(self.X_train, self.y_train)
-        # plotting fit data
-        # Saving model
-
-    def predict(self, input_value):
-        if input_value == None:
-            result = self.random_forest.fit(self.X_test)
-        else:
-            result = self.random_forest.fit(np.array([input_value]))
-        return result
-        # Plotting prediction data
-
-    def saving(self):
-        log_dir = 'Model-Graphs&Logs\\' + self.model_name + '\\Logs'
-        metric_dir = 'Model-Graphs&Logs\\' + self.model_name + '\\Metric-Graphs'
-        if not os.path.isfile(log_dir):
-            os.mkdir(log_dir)
-
-        if not os.path.isfile(metric_dir):
-            os.mkdir(metric_dir)
-        return None
-
-
-# Executor
-if __name__ == '__main__':
-    model_instance = catdogModel("CatDog_Model", "data.csv")
-    model_instance.preprocess(0.2)
-    model_instance.fit()
-    print(model_instance.predict(1))
-    print("Accuracy: ", model_instance.model.score(model_instance.X_test, model_instance.y_test))
-
-# Subplotting code
-fig = make_subplots(
-    rows=2, cols=2,
-    subplot_titles=("Plot 1", "Plot 2", "Plot 3", "Plot 4"),
-    specs=[[{}, {}],
-           [{"colspan": 2}, None]]
-)
-
-fig.add_trace(go.Scatter(x=[1, 2, 3], y=[4, 5, 6]),
-              row=1, col=1)
-
-fig.add_trace(go.Scatter(x=[20, 30, 40], y=[50, 60, 70]),
-              row=1, col=2)
-
-fig.add_trace(go.Scatter(x=[300, 400, 500], y=[600, 700, 800]),
-              row=2, col=1)
-
-fig.add_trace(go.Scatter(x=[4000, 5000, 6000], y=[7000, 8000, 9000]),
-              row=2, col=2)
-
-fig.update_layout(height=1000, width=1200,
-                  title_text="Multiple Subplots with Titles")
-
-fig.show()
-
-# print out requirements.txt
-'''
-pipreqs AJISAI-Project\Web-App\
+self.f1_figure.update_layout(
+    font_color='black',
+    title_font_color='black',
+    title=dict(text='F1 Graph',
+               font_size=30),
+    xaxis_title=dict(text='Epochs',
+                     font_size=25),
+    yaxis_title=dict(text='F1 Score',
+                     font_size=25),
+    legend=dict(font_size=15))
 '''
 
-# Useful stuff to know
-'''
-- Guides
-    + Fast-API Templates:
-        > https://www.youtube.com/watch?v=JC5q22g3yQM
+empty_list = []
+row = [2, 4, 6, 8, 10]
+col = [1, 3, 5, 7, 9]
 
-    + ML Model on Fast-API
-        > https://www.youtube.com/watch?v=Mw9etoRz0Ic
+for (r, c) in zip(row, col):
+    empty_list.append([r, c])
 
-    + Docker and Fast-API
-        > https://fastapi.tiangolo.com/deployment/docker/
-        > https://towardsdatascience.com/tensorflow-model-deployment-using-fastapi-docker-4b398251af75
-        > https://medium.com/swlh/python-with-docker-fastapi-c4c304c7a93b
-        > https://www.youtube.com/watch?v=2a5414BsYqw
-        
-    + Metric information
-        > https://neptune.ai/blog/evaluation-metrics-binary-classification
-'''
-
-# Code
-'''
-. MinMaxScaler (sklearn.preprocessing) = Normalizing binary data to 1 or 0
-. OnehotEncoder (sklearn.preprocessing) = One hot encode categorical data
-. random.sample(glob.blob('cat*'), 100) = Grabs 100 files containing word cat
-. shutil.move(source, dest) = Moves files
-. random.choice(os.listdir('example/directory')) = choose random file/image
-. StratifiedShuffleSplit(n_splts=, test_size=) = When you want your data stratified
-. SimpleImputer(strategy= "median") = Handling missing data
-
-
-.vectorizer = CountVectorizer()
- vectorizer.fit_transform(train_x)
- vectorizer.transform(test_x)       #To vectorized words
-
-
-. #Normalize data with tensorflow (Categories and numeric)
- CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
-                   'embark_town', 'alone']
-   NUMERIC_COLUMNS = ['age', 'fare']
-   feature_columns = []
-
-   for feature_name in CATEGORICAL_COLUMNS:
-        # gets a list of all unique values from given feature column
-        vocabulary = dftrain[feature_name].unique()
-        #Maps categorey with unique values
-        feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary))
-
-   for feature_name in NUMERIC_COLUMNS:
-        feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
-'''
-
-# Plotting average image
-'''import os
-import numpy as np
-import matplotlib.pyplot as plt
-from tensorflow.keras.preprocessing import image
-
-# making n X m matrix
-def img2np(path, list_of_filename, size = (64, 64)):
-    # iterating through each file
-    for fn in list_of_filename:
-        fp = path + fn
-        current_image = image.load_img(fp, target_size = size,
-                                       color_mode = 'grayscale')
-        # covert image to a matrix
-        img_ts = image.img_to_array(current_image)
-        # turn that into a vector / 1D array
-        img_ts = [img_ts.ravel()]
-        try:
-            # concatenate different images
-            full_mat = np.concatenate((full_mat, img_ts))
-        except UnboundLocalError:
-            # if not assigned yet, assign one
-            full_mat = img_ts
-    return full_mat
-
-# run it on our folders
-normal_images = img2np(f'{train_dir}/NORMAL/', normal_imgs)
-pnemonia_images = img2np(f'{train_dir}/PNEUMONIA/', pneumo_imgs)
-
-def find_mean_img(full_mat, title, size = (64, 64)):
-    # calculate the average
-    mean_img = np.mean(full_mat, axis = 0)
-    # reshape it back to a matrix
-    mean_img = mean_img.reshape(size)
-    plt.imshow(mean_img, vmin=0, vmax=255, cmap='Greys_r')
-    plt.title(f'Average {title}')
-    plt.axis('off')
-    plt.show()
-    return mean_img
-
-norm_mean = find_mean_img(normal_images, 'NORMAL')
-pneu_mean = find_mean_img(pnemonia_images, 'PNEUMONIA')'''
+for pair in empty_list:
+    print(pair[0])
+    print(pair[1])
+    print('------')
