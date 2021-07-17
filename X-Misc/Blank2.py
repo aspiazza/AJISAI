@@ -56,35 +56,24 @@ self.f1_figure.update_layout(
 
 from icecream import ic
 
-'''
+
 class TestClass:
     def __init__(self):
         self.variable = 1
         self.string = "Andrew"
 
     def printer(self):
-        print("Executed printer()")
+        print("Executed first function")
 
-        class AndrewPrinter:
-            print("Executed andrewPrinter")
+        class AndrewPrinter(TestClass):
+            print("Executed inner class")
+            print(self.string)
 
-            def function_printer(self, outer_class):
-                print(f'Executed function_printer')
-                print(outer_class.self.string)
+            def function_printer(self):
+                print(f'Executed inner class function')
 
-        ap = AndrewPrinter().function_printer(TestClass)
+        ap = AndrewPrinter().function_printer()
         return ap
 
 
-TestClass().printer()'''
-
-
-class Outer:
-    def __init__(self, file_list):
-        self.file_list = file_list
-        self.inner = self.Inner(self)
-
-    class Inner:
-        def __init__(self, outer_parent):
-            print(outer_parent.file_list)
-            pass
+TestClass().printer()

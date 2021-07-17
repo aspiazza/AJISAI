@@ -156,7 +156,7 @@ class DataVisualization:
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
         def row_index_creator(row_size, col_size):
-            row_col_index_list = []  # TODO: Optimize this shit
+            row_col_index_list = []
             row_size -= 1
             col_size += 1
             for row_index in range(col_size):

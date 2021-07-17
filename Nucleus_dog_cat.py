@@ -32,17 +32,19 @@ class CatDogModel:
 
         self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
 
-        class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Turn Model summary into a callback
-            def model_summary_creation(self):
-                with open(f'{self.log_dir}_summary.txt', 'a') as summary_file:
+        class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Test to see if model summary callback works
+            def model_summary_creation(self, log_dir, model):
+                with open(f'{log_dir}_summary.txt', 'a') as summary_file:
                     sys.stdout = summary_file
-                    self.model.summary()
+                    model.summary()
                     summary_file.close()
-        self.model_summary = ModelSummaryCallback().model_summary_creation()
+
+        self.model_summary = ModelSummaryCallback().model_summary_creation(self.log_dir, self.model)
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = [self.metric_csv, self.model_checkpoint, self.model_summary]
+            callback_list = [self.metric_csv, self.model_checkpoint,
+                             self.model_summary]  # TODO: Turn callbacks into sub-function of training
         else:
             callback_list = []
 
