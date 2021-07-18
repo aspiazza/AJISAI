@@ -7,22 +7,25 @@ from icecream import ic
 
 class DataVisualization:
     def __init__(self, training_information, metric_dir):
-        self.metric_dir = metric_dir
-        self.subplot_name_list = []
-        self.figure_xaxes_list = []
-        self.figure_yaxes_list = []
-        self.subplot_list = []
 
+        # If file type is equal to tensorflow history
         if str(type(training_information)) == "<class 'tensorflow.python.keras.callbacks.History'>":
             self.epoch_list = training_information.epoch
             training_information = training_information.history
             self.last_auc_score = training_information['auc'][-1]
             self.val_last_auc_score = training_information['val_auc'][-1]
 
+        # If file type is equal to CSV dataframe
         elif str(type(training_information)) == "<class 'pandas.core.frame.DataFrame'>":
             self.epoch_list = training_information['epoch']
             self.last_auc_score = training_information['auc'].iloc[-1]
             self.val_last_auc_score = training_information['val_auc'].iloc[-1]
+
+        self.metric_dir = metric_dir
+        self.subplot_name_list = []
+        self.figure_xaxes_list = []
+        self.figure_yaxes_list = []
+        self.subplot_list = []
 
         self.accuracy_list = training_information['accuracy']
         self.loss_list = training_information['loss']

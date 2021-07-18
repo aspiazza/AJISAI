@@ -27,24 +27,43 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn()
 
-        self.model_checkpoint = keras.callbacks.ModelCheckpoint(f'F:\\Saved-Models\\{self.version_model_name}.h5',
-                                                                save_best_only=True)
-
-        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
-
-        class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Test to see if model summary callback works
-            def model_summary_creation(self, log_dir, model):
-                with open(f'{log_dir}_summary.txt', 'a') as summary_file:
-                    sys.stdout = summary_file
-                    model.summary()
-                    summary_file.close()
-
-        self.model_summary = ModelSummaryCallback().model_summary_creation(self.log_dir, self.model)
-
     def training(self, callback_bool):
-        if callback_bool:
-            callback_list = [self.metric_csv, self.model_checkpoint,
-                             self.model_summary]  # TODO: Turn callbacks into sub-function of training
+
+        if callback_bool:  # TODO: Test
+            def callbacks():
+                callback_list = []
+
+                def model_checkpoint_callback():
+                    self.model_checkpoint = keras.callbacks.ModelCheckpoint(
+                        f'F:\\Saved-Models\\{self.version_model_name}.h5',
+                        save_best_only=True)
+                    return self.model_checkpoint
+
+                callback_list.append(model_checkpoint_callback())
+
+                def metric_csv_callback():
+                    self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
+                    return self.metric_csv
+
+                callback_list.append(metric_csv_callback())
+
+                def model_summary_callback():
+                    class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Test to see if this works
+                        def model_summary_creation(self, log_dir, model):
+                            with open(f'{log_dir}_summary.txt', 'a') as summary_file:
+                                sys.stdout = summary_file
+                                model.summary()
+                                summary_file.close()
+
+                    self.model_summary = ModelSummaryCallback().model_summary_creation(self.log_dir, self.model)
+                    return self.model_summary
+
+                callback_list.append(model_summary_callback())
+
+                return callback_list
+
+            callback_list = callbacks()
+
         else:
             callback_list = []
 
@@ -62,7 +81,7 @@ class CatDogModel:
         else:
             training_information = self.history
 
-        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir, )
+        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir)
         self.data_visualization.loss_graph()
         self.data_visualization.error_rate_graph()
         self.data_visualization.recall_graph()
@@ -70,9 +89,12 @@ class CatDogModel:
         self.data_visualization.f1_graph()
         self.data_visualization.subplot_creation(context='Training', row_size=3, col_size=2)
 
-    def predict(self):  # TODO: Prediction graphing module and implement more metrics
+    def predict(self):  # TODO: Prediction module
         test_labels = self.test_gen.classes
         print(test_labels)
+
+    def predict_graph(self):  # TODO: Prediction graph
+        pass
 
 
 # Executor

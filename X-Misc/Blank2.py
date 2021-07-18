@@ -53,27 +53,3 @@ self.f1_figure.update_layout(
                      font_size=25),
     legend=dict(font_size=15))
 '''
-
-from icecream import ic
-
-
-class TestClass:
-    def __init__(self):
-        self.variable = 1
-        self.string = "Andrew"
-
-    def printer(self):
-        print("Executed first function")
-
-        class AndrewPrinter(TestClass):
-            print("Executed inner class")
-            print(self.string)
-
-            def function_printer(self):
-                print(f'Executed inner class function')
-
-        ap = AndrewPrinter().function_printer()
-        return ap
-
-
-TestClass().printer()
