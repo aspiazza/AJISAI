@@ -156,15 +156,13 @@ class DataVisualization:
 
     def subplot_creation(self, context, row_size, col_size):
 
-        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
-
-        def row_index_creator(row_size, col_size):
+        def row_column_index_creator(index_row_size, index_col_size):
             row_col_index_list = []
-            row_size -= 1
-            col_size += 1
-            for row_index in range(col_size):
+            index_row_size -= 1
+            index_col_size += 1
+            for row_index in range(index_col_size):
                 row_index += 1
-                for col_index in range(row_size):
+                for col_index in range(index_row_size):
                     col_index += 1
                     row_col_index_list.append([row_index, col_index])
             return row_col_index_list
@@ -175,8 +173,9 @@ class DataVisualization:
                 x_y_axes.append([xaxes, yaxes])
             return x_y_axes
 
-        row_col_index_list = row_index_creator(row_size, col_size)
+        row_col_index_list = row_column_index_creator(row_size, col_size)
         x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
+        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
         for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
             x_axes = x_y_ax[0]

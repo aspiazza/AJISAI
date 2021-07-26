@@ -53,3 +53,18 @@ self.f1_figure.update_layout(
                      font_size=25),
     legend=dict(font_size=15))
 '''
+
+
+def row_column_index_creator(index_row_size, index_col_size):
+    row_col_index_list = []
+    index_row_size -= 1
+    index_col_size += 1
+    for row_index in range(index_col_size):
+        row_index += 1
+        for col_index in range(index_row_size):
+            col_index += 1
+            row_col_index_list.append([row_index, col_index])
+    return row_col_index_list
+
+
+print(row_column_index_creator(6, 8))

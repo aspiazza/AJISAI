@@ -30,7 +30,7 @@ class CatDogModel:
     def training(self, callback_bool):
 
         if callback_bool:  # TODO: Test
-            def callbacks():
+            def callbacks():  # TODO: Move to separate file
                 callback_list = []
 
                 def model_checkpoint_callback():
