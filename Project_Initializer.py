@@ -30,14 +30,14 @@ def make_project(project_name):  # Function to make files and directories
 
 
 def make_webapp(project_name):  # Function to make Web-App files and directories
-    web_app_dir = f'Web-Apps\\Web-App_{project_name}\\'
+    web_app_dir = f'Web-Apps\\Web-App_{project_name}'
     os.mkdir(web_app_dir)
 
-    file_list = [web_app_dir + f'API-{project_name}.py',
-                 web_app_dir + f'Dockerfile-{project_name}.dockerfile',
-                 web_app_dir + f'Predictor-{project_name}.py',
-                 web_app_dir + f'WebPage-{project_name}.html',
-                 web_app_dir + f'style-{project_name}.css']
+    file_list = [f'{web_app_dir}\\API-{project_name}.py',
+                 f'{web_app_dir}\\Dockerfile-{project_name}.dockerfile',
+                 f'{web_app_dir}\\Predictor-{project_name}.py',
+                 f'{web_app_dir}\\WebPage-{project_name}.html',
+                 f'{web_app_dir}\\style-{project_name}.css']
 
     for file in file_list:
         if not os.path.isfile(file):
@@ -49,7 +49,38 @@ def make_webapp(project_name):  # Function to make Web-App files and directories
 def populate_nucleus(project_name):
     with open(f'Nucleus_{project_name}.py', 'a') as nucleus_file:
         nucleus_file.write('''
-''')  # TODO: Create nucleus shell text
+class placeholder:
+    def __init__(self, model_name, version, datafile):
+        self.datafile = datafile
+        self.version_model_name = f'{version}_{model_name}'
+        self.log_dir = f'Model-Graphs&Logs\\\Model-Data_{model_name}\\\Logs\\\{self.version_model_name}'
+        self.metric_dir = f'Model-Graphs&Logs\\\Model-Data_{model_name}\\\Metric-Graphs\\\{self.version_model_name}'
+
+    def preprocess(self):
+        pass
+
+    def model(self):
+        pass
+
+    def training(self):
+        pass
+
+    def graphing(self):
+        pass
+
+    def predict(self):
+        pass
+
+
+# Executor
+if __name__ == '__main__':
+    model_instance = placeholder(model_name=placeholder, version=placeholder, datafile=placeholder)
+    # model_instance.preprocess()
+    # model_instance.model()
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(csv_file=None)
+    # model_instance.predict()
+''')
 
 
 project_name_input = input('Please enter project name: ')
