@@ -2,27 +2,29 @@
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-from icecream import ic
 
 
 class DataVisualization:
     def __init__(self, training_information, metric_dir):
-        self.metric_dir = metric_dir
-        self.subplot_name_list = []
-        self.figure_xaxes_list = []
-        self.figure_yaxes_list = []
-        self.subplot_list = []
 
+        # If file type is equal to tensorflow history
         if str(type(training_information)) == "<class 'tensorflow.python.keras.callbacks.History'>":
             self.epoch_list = training_information.epoch
             training_information = training_information.history
             self.last_auc_score = training_information['auc'][-1]
             self.val_last_auc_score = training_information['val_auc'][-1]
 
+        # If file type is equal to CSV dataframe
         elif str(type(training_information)) == "<class 'pandas.core.frame.DataFrame'>":
             self.epoch_list = training_information['epoch']
             self.last_auc_score = training_information['auc'].iloc[-1]
             self.val_last_auc_score = training_information['val_auc'].iloc[-1]
+
+        self.metric_dir = metric_dir
+        self.subplot_name_list = []
+        self.figure_xaxes_list = []
+        self.figure_yaxes_list = []
+        self.subplot_list = []
 
         self.accuracy_list = training_information['accuracy']
         self.loss_list = training_information['loss']
@@ -153,17 +155,12 @@ class DataVisualization:
 
     def subplot_creation(self, context, row_size, col_size):
 
-        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
-
-        def row_index_creator(row_size, col_size):
-            row_col_index_list = []  # TODO: Optimize this shit
-            row_size -= 1
-            col_size += 1
-            for row_index in range(col_size):
-                row_index += 1
-                for col_index in range(row_size):
-                    col_index += 1
-                    row_col_index_list.append([row_index, col_index])
+        def row_column_index_creator(index_row_size, index_col_size):
+            row_col_index_list = []
+            index_row_size += 1
+            index_col_size += 1
+            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column
+             in range(1, index_col_size)]
             return row_col_index_list
 
         def axes_title_creator(xaxes_list, yaxes_list):
@@ -172,8 +169,9 @@ class DataVisualization:
                 x_y_axes.append([xaxes, yaxes])
             return x_y_axes
 
-        row_col_index_list = row_index_creator(row_size, col_size)
+        row_col_index_list = row_column_index_creator(row_size, col_size)
         x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
+        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
         for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
             x_axes = x_y_ax[0]

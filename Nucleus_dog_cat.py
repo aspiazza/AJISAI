@@ -1,7 +1,7 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
-from keras.callbacks import CSVLogger, Callback
+from Pipeline.Callbacks import Callbacks_dog_cat as CbDogCat
 import keras
 import tensorflow as tf
 import sys
@@ -27,22 +27,14 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn()
 
-        self.model_checkpoint = keras.callbacks.ModelCheckpoint(f'F:\\Saved-Models\\{self.version_model_name}.h5',
-                                                                save_best_only=True)
-
-        self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
-
-        class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Turn Model summary into a callback
-            def model_summary_creation(self):
-                with open(f'{self.log_dir}_summary.txt', 'a') as summary_file:
-                    sys.stdout = summary_file
-                    self.model.summary()
-                    summary_file.close()
-        self.model_summary = ModelSummaryCallback().model_summary_creation()
-
     def training(self, callback_bool):
+
         if callback_bool:
-            callback_list = [self.metric_csv, self.model_checkpoint, self.model_summary]
+            callback_list = CbDogCat.callbacks(self.version_model_name, self.log_dir)
+
+            # Custom callback cannot be appended to callback list so is simply called
+            CbDogCat.model_summary_callback(self.log_dir, self.model)
+
         else:
             callback_list = []
 
@@ -60,7 +52,7 @@ class CatDogModel:
         else:
             training_information = self.history
 
-        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir, )
+        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir)
         self.data_visualization.loss_graph()
         self.data_visualization.error_rate_graph()
         self.data_visualization.recall_graph()
@@ -68,9 +60,12 @@ class CatDogModel:
         self.data_visualization.f1_graph()
         self.data_visualization.subplot_creation(context='Training', row_size=3, col_size=2)
 
-    def predict(self):  # TODO: Prediction graphing module and implement more metrics
+    def predict(self):  # TODO: Prediction module
         test_labels = self.test_gen.classes
         print(test_labels)
+
+    def predict_graph(self):  # TODO: Prediction graph
+        pass
 
 
 # Executor

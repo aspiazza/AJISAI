@@ -17,6 +17,7 @@ def make_project(project_name):  # Function to make files and directories
                  f'Data-Exploration\\Explore_{project_name}.py',
                  f'Nucleus_{project_name}.py',
                  f'Pipeline\\Baseline_Models\\Baseline_{project_name}.py',
+                 f'Pipeline\\Callbacks\\Callbacks_{project_name}.py',
                  f'Pipeline\\Data_Visual\\Data-Visual_{project_name}.py',
                  f'Pipeline\\Models\\Model_{project_name}.py',
                  f'Pipeline\\Preprocess\\Preprocess_{project_name}.py']
