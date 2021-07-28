@@ -2,7 +2,6 @@
 import plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-from icecream import ic
 
 
 class DataVisualization:
@@ -158,13 +157,10 @@ class DataVisualization:
 
         def row_column_index_creator(index_row_size, index_col_size):
             row_col_index_list = []
-            index_row_size -= 1
+            index_row_size += 1
             index_col_size += 1
-            for row_index in range(index_col_size):
-                row_index += 1
-                for col_index in range(index_row_size):
-                    col_index += 1
-                    row_col_index_list.append([row_index, col_index])
+            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column
+             in range(1, index_col_size)]
             return row_col_index_list
 
         def axes_title_creator(xaxes_list, yaxes_list):

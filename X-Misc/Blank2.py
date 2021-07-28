@@ -1,58 +1,4 @@
-'''self.loss_graph.update_layout(
-    font_color='black',
-    title_font_color='black',
-    title=dict(text='Loss Graph',
-               font_size=30),
-    xaxis_title=dict(text='Epochs',
-                     font_size=25),
-    yaxis_title=dict(text='Loss',
-                     font_size=25),
-    legend=dict(font_size=15))
-
-self.error_rate_figure.update_layout(
-    font_color='black',
-    title_font_color='black',
-    title=dict(text='Error Rate Graph',
-               font_size=30),
-    xaxis_title=dict(text='Epochs',
-                     font_size=25),
-    yaxis_title=dict(text='Error Rate',
-                     font_size=25),
-    legend=dict(font_size=15))
-
-self.recall_figure.update_layout(
-    font_color='black',
-    title_font_color='black',
-    title=dict(text='Recall Graph',
-               font_size=30),
-    xaxis_title=dict(text='Epochs',
-                     font_size=25),
-    yaxis_title=dict(text='Recall',
-                     font_size=25),
-    legend=dict(font_size=15))
-
-self.precision_figure.update_layout(
-    font_color='black',
-    title_font_color='black',
-    title=dict(text='Precision Graph',
-               font_size=30),
-    xaxis_title=dict(text='Epochs',
-                     font_size=25),
-    yaxis_title=dict(text='Precision',
-                     font_size=25),
-    legend=dict(font_size=15))
-
-self.f1_figure.update_layout(
-    font_color='black',
-    title_font_color='black',
-    title=dict(text='F1 Graph',
-               font_size=30),
-    xaxis_title=dict(text='Epochs',
-                     font_size=25),
-    yaxis_title=dict(text='F1 Score',
-                     font_size=25),
-    legend=dict(font_size=15))
-'''
+from icecream import ic
 
 
 def row_column_index_creator(index_row_size, index_col_size):
@@ -67,4 +13,14 @@ def row_column_index_creator(index_row_size, index_col_size):
     return row_col_index_list
 
 
-print(row_column_index_creator(6, 8))
+def row_column_index_creator_v2(index_row_size, index_col_size):
+    row_col_index_list = []
+    index_row_size += 1
+    index_col_size += 1
+    [row_col_index_list.append([row_index, col_index]) for row_index in range(1, index_row_size) for col_index in
+     range(1, index_col_size)]
+    return row_col_index_list
+
+
+ic(row_column_index_creator(4, 3))
+ic(row_column_index_creator_v2(4, 3))

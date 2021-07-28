@@ -1,7 +1,7 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
-from keras.callbacks import CSVLogger, Callback
+from Pipeline.Callbacks import Callbacks_dog_cat as CbDogCat
 import keras
 import tensorflow as tf
 import sys
@@ -29,40 +29,11 @@ class CatDogModel:
 
     def training(self, callback_bool):
 
-        if callback_bool:  # TODO: Test
-            def callbacks():  # TODO: Move to separate file
-                callback_list = []
+        if callback_bool:
+            callback_list = CbDogCat.callbacks(self.version_model_name, self.log_dir)
 
-                def model_checkpoint_callback():
-                    self.model_checkpoint = keras.callbacks.ModelCheckpoint(
-                        f'F:\\Saved-Models\\{self.version_model_name}.h5',
-                        save_best_only=True)
-                    return self.model_checkpoint
-
-                callback_list.append(model_checkpoint_callback())
-
-                def metric_csv_callback():
-                    self.metric_csv = CSVLogger(f'{self.log_dir}_training_metrics.csv', append=True, separator=',')
-                    return self.metric_csv
-
-                callback_list.append(metric_csv_callback())
-
-                def model_summary_callback():
-                    class ModelSummaryCallback(keras.callbacks.Callback):  # TODO: Test to see if this works
-                        def model_summary_creation(self, log_dir, model):
-                            with open(f'{log_dir}_summary.txt', 'a') as summary_file:
-                                sys.stdout = summary_file
-                                model.summary()
-                                summary_file.close()
-
-                    self.model_summary = ModelSummaryCallback().model_summary_creation(self.log_dir, self.model)
-                    return self.model_summary
-
-                callback_list.append(model_summary_callback())
-
-                return callback_list
-
-            callback_list = callbacks()
+            # Custom callback cannot be appended to callback list so is simply called
+            CbDogCat.model_summary_callback(self.log_dir, self.model)
 
         else:
             callback_list = []
