@@ -2,9 +2,6 @@ from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as CbDogCat
-import keras
-import tensorflow as tf
-import sys
 import pandas as pd
 from icecream import ic
 
@@ -46,7 +43,7 @@ class CatDogModel:
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics
-    def training_graphs(self, csv_file):
+    def graphing(self, csv_file, context):
         if csv_file is not None:
             training_information = pd.read_csv(csv_file)
         else:
@@ -58,14 +55,11 @@ class CatDogModel:
         self.data_visualization.recall_graph()
         self.data_visualization.precision_graph()
         self.data_visualization.f1_graph()
-        self.data_visualization.subplot_creation(context='Training', row_size=3, col_size=2)
+        self.data_visualization.subplot_creation(context=context, row_size=3, col_size=2)
 
     def predict(self):  # TODO: Prediction module
-        test_labels = self.test_gen.classes
-        print(test_labels)
-
-    def predict_graph(self):  # TODO: Prediction graph
-        pass
+        self.test_history = self.model.predict(self.test_gen)
+        # test_labels = self.test_gen.classes
 
 
 # Executor
@@ -75,5 +69,7 @@ if __name__ == '__main__':
     model_instance.preprocess()
     model_instance.model()
     model_instance.training(callback_bool=True)
-    # model_instance.training_graphs(csv_file='C:\\Users\\17574\\PycharmProjects\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\dog_cat_13-48-44_training_metrics.csv')
+    # model_instance.graphing(csv_file=None, context='Training')
+    model_instance.predict()
+    # model_instance.graphing(csv_file=None, context='Testing')
     # model_instance.predict()

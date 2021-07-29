@@ -1,4 +1,4 @@
-from keras.callbacks import CSVLogger, Callback
+from keras.callbacks import CSVLogger
 import keras
 import sys
 
