@@ -26,7 +26,7 @@ def callbacks(version_model_name, log_dir):
 def model_summary_callback(log_dir, model):
     class ModelSummaryCallback:
         def model_summary_creation(self):
-            with open(f'{log_dir}_summary.txt', 'a') as summary_file:
+            with open(f'{log_dir}_summary.txt', 'w') as summary_file:
                 sys.stdout = summary_file
                 model.summary()
                 summary_file.close()
