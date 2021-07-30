@@ -39,7 +39,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=1,
+                                      epochs=20,
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics
@@ -58,8 +58,13 @@ class CatDogModel:
         self.data_visualization.subplot_creation(context=context, row_size=3, col_size=2)
 
     def predict(self):  # TODO: Prediction module
-        self.test_history = self.model.predict(self.test_gen)
-        # test_labels = self.test_gen.classes
+        self.prediction = self.model.predict(self.test_gen,
+                                             batch_size=20)  # TODO: Add ability to use saved model weights
+        ic(self.model.predict_classes(self.test_gen))
+        ic(self.model.predict_proba(self.test_gen))
+        ic(self.prediction)
+        test_labels = self.test_gen.classes
+        ic(test_labels)
 
 
 # Executor
@@ -68,7 +73,7 @@ if __name__ == '__main__':
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
     model_instance.model()
-    model_instance.training(callback_bool=True)
+    model_instance.training(callback_bool=False)
     # model_instance.graphing(csv_file=None, context='Training')
     model_instance.predict()
     # model_instance.graphing(csv_file=None, context='Testing')
