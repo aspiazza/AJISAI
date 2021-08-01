@@ -153,7 +153,7 @@ class DataVisualization:
         self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
-    def subplot_creation(self, context, row_size, col_size):
+    def subplot_creation(self, row_size, col_size):
 
         def row_column_index_creator(index_row_size, index_col_size):
             row_col_index_list = []
@@ -186,5 +186,5 @@ class DataVisualization:
                 metric_subplot.append_trace(trace, row=row_index, col=col_index)
 
         plotly.offline.plot(metric_subplot,
-                            filename=f'{self.metric_dir}_{context}_metrics.html',
+                            filename=f'{self.metric_dir}_metrics.html',
                             auto_open=False)

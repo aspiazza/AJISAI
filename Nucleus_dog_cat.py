@@ -22,7 +22,7 @@ class CatDogModel:
         self.test_gen = procDogCat.test_image_gen(self.datafile)
 
     def model(self):
-        self.model = modelDogCat.seq_maxpool_cnn()
+        self.model = modelDogCat.seq_maxpool_cnn(self.metric_dir)
 
     def training(self, callback_bool):
         if callback_bool:
@@ -39,6 +39,21 @@ class CatDogModel:
                                       epochs=20,
                                       callbacks=callback_list)
 
+    # TODO: Implement more metrics
+    def graphing(self, csv_file):
+        if csv_file is not None:  # If you want to use a CSV file to create graphs
+            metric_data = pd.read_csv(csv_file)
+        else:
+            metric_data = self.history
+
+        self.data_visualization = datavizDogCat.DataVisualization(metric_data, self.metric_dir)
+        self.data_visualization.loss_graph()
+        self.data_visualization.error_rate_graph()
+        self.data_visualization.recall_graph()
+        self.data_visualization.precision_graph()
+        self.data_visualization.f1_graph()
+        self.data_visualization.subplot_creation(row_size=3, col_size=2)
+
     def predict(self, saved_weights):  # TODO: Prediction module
         if saved_weights is not None:
             self.model = self.model.load_weights(saved_weights)  # Directory of saved weights
@@ -47,29 +62,14 @@ class CatDogModel:
 
         self.prediction_history = self.model.predict(self.test_gen,
                                                      batch_size=20)
+        # Tells you the indices of your classes
+        # print(self.test_gen.class_indices)
 
-    # TODO: Implement more metrics
-    def graphing(self, csv_file, context):
-        if csv_file is not None:  # If you want to use a CSV file to create graphs
-            metric_data = pd.read_csv(csv_file)
-        else:
-            pass
+        # Generator?
+        # test_imgs, test_labels = next(self.test_gen)
 
-        if context == 'Training':  # Context should be either 'Training' or 'Testing'
-            metric_data = self.history
-        elif context == 'Testing':  # TODO: METRICS EXTRACTED FROM PREDICTION HISTORY ARE NOT THE SAME AS TRAINING FUK
-            metric_data = self.prediction_history
-        else:
-            print('Context for graphing function is not Training or Testing')
-
-        self.data_visualization = datavizDogCat.DataVisualization(metric_data, self.metric_dir)
-        self.data_visualization.loss_graph()
-        self.data_visualization.error_rate_graph()
-        self.data_visualization.recall_graph()
-        self.data_visualization.precision_graph()
-        self.data_visualization.f1_graph()
-        self.data_visualization.subplot_creation(context=context, row_size=3, col_size=2)
-
+        # IDK
+        # self.test_gen.classes
 
 # Executor
 if __name__ == '__main__':
@@ -78,7 +78,6 @@ if __name__ == '__main__':
     model_instance.preprocess()
     model_instance.model()
     model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file=None, context='Training')
-    model_instance.predict(saved_weights=None)
-    model_instance.graphing(csv_file=None, context='Testing')
+    model_instance.graphing(csv_file=None)
+    # model_instance.predict(saved_weights=None)
     # model_instance.predict()
