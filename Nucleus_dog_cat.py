@@ -60,8 +60,7 @@ class CatDogModel:
         else:
             pass
 
-        self.prediction_history = self.model.predict(self.test_gen,
-                                                     batch_size=20)
+        self.prediction_history = self.model.predict(self.test_gen, batch_size=20)
         # Tells you the indices of your classes
         # print(self.test_gen.class_indices)
 
