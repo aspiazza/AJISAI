@@ -5,7 +5,7 @@ from keras.optimizers import RMSprop
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 
 
-def seq_maxpool_cnn(metric_dir):
+def seq_maxpool_cnn(log_dir):
     model_name = 'seq_maxpool_cnn'
     model = keras.Sequential([
         keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(150, 150, 3)),
@@ -19,7 +19,7 @@ def seq_maxpool_cnn(metric_dir):
         keras.layers.Dense(1, activation='sigmoid')],
         name=model_name)
 
-    plot_model(model, to_file=f'{metric_dir}_{model_name}.png')  # TODO: Test to see if this works
+    plot_model(model, to_file=f'{log_dir}_{model_name}.png')
 
     model.compile(optimizer=RMSprop(lr=0.001),
                   loss='binary_crossentropy',

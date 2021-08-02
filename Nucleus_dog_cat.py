@@ -2,6 +2,7 @@ from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as CbDogCat
+from keras.models import load_model
 import pandas as pd
 from icecream import ic
 
@@ -22,7 +23,7 @@ class CatDogModel:
         self.test_gen = procDogCat.test_image_gen(self.datafile)
 
     def model(self):
-        self.model = modelDogCat.seq_maxpool_cnn(self.metric_dir)
+        self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
     def training(self, callback_bool):
         if callback_bool:
@@ -36,7 +37,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=20,
+                                      epochs=25,
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics
@@ -56,27 +57,30 @@ class CatDogModel:
 
     def predict(self, saved_weights):  # TODO: Prediction module
         if saved_weights is not None:
-            self.model = self.model.load_weights(saved_weights)  # Directory of saved weights
+            self.model = load_model(saved_weights)  # Directory of saved weights
         else:
             pass
 
-        self.prediction_history = self.model.predict(self.test_gen, batch_size=20)
+        print(self.model.evaluate(self.test_gen, batch_size=20))
         # Tells you the indices of your classes
-        # print(self.test_gen.class_indices)
+        print(self.test_gen.class_indices)
 
-        # Generator?
-        # test_imgs, test_labels = next(self.test_gen)
+
+'''        # Generator?
+        test_imgs, test_labels = next(self.test_gen)
+        ic(test_imgs)
+        ic(test_labels)
 
         # IDK
-        # self.test_gen.classes
+        print(self.test_gen.classes)'''
 
 # Executor
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    model_instance.model()
-    model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file=None)
-    # model_instance.predict(saved_weights=None)
+    # model_instance.model()
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(csv_file=None)
+    model_instance.predict(saved_weights='F:\\Saved-Models\\First_Generation_dog_cat.h5')
     # model_instance.predict()
