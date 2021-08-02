@@ -2,9 +2,7 @@ from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as CbDogCat
-import keras
-import tensorflow as tf
-import sys
+from keras.models import load_model
 import pandas as pd
 from icecream import ic
 
@@ -25,16 +23,13 @@ class CatDogModel:
         self.test_gen = procDogCat.test_image_gen(self.datafile)
 
     def model(self):
-        self.model = modelDogCat.seq_maxpool_cnn()
+        self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
     def training(self, callback_bool):
-
         if callback_bool:
             callback_list = CbDogCat.callbacks(self.version_model_name, self.log_dir)
-
             # Custom callback cannot be appended to callback list so is simply called
             CbDogCat.model_summary_callback(self.log_dir, self.model)
-
         else:
             callback_list = []
 
@@ -42,38 +37,50 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=1,
+                                      epochs=25,
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics
-    def training_graphs(self, csv_file):
-        if csv_file is not None:
-            training_information = pd.read_csv(csv_file)
+    def graphing(self, csv_file):
+        if csv_file is not None:  # If you want to use a CSV file to create graphs
+            metric_data = pd.read_csv(csv_file)
         else:
-            training_information = self.history
+            metric_data = self.history
 
-        self.data_visualization = datavizDogCat.DataVisualization(training_information, self.metric_dir)
+        self.data_visualization = datavizDogCat.DataVisualization(metric_data, self.metric_dir)
         self.data_visualization.loss_graph()
         self.data_visualization.error_rate_graph()
         self.data_visualization.recall_graph()
         self.data_visualization.precision_graph()
         self.data_visualization.f1_graph()
-        self.data_visualization.subplot_creation(context='Training', row_size=3, col_size=2)
+        self.data_visualization.subplot_creation(row_size=3, col_size=2)
 
-    def predict(self):  # TODO: Prediction module
-        test_labels = self.test_gen.classes
-        print(test_labels)
+    def predict(self, saved_weights):  # TODO: Prediction module
+        if saved_weights is not None:
+            self.model = load_model(saved_weights)  # Directory of saved weights
+        else:
+            pass
 
-    def predict_graph(self):  # TODO: Prediction graph
-        pass
+        print(self.model.evaluate(self.test_gen, batch_size=20))
+        # Tells you the indices of your classes
+        print(self.test_gen.class_indices)
 
+
+'''        # Generator?
+        test_imgs, test_labels = next(self.test_gen)
+        ic(test_imgs)
+        ic(test_labels)
+
+        # IDK
+        print(self.test_gen.classes)'''
 
 # Executor
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    model_instance.model()
-    model_instance.training(callback_bool=True)
-    # model_instance.training_graphs(csv_file='C:\\Users\\17574\\PycharmProjects\Kraken\\AJISAI-Project\\Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\dog_cat_13-48-44_training_metrics.csv')
+    # model_instance.model()
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(csv_file=None)
+    model_instance.predict(saved_weights='F:\\Saved-Models\\First_Generation_dog_cat.h5')
     # model_instance.predict()

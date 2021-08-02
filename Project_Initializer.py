@@ -46,7 +46,7 @@ def make_webapp(project_name):  # Function to make Web-App files and directories
             continue
 
 
-def populate_nucleus(project_name):
+def populate_nucleus(project_name):  # TODO: Update as Nucleus gets more accurate to final product
     with open(f'Nucleus_{project_name}.py', 'a') as nucleus_file:
         nucleus_file.write('''
 class placeholder:
@@ -61,11 +61,11 @@ class placeholder:
 
     def model(self):
         pass
-
-    def training(self):
+        
+    def graphing(self):
         pass
 
-    def graphing(self):
+    def training(self):
         pass
 
     def predict(self):
