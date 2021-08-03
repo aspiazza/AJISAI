@@ -40,39 +40,55 @@ class CatDogModel:
                                       epochs=25,
                                       callbacks=callback_list)
 
-    # TODO: Implement more metrics
+    # TODO: Implement more metrics (Confusion Matrix, ROC Curve)
     def graphing(self, csv_file):
         if csv_file is not None:  # If you want to use a CSV file to create graphs
             metric_data = pd.read_csv(csv_file)
         else:
             metric_data = self.history
 
-        self.data_visualization = datavizDogCat.DataVisualization(metric_data, self.metric_dir)
-        self.data_visualization.loss_graph()
-        self.data_visualization.error_rate_graph()
-        self.data_visualization.recall_graph()
-        self.data_visualization.precision_graph()
-        self.data_visualization.f1_graph()
-        self.data_visualization.subplot_creation(row_size=3, col_size=2)
+        self.training_data_visualization = datavizDogCat.DataVisualization(metric_data, self.metric_dir)
+        self.training_data_visualization.loss_graph()
+        self.training_data_visualization.error_rate_graph()
+        self.training_data_visualization.recall_graph()
+        self.training_data_visualization.precision_graph()
+        self.training_data_visualization.f1_graph()
+        self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
 
-    def predict(self, saved_weights):  # TODO: Prediction module
+    def evaluate(self, saved_weights):  # TODO: Testing functions
         if saved_weights is not None:
             self.model = load_model(saved_weights)  # Directory of saved weights
         else:
             pass
 
-        print(self.model.evaluate(self.test_gen, batch_size=20))
-        # Tells you the indices of your classes
-        print(self.test_gen.class_indices)
+        evaluation_results = self.model.evaluate(self.test_gen, batch_size=20)
+
+        self.evaluateion_data_visualization = datavizDogCat.DataVisualization(evaluation_results, self.metric_dir)
+        # self.evaluateion_data_visualization.
+        # self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
+
+        # print(f'Evaluation results: {evaluation_results}')
+
+    def predict(self, saved_weights, prediction_sample_size):
+        if saved_weights is not None:
+            self.model = load_model(saved_weights)
+        else:
+            pass
+
+        print(self.model.predict(self.test_gen[:prediction_sample_size]))
 
 
-'''        # Generator?
-        test_imgs, test_labels = next(self.test_gen)
-        ic(test_imgs)
-        ic(test_labels)
+'''
+# Generator?
+test_imgs, test_labels = next(self.test_gen)
+ic(test_imgs)
+ic(test_labels)
+# prints labels
+print(self.test_gen.classes)
+# IDK
+print(self.test_gen.classes)'''
 
-        # IDK
-        print(self.test_gen.classes)'''
+# print(self.test_gen.class_indices)
 
 # Executor
 if __name__ == '__main__':
@@ -82,5 +98,5 @@ if __name__ == '__main__':
     # model_instance.model()
     # model_instance.training(callback_bool=True)
     # model_instance.graphing(csv_file=None)
-    model_instance.predict(saved_weights='F:\\Saved-Models\\First_Generation_dog_cat.h5')
+    model_instance.evaluate(saved_weights='F:\\Saved-Models\\First_Generation_dog_cat.h5')
     # model_instance.predict()

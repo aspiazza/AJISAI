@@ -153,6 +153,9 @@ class DataVisualization:
         self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
+    #def confusion_matrx(self):
+
+
     def subplot_creation(self, row_size, col_size):
 
         def row_column_index_creator(index_row_size, index_col_size):

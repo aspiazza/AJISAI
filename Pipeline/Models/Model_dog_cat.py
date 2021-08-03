@@ -3,6 +3,7 @@ import keras
 from keras.utils import plot_model
 from keras.optimizers import RMSprop
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
+import tensorflow_addons as tfa
 
 
 def seq_maxpool_cnn(log_dir):
@@ -24,7 +25,7 @@ def seq_maxpool_cnn(log_dir):
     model.compile(optimizer=RMSprop(lr=0.001),
                   loss='binary_crossentropy',
                   metrics=['accuracy', 'AUC', 'Recall', 'Precision',
-                           Fp(), Tn(), Fn(), Tp()])
+                           Fp(), Tn(), Fn(), Tp(), tfa.metrics.RSquare()])  # TODO: Test metric
     return model
 
 # Can add multiple models

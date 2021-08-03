@@ -148,6 +148,6 @@ utilized in this project:
 
 ### Graph of ML Web-App Creation Pipeline
 
-![Nucleus Logic](X-Pics/Nucleus.png)
+![Nucleus Logic](X-Misc/Nucleus.png)
 
-![Web App Logic](X-Pics/WebApp.png)
+![Web App Logic](X-Misc/WebApp.png)
