@@ -25,7 +25,7 @@ def seq_maxpool_cnn(log_dir):
     model.compile(optimizer=RMSprop(lr=0.001),
                   loss='binary_crossentropy',
                   metrics=['accuracy', 'AUC', 'Recall', 'Precision',
-                           Fp(), Tn(), Fn(), Tp(), tfa.metrics.RSquare()])  # TODO: Test metric
+                           Fp(), Tn(), Fn(), Tp()])  # TODO: Test metric tfa.metrics.RSquare()
     return model
 
 # Can add multiple models

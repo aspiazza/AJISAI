@@ -21,7 +21,6 @@ class CatDogModel:
         self.train_gen = procDogCat.train_image_gen(self.datafile)
         self.valid_gen = procDogCat.valid_image_gen(self.datafile)
         self.test_gen = procDogCat.test_image_gen(self.datafile)
-
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
@@ -29,7 +28,6 @@ class CatDogModel:
         if callback_bool:
             callback_list = CbDogCat.callbacks(self.version_model_name, self.log_dir)
             # Custom callback cannot be appended to callback list so is simply called
-            ic(self.model)
             CbDogCat.model_summary_callback(self.log_dir, self.model)
         else:
             callback_list = []
@@ -38,7 +36,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=25,
+                                      epochs=2,
                                       callbacks=callback_list)
 
     # TODO: Implement more metrics (Confusion Matrix, ROC/PR Curve)
@@ -96,7 +94,7 @@ if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    # model_instance.model()
+    model_instance.model()
     model_instance.training(callback_bool=True)
     # model_instance.graphing(csv_file=None)
     # model_instance.evaluate(saved_weights='F:\\Saved-Models\\First_Generation_dog_cat.h5')

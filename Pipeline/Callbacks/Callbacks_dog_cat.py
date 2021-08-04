@@ -1,7 +1,6 @@
 from keras.callbacks import CSVLogger
 import keras
 import sys
-from icecream import ic
 
 
 def callbacks(version_model_name, log_dir):
@@ -28,7 +27,6 @@ def model_summary_callback(log_dir, model):
     class ModelSummaryCallback:
         def model_summary_creation(self):
             with open(f'{log_dir}_summary.txt', 'w') as summary_file:
-                ic(model)
                 sys.stdout = summary_file
                 model.summary()
                 summary_file.close()
