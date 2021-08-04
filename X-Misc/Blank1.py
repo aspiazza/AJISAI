@@ -1,29 +1,3 @@
-# AJISAI NOTES
-
-# print out requirements.txt
-'''
-pipreqs AJISAI-Project\Web-App\
-'''
-
-# Useful stuff to know
-'''
-- Guides
-    + Fast-API Templates:
-        > https://www.youtube.com/watch?v=JC5q22g3yQM
-
-    + ML Model on Fast-API
-        > https://www.youtube.com/watch?v=Mw9etoRz0Ic
-
-    + Docker and Fast-API
-        > https://fastapi.tiangolo.com/deployment/docker/
-        > https://towardsdatascience.com/tensorflow-model-deployment-using-fastapi-docker-4b398251af75
-        > https://medium.com/swlh/python-with-docker-fastapi-c4c304c7a93b
-        > https://www.youtube.com/watch?v=2a5414BsYqw
-
-    + Metric information
-        > https://neptune.ai/blog/evaluation-metrics-binary-classification
-'''
-
 # Code
 '''
 . MinMaxScaler (sklearn.preprocessing) = Normalizing binary data to 1 or 0
@@ -54,10 +28,11 @@ pipreqs AJISAI-Project\Web-App\
 
    for feature_name in NUMERIC_COLUMNS:
         feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
-'''
 
+''''''
 # Plotting average image
-'''import os
+
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing import image
@@ -97,4 +72,34 @@ def find_mean_img(full_mat, title, size = (64, 64)):
     return mean_img
 
 norm_mean = find_mean_img(normal_images, 'NORMAL')
-pneu_mean = find_mean_img(pnemonia_images, 'PNEUMONIA')'''
+pneu_mean = find_mean_img(pnemonia_images, 'PNEUMONIA')
+'''
+
+
+import keras
+
+import optuna
+
+# 1. Define an objective function to be maximized.
+def objective(trial):
+    model = Sequential()
+
+    # 2. Suggest values of the hyperparameters using a trial object.
+    model.add(
+        Conv2D(filters=trial.suggest_categorical('filters', [32, 64]),
+               kernel_size=trial.suggest_categorical('kernel_size', [3, 5]),
+               strides=trial.suggest_categorical('strides', [1, 2]),
+               activation=trial.suggest_categorical('activation', ['relu', 'linear']),
+               input_shape=input_shape))
+    model.add(Flatten())
+    model.add(Dense(CLASSES, activation='softmax'))
+
+    # We compile our model with a sampled learning rate.
+    lr = trial.suggest_loguniform('lr', 1e-5, 1e-1)
+    model.compile(loss='sparse_categorical_crossentropy', optimizer=RMSprop(lr=lr), metrics=['accuracy'])
+    ...
+    return accuracy
+
+# 3. Create a study object and optimize the objective function.
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=100)

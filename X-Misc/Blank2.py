@@ -3,7 +3,7 @@ from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from icecream import ic
 
 
-def evaluate(saved_weights):  # TODO: Testing functions
+def evaluate(saved_weights):
     model = load_model(saved_weights)  # Directory of saved weights
 
     test_gen = procDogCat.test_image_gen('F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')

@@ -1,7 +1,4 @@
 . Confusion Matrix
-. False Positive Rate | Fall-out
-. False Negative Rate
-. True Negative Rate | Specificity
 . Negative Predictive Value
 . False Discovery Rate
 . F Beta Score
@@ -24,3 +21,37 @@
 We do not want to miss any fraud transactions. Therefore, we want False-Negative to be as low as possible. In these situations, we can compromise with the low precision, but recall should be high.
 
 In the detection of spam mail, it is okay if any spam mail remains undetected (false negative), but what if we miss any critical mail because it is classified as spam (false positive). In this situation, False Positive should be as low as possible.
+
+
+# AJISAI NOTES
+
+print out requirements.txt:
+pipreqs AJISAI-Project\Web-App\
+
+- Guides
+    + Fast-API Templates:
+        > https://www.youtube.com/watch?v=JC5q22g3yQM
+
+    + ML Model on Fast-API
+        > https://www.youtube.com/watch?v=Mw9etoRz0Ic
+
+    + Docker and Fast-API
+        > https://fastapi.tiangolo.com/deployment/docker/
+        > https://towardsdatascience.com/tensorflow-model-deployment-using-fastapi-docker-4b398251af75
+        > https://medium.com/swlh/python-with-docker-fastapi-c4c304c7a93b
+        > https://www.youtube.com/watch?v=2a5414BsYqw
+
+    + ML Web App with Flask
+        > https://towardsdatascience.com/image-classification-of-pcbs-and-its-web-application-flask-c2b26039924a
+
+    + Metric information
+        > https://neptune.ai/blog/evaluation-metrics-binary-classification
+
+    + Hyperparameter Tuning
+        > https://towardsdatascience.com/why-is-everyone-at-kaggle-obsessed-with-optuna-for-hyperparameter-tuning-7608fdca337c
+
+    + Graphs
+        > https://towardsdatascience.com/how-did-i-classify-50-chart-types-by-purpose-a6b0aa5b812d
+
+    + Generators
+        > https://towardsdatascience.com/how-to-use-yield-in-python-5f1fbb864f94

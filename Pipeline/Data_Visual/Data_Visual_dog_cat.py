@@ -4,7 +4,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 
-class DataVisualization:
+class TrainingDataVisualization:
     def __init__(self, metric_data, metric_dir):
 
         # If file type is equal to tensorflow history
@@ -153,8 +153,9 @@ class DataVisualization:
         self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
-    #def confusion_matrx(self):
-
+    def confusion_matrix(self):
+        confusion_plots = []
+        pass
 
     def subplot_creation(self, row_size, col_size):
 
