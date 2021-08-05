@@ -9,6 +9,9 @@ from icecream import ic
 
 # TODO: Clean code, add comments
 # TODO: Use Numba somehow
+# TODO: Use Mermaid
+# TODO: Add in learning rate schedule callback
+# TODO: Create cheatsheet for ML model building
 # Model class
 class CatDogModel:
     def __init__(self, model_name, version, datafile):
@@ -21,12 +24,13 @@ class CatDogModel:
         self.train_gen = procDogCat.train_image_gen(self.datafile)
         self.valid_gen = procDogCat.valid_image_gen(self.datafile)
         self.test_gen = procDogCat.test_image_gen(self.datafile)
+
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
     def training(self, callback_bool):  # TODO: Research and potentially incorporate Optuna?
         if callback_bool:
-            callback_list = CbDogCat.callbacks(self.version_model_name, self.log_dir)
+            callback_list = CbDogCat.training_callbacks(self.version_model_name, self.log_dir)
             # Custom callback cannot be appended to callback list so is simply called
             CbDogCat.model_summary_callback(self.log_dir, self.model)
         else:
@@ -54,15 +58,23 @@ class CatDogModel:
         self.training_data_visualization.f1_graph()
         self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
 
-    def evaluate(self, saved_weights):  # TODO: Implement graphing and get more information
+    # TODO: Implement more metrics
+    def evaluate(self, saved_weights, callback_bool):  # TODO: Implement graphing by grabbing eval history
         if saved_weights is not None:
             self.model = load_model(saved_weights)  # Directory of saved weights
         else:
             pass
 
-        evaluation_results = self.model.evaluate(self.test_gen, batch_size=20)
+        if callback_bool:
+            callback_list = CbDogCat.evaluation_callbacks(self.version_model_name)
+        else:
+            callback_list = []
 
-        self.evaluateion_data_visualization = datavizDogCat.TrainingDataVisualization(evaluation_results, self.metric_dir)
+        evaluation_results = self.model.evaluate(self.test_gen,
+                                                 batch_size=20,
+                                                 callbacks=callback_list)
+
+        # self.evaluateion_data_visualization = datavizDogCat.TrainingDataVisualization(evaluation_results, self.metric_dir)
         # self.evaluateion_data_visualization.
         # self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
 
@@ -95,7 +107,7 @@ if __name__ == '__main__':
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
     model_instance.model()
-    model_instance.training(callback_bool=True)
+    # model_instance.training(callback_bool=True)
     # model_instance.graphing(csv_file=None)
-    # model_instance.evaluate(saved_weights='F:\\Saved-Models\\First_Generation_dog_cat.h5')
+    model_instance.evaluate(saved_weights='F:\\Saved-Models\\a_good_model_dog_cat.h5', callback_bool=True)
     # model_instance.predict()

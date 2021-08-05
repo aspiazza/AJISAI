@@ -55,3 +55,34 @@ pipreqs AJISAI-Project\Web-App\
 
     + Generators
         > https://towardsdatascience.com/how-to-use-yield-in-python-5f1fbb864f94
+
+Docker Commands:
+
+docker pull {container_name} : To pull docker image
+
+docker images : Shows images in our local machine
+
+docker ps : List all running containers
+
+docker stop {id} : Stop a container
+
+docker restart {id} : Restart a container
+
+docker rename {old_name new_name} : Rename a container
+
+docker exec : Access the container
+
+
+Mermaid for README:
+
+https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax
+https://community.plotly.com/t/flowchart-sequence-diagram-support-mermaid-markdown/54303
+
+
+Optuna:
+https://optuna.org/#code_examples
+
+
+Got rid of baseline
+eval callback
+Added more todos
