@@ -1,7 +1,8 @@
 # Data Visualization
-import plotly
 from plotly.subplots import make_subplots
+import plotly.figure_factory as ff
 import plotly.graph_objects as go
+import plotly
 
 
 class TrainingDataVisualization:
@@ -19,6 +20,8 @@ class TrainingDataVisualization:
             self.epoch_list = metric_data['epoch']
             self.last_auc_score = metric_data['auc'].iloc[-1]
             self.val_last_auc_score = metric_data['val_auc'].iloc[-1]
+            self.last_true_positive = metric_data['true_positive'].iloc[
+                -1]  # TODO: Decide what to do about confusion train, val, test confusion matrix
 
         self.metric_dir = metric_dir
         self.subplot_name_list = []
@@ -154,8 +157,51 @@ class TrainingDataVisualization:
         self.subplot_list.append(self.f1_figure)
 
     def confusion_matrix(self):
-        confusion_plots = []
-        pass
+        def true_false_metric_appender(true_false_metric):
+            iterated_list = []
+            for metric in true_false_metric:
+                iterated_list.append(metric)
+            return iterated_list
+
+        z = [[self.true_negatives[-1], self.true_positives[-1]],
+             [self.false_negatives[-1], self.false_positives[-1]]]
+
+        x = ['Positive', 'Negative']
+        y = ['Negative', 'Positive']
+
+        # Turn each item in z into a string for annotation only
+        z_text = [[str(y) for y in x] for x in z]
+
+        # set up figure
+        confusion_mat = ff.create_annotated_heatmap(z, x=x, y=y, annotation_text=z_text, colorscale='Viridis')
+
+        confusion_mat.update_layout(title_text='<i><b>Confusion matrix</b></i>')
+
+        # add custom xaxis title
+        confusion_mat.add_annotation(dict(font=dict(color="black", size=14),
+                                          x=0.5,
+                                          y=-0.15,
+                                          showarrow=False,
+                                          text="Actual Value",
+                                          xref="paper",
+                                          yref="paper"))
+
+        # add custom yaxis title
+        confusion_mat.add_annotation(dict(font=dict(color="black", size=14),
+                                          x=-0.35,
+                                          y=0.5,
+                                          showarrow=False,
+                                          text="Predicted Value",
+                                          textangle=-90,
+                                          xref="paper",
+                                          yref="paper"))
+
+        # adjust margins to make room for yaxis title
+        confusion_mat.update_layout(margin=dict(t=50, l=200))
+
+        plotly.offline.plot(confusion_mat,
+                            filename=f'{self.metric_dir}_training_confusion_matrix.html',
+                            auto_open=False)
 
     def subplot_creation(self, row_size, col_size):
 
@@ -190,5 +236,5 @@ class TrainingDataVisualization:
                 metric_subplot.append_trace(trace, row=row_index, col=col_index)
 
         plotly.offline.plot(metric_subplot,
-                            filename=f'{self.metric_dir}_metrics.html',
+                            filename=f'{self.metric_dir}_training_metrics.html',
                             auto_open=False)

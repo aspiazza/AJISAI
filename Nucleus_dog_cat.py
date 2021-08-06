@@ -9,9 +9,6 @@ from icecream import ic
 
 # TODO: Clean code, add comments
 # TODO: Use Numba somehow
-# TODO: Use Mermaid
-# TODO: Add in learning rate schedule callback
-# TODO: Create cheatsheet for ML model building
 # Model class
 class CatDogModel:
     def __init__(self, model_name, version, datafile):
@@ -51,12 +48,13 @@ class CatDogModel:
             metric_data = self.history
 
         self.training_data_visualization = datavizDogCat.TrainingDataVisualization(metric_data, self.metric_dir)
-        self.training_data_visualization.loss_graph()
-        self.training_data_visualization.error_rate_graph()
-        self.training_data_visualization.recall_graph()
-        self.training_data_visualization.precision_graph()
-        self.training_data_visualization.f1_graph()
-        self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
+        # self.training_data_visualization.loss_graph()
+        # self.training_data_visualization.error_rate_graph()
+        # self.training_data_visualization.recall_graph()
+        # self.training_data_visualization.precision_graph()
+        # self.training_data_visualization.f1_graph()
+        # self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
+        self.training_data_visualization.confusion_matrix()
 
     # TODO: Implement more metrics
     def evaluate(self, saved_weights, callback_bool):  # TODO: Implement graphing by grabbing eval history
@@ -105,9 +103,10 @@ print(self.test_gen.classes)
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    model_instance.preprocess()
-    model_instance.model()
+    # model_instance.preprocess()
+    # model_instance.model()
     # model_instance.training(callback_bool=True)
-    # model_instance.graphing(csv_file=None)
-    model_instance.evaluate(saved_weights='F:\\Saved-Models\\a_good_model_dog_cat.h5', callback_bool=True)
+    model_instance.graphing(
+        csv_file='Model-Graphs&Logs//Model-Data_dog_cat//Logs//First_Generation_dog_cat_training_metrics.csv')
+    # model_instance.evaluate(saved_weights='F:\\Saved-Models\\a_good_model_dog_cat.h5', callback_bool=True)
     # model_instance.predict()

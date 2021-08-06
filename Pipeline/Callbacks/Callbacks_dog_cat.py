@@ -1,4 +1,5 @@
 from keras.callbacks import CSVLogger
+import tensorflow as tf
 import pandas as pd
 import keras
 import sys
@@ -22,6 +23,15 @@ def training_callbacks(version_model_name, log_dir):
         return metric_csv
 
     callback_list.append(metric_csv_callback())
+
+    def scheduler(epoch, lr):
+        if epoch < 10:
+            return lr
+        else:
+            return lr * tf.math.exp(-0.1)
+    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+    callback_list.append(lr_callback)
+
     return callback_list
 
 
