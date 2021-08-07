@@ -44,9 +44,6 @@ pipreqs AJISAI-Project\Web-App\
     + ML Web App with Flask
         > https://towardsdatascience.com/image-classification-of-pcbs-and-its-web-application-flask-c2b26039924a
 
-    + Metric information
-        > https://neptune.ai/blog/evaluation-metrics-binary-classification
-
     + Hyperparameter Tuning
         > https://towardsdatascience.com/why-is-everyone-at-kaggle-obsessed-with-optuna-for-hyperparameter-tuning-7608fdca337c
 
@@ -55,6 +52,12 @@ pipreqs AJISAI-Project\Web-App\
 
     + Generators
         > https://towardsdatascience.com/how-to-use-yield-in-python-5f1fbb864f94
+
+    + TensorFlow Addons
+        > https://www.tensorflow.org/addons
+        > https://www.tensorflow.org/addons/api_docs/python/tfa/metrics/RSquare
+        > https://www.tensorflow.org/guide/keras/custom_callback
+
 
 Docker Commands:
 

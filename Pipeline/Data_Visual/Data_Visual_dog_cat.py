@@ -20,8 +20,6 @@ class TrainingDataVisualization:
             self.epoch_list = metric_data['epoch']
             self.last_auc_score = metric_data['auc'].iloc[-1]
             self.val_last_auc_score = metric_data['val_auc'].iloc[-1]
-            self.last_true_positive = metric_data['true_positive'].iloc[
-                -1]  # TODO: Decide what to do about confusion train, val, test confusion matrix
 
         self.metric_dir = metric_dir
         self.subplot_name_list = []
@@ -156,17 +154,13 @@ class TrainingDataVisualization:
         self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
-    def confusion_matrix(self):
-        def true_false_metric_appender(true_false_metric):
-            iterated_list = []
-            for metric in true_false_metric:
-                iterated_list.append(metric)
-            return iterated_list
+    def confusion_matrix(self, class_indices):
+        cm_plot_list = []
 
-        z = [[self.true_negatives[-1], self.true_positives[-1]],
-             [self.false_negatives[-1], self.false_positives[-1]]]
+        z = [[self.true_negatives.iloc[-1], self.false_negatives.iloc[-1]],
+             [self.true_positives.iloc[-1], self.false_positives.iloc[-1]]]
 
-        x = ['Positive', 'Negative']
+        x = ['True (1)', 'False (0)']
         y = ['Negative', 'Positive']
 
         # Turn each item in z into a string for annotation only
@@ -175,12 +169,12 @@ class TrainingDataVisualization:
         # set up figure
         confusion_mat = ff.create_annotated_heatmap(z, x=x, y=y, annotation_text=z_text, colorscale='Viridis')
 
-        confusion_mat.update_layout(title_text='<i><b>Confusion matrix</b></i>')
+        confusion_mat.update_layout(title_text=str(class_indices))
 
         # add custom xaxis title
         confusion_mat.add_annotation(dict(font=dict(color="black", size=14),
                                           x=0.5,
-                                          y=-0.15,
+                                          y=-0.05,
                                           showarrow=False,
                                           text="Actual Value",
                                           xref="paper",
@@ -188,7 +182,7 @@ class TrainingDataVisualization:
 
         # add custom yaxis title
         confusion_mat.add_annotation(dict(font=dict(color="black", size=14),
-                                          x=-0.35,
+                                          x=-0.05,
                                           y=0.5,
                                           showarrow=False,
                                           text="Predicted Value",

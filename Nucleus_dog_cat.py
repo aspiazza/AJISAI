@@ -54,7 +54,7 @@ class CatDogModel:
         # self.training_data_visualization.precision_graph()
         # self.training_data_visualization.f1_graph()
         # self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
-        self.training_data_visualization.confusion_matrix()
+        self.training_data_visualization.confusion_matrix(self.test_gen.class_indices)
 
     # TODO: Implement more metrics
     def evaluate(self, saved_weights, callback_bool):  # TODO: Implement graphing by grabbing eval history
@@ -96,14 +96,14 @@ ic(test_labels)
 print(self.test_gen.classes)
 # IDK
 print(self.test_gen.classes)
-# print(self.test_gen.class_indices)
+print(self.test_gen.class_indices)
 '''
 
 # Executor
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    # model_instance.preprocess()
+    model_instance.preprocess()
     # model_instance.model()
     # model_instance.training(callback_bool=True)
     model_instance.graphing(
