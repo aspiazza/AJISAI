@@ -1,0 +1,15 @@
+graph TD
+    subgraph Data Organization
+    id1([Raw Data])-.->Extraction_Scripts
+    Extraction_Scripts--Organized_Data --> id2[/Data-Warehouse\]
+    end
+    subgraph _ _ _ _ _ _ _ _ _ _ _ _Data Exploration
+    id2-.Organized_Data.-> Data_Exploration_Scripts
+    Data_Exploration_Scripts --Exploration Graphs--> id3[/Model Graphs & Logs\]
+    end
+    subgraph _ _ _ _ _ _Model Creation
+    id2-.Organized_Data.-> Nucleus_Scripts
+    Nucleus_Scripts --- Preprocessing_Scripts & Model_Scripts & Callbacks_Scripts & Data_Visualization_Scripts
+    Nucleus_Scripts -.-> id5[[Training/Testing]]
+    id5[[Training/Testing]] ---> id4{Saved Model Weight} & id3
+    end
