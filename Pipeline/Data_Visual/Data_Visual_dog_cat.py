@@ -3,6 +3,7 @@ from plotly.subplots import make_subplots
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import plotly
+from icecream import ic
 
 
 class TrainingDataVisualization:
@@ -46,6 +47,7 @@ class TrainingDataVisualization:
         self.val_false_negatives = metric_data['val_false_negatives']
 
     def loss_graph(self):
+
         loss_plots = [go.Scatter(x=self.epoch_list,
                                  y=self.loss_list,
                                  mode='lines',
@@ -92,6 +94,7 @@ class TrainingDataVisualization:
         self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
+
         recall_plots = [go.Scatter(x=self.epoch_list,
                                    y=self.recall,
                                    mode='lines',
@@ -110,6 +113,7 @@ class TrainingDataVisualization:
         self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
+
         precision_plots = [go.Scatter(x=self.epoch_list,
                                       y=self.precision,
                                       mode='lines',
@@ -128,6 +132,7 @@ class TrainingDataVisualization:
         self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
+
         def f1_score_computation(precision, recall):
             f1_score_list = []
             for (precision_score, recall_score) in zip(precision, recall):
@@ -154,51 +159,169 @@ class TrainingDataVisualization:
         self.figure_yaxes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
+    def false_positive_graph(self):
+        def false_positive_computation(false_postives, true_negatives):
+            fp_rate_list = []
+            for (fp_score, tn_score) in zip(false_postives, true_negatives):
+                fp_rate_list.append(fp_score / (fp_score + tn_score))
+            return fp_rate_list
+
+        false_positive_rate = false_positive_computation(self.false_positives, self.true_negatives)
+        val_false_positive_rate = false_positive_computation(self.val_false_positives, self.val_true_negatives)
+
+        fpr_plots = [go.Scatter(x=self.epoch_list,
+                                y=false_positive_rate,
+                                mode='lines',
+                                name='False Positive Rate',
+                                line=dict(width=4)),
+                     go.Scatter(x=self.epoch_list,
+                                y=val_false_positive_rate,
+                                mode='lines',
+                                name='Validation False Positive Rate',
+                                line=dict(width=4))]
+
+        self.fpr_figure = go.Figure(data=fpr_plots)
+        self.subplot_name_list.append('False Positive Rate Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("False Positive Rate")
+        self.subplot_list.append(self.fpr_figure)
+
+    def false_negative_graph(self):
+        def false_negative_computation(false_negatives, true_positives):
+            fn_rate_list = []
+            for (fn_score, tp_score) in zip(false_negatives, true_positives):
+                fn_rate_list.append(fn_score / (fn_score + tp_score))
+            return fn_rate_list
+
+        false_negative_rate = false_negative_computation(self.false_negatives, self.true_positives)
+        val_false_negative_rate = false_negative_computation(self.val_false_negatives, self.val_true_positives)
+
+        fnr_plots = [go.Scatter(x=self.epoch_list,
+                                y=false_negative_rate,
+                                mode='lines',
+                                name='False Negative Rate',
+                                line=dict(width=4)),
+                     go.Scatter(x=self.epoch_list,
+                                y=val_false_negative_rate,
+                                mode='lines',
+                                name='Validation False Negative Rate',
+                                line=dict(width=4))]
+
+        self.fnr_figure = go.Figure(data=fnr_plots)
+        self.subplot_name_list.append('False Negative Rate Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("False Negative Rate")
+        self.subplot_list.append(self.fnr_figure)
+
+    def true_positive_graph(self):
+        def true_positive_computation(true_positives, false_negatives):
+            tp_rate_list = []
+            for (tp_score, fn_score) in zip(true_positives, false_negatives):
+                tp_rate_list.append(tp_score / (tp_score + fn_score))
+            return tp_rate_list
+
+        true_positive_rate = true_positive_computation(self.true_positives, self.false_negatives)
+        val_true_positive_rate = true_positive_computation(self.val_true_positives, self.val_false_negatives)
+
+        tpr_plots = [go.Scatter(x=self.epoch_list,
+                                y=true_positive_rate,
+                                mode='lines',
+                                name='True Positive Rate',
+                                line=dict(width=4)),
+                     go.Scatter(x=self.epoch_list,
+                                y=val_true_positive_rate,
+                                mode='lines',
+                                name='Validation True Positive Rate',
+                                line=dict(width=4))]
+
+        self.tpr_figure = go.Figure(data=tpr_plots)
+        self.subplot_name_list.append('True Positive Rate Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("True Positive Rate")
+        self.subplot_list.append(self.tpr_figure)
+
+    def true_negative_graph(self):
+        def true_negative_computation(true_negatives, false_positives):
+            tn_rate_list = []
+            for (tn_score, fp_score) in zip(true_negatives, false_positives):
+                tn_rate_list.append(tn_score / (tn_score + fp_score))
+            return tn_rate_list
+
+        true_negative_rate = true_negative_computation(self.true_negatives, self.false_positives)
+        val_true_negative_rate = true_negative_computation(self.val_true_negatives, self.val_false_positives)
+
+        tnr_plots = [go.Scatter(x=self.epoch_list,
+                                y=true_negative_rate,
+                                mode='lines',
+                                name='True Negative Rate',
+                                line=dict(width=4)),
+                     go.Scatter(x=self.epoch_list,
+                                y=val_true_negative_rate,
+                                mode='lines',
+                                name='Validation True Negative Rate',
+                                line=dict(width=4))]
+
+        self.tnr_figure = go.Figure(data=tnr_plots)
+        self.subplot_name_list.append('True Negative Rate Graph')
+        self.figure_xaxes_list.append("Epochs")
+        self.figure_yaxes_list.append("True Negative Rate")
+        self.subplot_list.append(self.tnr_figure)
+
     def confusion_matrix(self, class_indices):
-        cm_plot_list = []
 
-        z = [[self.true_negatives.iloc[-1], self.false_negatives.iloc[-1]],
-             [self.true_positives.iloc[-1], self.false_positives.iloc[-1]]]
+        train_z = [[self.true_negatives.iloc[-1], self.false_negatives.iloc[-1]],
+                   [self.true_positives.iloc[-1], self.false_positives.iloc[-1]]]
 
-        x = ['True (1)', 'False (0)']
-        y = ['Negative', 'Positive']
+        val_z = [[self.val_true_negatives.iloc[-1], self.val_false_negatives.iloc[-1]],
+                 [self.val_true_positives.iloc[-1], self.val_false_positives.iloc[-1]]]
+
+        x = ['True', 'False']
+        y = ['Negative (0)', 'Positive (1)']
 
         # Turn each item in z into a string for annotation only
-        z_text = [[str(y) for y in x] for x in z]
+        def string_annotation_converter(z_data):
+            z_text = [[str(y) for y in x] for x in z_data]
+            return z_text
 
         # set up figure
-        confusion_mat = ff.create_annotated_heatmap(z, x=x, y=y, annotation_text=z_text, colorscale='Viridis')
+        train_confusion_mat = ff.create_annotated_heatmap(train_z, x=x, y=y,
+                                                          colorscale='Viridis',
+                                                          annotation_text=string_annotation_converter(train_z))
+        train_confusion_mat.add_annotation(text=f'Training CM - {str(class_indices)}',
+                                           align='left',
+                                           showarrow=False,
+                                           xref='paper',
+                                           yref='paper',
+                                           x=0.5,
+                                           y=1.1,
+                                           bordercolor='black',
+                                           borderwidth=1)
 
-        confusion_mat.update_layout(title_text=str(class_indices))
+        val_confusion_mat = ff.create_annotated_heatmap(val_z, x=x, y=y,
+                                                        colorscale='Viridis',
+                                                        annotation_text=string_annotation_converter(val_z))
+        val_confusion_mat.add_annotation(text=f'Validation CM - {str(class_indices)}',
+                                         align='left',
+                                         showarrow=False,
+                                         xref='paper',
+                                         yref='paper',
+                                         x=0.5,
+                                         y=1.1,
+                                         bordercolor='black',
+                                         borderwidth=1)
 
-        # add custom xaxis title
-        confusion_mat.add_annotation(dict(font=dict(color="black", size=14),
-                                          x=0.5,
-                                          y=-0.05,
-                                          showarrow=False,
-                                          text="Actual Value",
-                                          xref="paper",
-                                          yref="paper"))
+        # Dope ass function
+        def figures_to_html(figs, filename=f'{self.metric_dir}_training_confusion_matrix.html'):
+            dashboard = open(filename, 'w')
+            dashboard.write("<html><head></head><body>" + "\n")
+            for fig in figs:
+                inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
+                dashboard.write(inner_html)
+            dashboard.write("</body></html>" + "\n")
 
-        # add custom yaxis title
-        confusion_mat.add_annotation(dict(font=dict(color="black", size=14),
-                                          x=-0.05,
-                                          y=0.5,
-                                          showarrow=False,
-                                          text="Predicted Value",
-                                          textangle=-90,
-                                          xref="paper",
-                                          yref="paper"))
-
-        # adjust margins to make room for yaxis title
-        confusion_mat.update_layout(margin=dict(t=50, l=200))
-
-        plotly.offline.plot(confusion_mat,
-                            filename=f'{self.metric_dir}_training_confusion_matrix.html',
-                            auto_open=False)
+        figures_to_html([train_confusion_mat, val_confusion_mat])
 
     def subplot_creation(self, row_size, col_size):
-
         def row_column_index_creator(index_row_size, index_col_size):
             row_col_index_list = []
             index_row_size += 1

@@ -48,12 +48,16 @@ class CatDogModel:
             metric_data = self.history
 
         self.training_data_visualization = datavizDogCat.TrainingDataVisualization(metric_data, self.metric_dir)
-        # self.training_data_visualization.loss_graph()
-        # self.training_data_visualization.error_rate_graph()
-        # self.training_data_visualization.recall_graph()
-        # self.training_data_visualization.precision_graph()
-        # self.training_data_visualization.f1_graph()
-        # self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
+        self.training_data_visualization.loss_graph()
+        self.training_data_visualization.error_rate_graph()
+        self.training_data_visualization.recall_graph()
+        self.training_data_visualization.precision_graph()
+        self.training_data_visualization.f1_graph()
+        self.training_data_visualization.false_positive_graph()
+        self.training_data_visualization.false_negative_graph()
+        self.training_data_visualization.true_positive_graph()
+        self.training_data_visualization.true_negative_graph()
+        self.training_data_visualization.subplot_creation(row_size=3, col_size=3)
         self.training_data_visualization.confusion_matrix(self.test_gen.class_indices)
 
     # TODO: Implement more metrics
