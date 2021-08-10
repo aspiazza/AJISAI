@@ -37,10 +37,9 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=2,
+                                      epochs=35,
                                       callbacks=callback_list)
 
-    # TODO: Implement more metrics (Confusion Matrix, ROC/PR Curve)
     def graphing(self, csv_file):
         if csv_file is not None:  # If you want to use a CSV file to create graphs
             metric_data = pd.read_csv(csv_file)
@@ -108,9 +107,8 @@ if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    # model_instance.model()
-    # model_instance.training(callback_bool=True)
-    model_instance.graphing(
-        csv_file='Model-Graphs&Logs//Model-Data_dog_cat//Logs//First_Generation_dog_cat_training_metrics.csv')
+    model_instance.model()
+    model_instance.training(callback_bool=True)
+    model_instance.graphing(csv_file=None)
     # model_instance.evaluate(saved_weights='F:\\Saved-Models\\a_good_model_dog_cat.h5', callback_bool=True)
     # model_instance.predict()
