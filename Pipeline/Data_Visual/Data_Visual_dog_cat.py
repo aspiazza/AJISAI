@@ -86,8 +86,6 @@ class TrainingDataVisualization:
         self.figure_yaxes_list = []
         self.subplot_list = []
 
-
-
     def loss_graph(self):
 
         loss_plots = [go.Scatter(x=self.epoch_list,
@@ -202,9 +200,9 @@ class TrainingDataVisualization:
         self.subplot_list.append(self.f1_figure)
 
     def false_positive_graph(self):
-        def false_positive_computation(false_postives, true_negatives):
+        def false_positive_computation(false_positives, true_negatives):
             fp_rate_list = []
-            for (fp_score, tn_score) in zip(false_postives, true_negatives):
+            for (fp_score, tn_score) in zip(false_positives, true_negatives):
                 fp_rate_list.append(fp_score / (fp_score + tn_score))
             return fp_rate_list
 
@@ -397,3 +395,8 @@ class TrainingDataVisualization:
         plotly.offline.plot(metric_subplot,
                             filename=f'{self.metric_dir}_training_metrics.html',
                             auto_open=False)
+
+
+class EvaluationDataVisualization:
+    def __init__(self, metric_data, metric_dir):
+        pass

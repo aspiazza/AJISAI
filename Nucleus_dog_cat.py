@@ -7,6 +7,7 @@ import pandas as pd
 from icecream import ic
 
 
+# TODO: Update README
 # TODO: Clean code, add comments
 # TODO: Use Numba somehow
 # Model class
@@ -25,7 +26,7 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
-    def training(self, callback_bool):  # TODO: Research and potentially incorporate Optuna?
+    def training(self, callback_bool):  # TODO: Research and incorporate Optuna
         if callback_bool:
             callback_list = CbDogCat.training_callbacks(self.version_model_name, self.log_dir)
             # Custom callback cannot be appended to callback list so is simply called
@@ -41,7 +42,7 @@ class CatDogModel:
                                       callbacks=callback_list)
 
     def graphing(self, csv_file):
-        if csv_file is not None:  # If you want to use a CSV file to create graphs
+        if csv_file is not None:
             metric_data = pd.read_csv(csv_file)
         else:
             metric_data = self.history
@@ -60,14 +61,14 @@ class CatDogModel:
         self.training_data_visualization.confusion_matrix(self.test_gen.class_indices)
 
     # TODO: Implement more metrics
-    def evaluate(self, saved_weights, callback_bool):  # TODO: Implement graphing by grabbing eval history
-        if saved_weights is not None:
-            self.model = load_model(saved_weights)  # Directory of saved weights
+    def evaluate(self, saved_weights_dir, callback_bool):  # TODO: Implement graphing by grabbing eval history
+        if saved_weights_dir is not None:
+            self.model = load_model(saved_weights_dir)
         else:
             pass
 
         if callback_bool:
-            callback_list = CbDogCat.evaluation_callbacks(self.version_model_name)
+            callback_list = CbDogCat.evaluation_callbacks(self.log_dir)
         else:
             callback_list = []
 
@@ -76,14 +77,14 @@ class CatDogModel:
                                                  callbacks=callback_list)
 
         # self.evaluateion_data_visualization = datavizDogCat.TrainingDataVisualization(evaluation_results, self.metric_dir)
-        # self.evaluateion_data_visualization.
+        # self.evaluation_data_visualization.
         # self.training_data_visualization.subplot_creation(row_size=3, col_size=2)
 
         # print(f'Evaluation results: {evaluation_results}')
 
-    def predict(self, saved_weights, prediction_sample_size):
-        if saved_weights is not None:
-            self.model = load_model(saved_weights)
+    def predict(self, saved_weights_dir, prediction_sample_size):
+        if saved_weights_dir is not None:
+            self.model = load_model(saved_weights_dir)
         else:
             pass
 
@@ -107,8 +108,8 @@ if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    model_instance.model()
-    model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file=None)
-    # model_instance.evaluate(saved_weights='F:\\Saved-Models\\a_good_model_dog_cat.h5', callback_bool=True)
+    # model_instance.model()
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(csv_file=None)
+    model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
     # model_instance.predict()
