@@ -66,7 +66,10 @@ class placeholder:
 
     def training(self):
         pass
-
+        
+    def evaluation(self):
+        pass
+        
     def predict(self):
         pass
 
