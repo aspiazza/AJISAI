@@ -399,4 +399,31 @@ class TrainingDataVisualization:
 
 class EvaluationDataVisualization:
     def __init__(self, metric_data, metric_dir):
-        pass
+
+        self.metric_dir = metric_dir
+        self.metric_data = metric_data
+
+        if str(type(metric_data)) == "<class 'list'>":
+            self.loss = metric_data[0]
+            self.accuracy = metric_data[1]
+            self.auc = metric_data[2]
+            self.recall = metric_data[3]
+            self.precision = metric_data[4]
+            self.false_positive = metric_data[5]
+            self.true_negative = metric_data[6]
+            self.false_negative = metric_data[7]
+            self.true_positive = metric_data[8]
+
+        elif str(type(metric_data)) == "<class 'pandas.core.frame.DataFrame'>":
+            self.loss = metric_data['loss']
+            self.accuracy = metric_data['accuracy']
+            self.auc = metric_data['auc']
+            self.recall = metric_data['recall']
+            self.precision = metric_data['precision']
+            self.false_positive = metric_data['false_positives']
+            self.true_negative = metric_data['true_negatives']
+            self.false_negative = metric_data['false_negatives']
+            self.true_positive = metric_data['true_positives']
+
+    def test(self):
+        ic(self.loss)

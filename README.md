@@ -2,13 +2,18 @@
 
 ### The what:
 
-The AJISAI Project can be considered as a framework or a 'Machine Learning Workbench'. The project is a way for me to
-create complex machine/deep learning models to incorporate into web applications in an organized way. To achieve this,
-the folder structure segments the different components involved in machine learning training and testing like training,
-callbacks, data visualization, testing, and visualization. This folder structure also promotes elasticity of the model
-being built and allows for quick changes on the fly with minimal bugs/affects. The command and control folders are
-called Nucleus files, and they are the files that call other files when being run to train/test a model and output
-important information.
+The AJISAI Project can be considered to be a framework or 'Machine Learning Workbench'. It is a directory structure that
+separates the different components of the machine learning training, testing, and visualization process all in separate
+files. These files (located in the Pipeline directory) are all called on as needed by a Nucleus file. The Nucleus file
+can be thought of as the command and control file of a project and executes functions and classes from these other .py
+files. Graphs, logs, and other model information are also all outputted to the Model-Graphs&Logs folder to help evaluate
+the model and view its performance. Directories for data extraction and exploration are also present, although they are
+not necessarily part of the Nucleus pipeline. Directories to save trained models are also present for testing and
+prediction purposes as well as incorporating into ML/DL web applications. Using this kind of framework, I can make any
+kind of machine or deep learning model I want with varying levels of complexity efficiently and professionally.
+
+The Web Application portion of the AJISAI Project contains all the necessary files need to create a ML/DL web
+application like a docker file, requirements.txt, html/css files, and API.
 
 ### Purpose:
 
