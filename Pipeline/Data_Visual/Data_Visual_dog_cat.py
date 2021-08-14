@@ -12,9 +12,39 @@ class TrainingDataVisualization:
         # If file type is equal to tensorflow history
         if str(type(metric_data)) == "<class 'tensorflow.python.keras.callbacks.History'>":
             self.epoch_list = metric_data.epoch
+
             metric_data = metric_data.history
+
             self.last_auc_score = metric_data['auc'][-1]
             self.val_last_auc_score = metric_data['val_auc'][-1]
+
+            self.accuracy_list = metric_data['accuracy']
+            self.loss_list = metric_data['loss']
+            self.recall = metric_data['recall']
+            self.precision = metric_data['precision']
+            self.true_positives = metric_data['true_positives']
+            self.true_negatives = metric_data['true_negatives']
+            self.false_positives = metric_data['false_positives']
+            self.false_negatives = metric_data['false_negatives']
+
+            self.val_accuracy_list = metric_data['val_accuracy']
+            self.val_loss_list = metric_data['val_loss']
+            self.val_recall = metric_data['val_recall']
+            self.val_precision = metric_data['val_precision']
+            self.val_true_positives = metric_data['val_true_positives']
+            self.val_true_negatives = metric_data['val_true_negatives']
+            self.val_false_positives = metric_data['val_false_positives']
+            self.val_false_negatives = metric_data['val_false_negatives']
+
+            self.last_true_negatives = self.true_negatives[-1]
+            self.last_false_negatives = self.false_negatives[-1]
+            self.last_true_positives = self.true_positives[-1]
+            self.last_false_positives = self.false_positives[-1]
+
+            self.last_val_true_negatives = self.val_true_negatives[-1]
+            self.last_val_false_negatives = self.val_false_negatives[-1]
+            self.last_val_true_positives = self.val_true_positives[-1]
+            self.last_val_false_positives = self.val_false_positives[-1]
 
         # If file type is equal to CSV dataframe
         elif str(type(metric_data)) == "<class 'pandas.core.frame.DataFrame'>":
@@ -22,29 +52,39 @@ class TrainingDataVisualization:
             self.last_auc_score = metric_data['auc'].iloc[-1]
             self.val_last_auc_score = metric_data['val_auc'].iloc[-1]
 
+            self.accuracy_list = metric_data['accuracy']
+            self.loss_list = metric_data['loss']
+            self.recall = metric_data['recall']  # true_positives
+            self.precision = metric_data['precision']
+            self.true_positives = metric_data['true_positives']
+            self.true_negatives = metric_data['true_negatives']
+            self.false_positives = metric_data['false_positives']
+            self.false_negatives = metric_data['false_negatives']
+
+            self.val_accuracy_list = metric_data['val_accuracy']
+            self.val_loss_list = metric_data['val_loss']
+            self.val_recall = metric_data['val_recall']
+            self.val_precision = metric_data['val_precision']
+            self.val_true_positives = metric_data['val_true_positives']
+            self.val_true_negatives = metric_data['val_true_negatives']
+            self.val_false_positives = metric_data['val_false_positives']
+            self.val_false_negatives = metric_data['val_false_negatives']
+
+            self.last_true_negatives = self.true_negatives.iloc[-1]
+            self.last_false_negatives = self.false_negatives.iloc[-1]
+            self.last_true_positives = self.true_positives.iloc[-1]
+            self.last_false_positives = self.false_positives.iloc[-1]
+
+            self.last_val_true_negatives = self.val_true_negatives.iloc[-1]
+            self.last_val_false_negatives = self.val_false_negatives.iloc[-1]
+            self.last_val_true_positives = self.val_true_positives.iloc[-1]
+            self.last_val_false_positives = self.val_false_positives.iloc[-1]
+
         self.metric_dir = metric_dir
         self.subplot_name_list = []
         self.figure_xaxes_list = []
         self.figure_yaxes_list = []
         self.subplot_list = []
-
-        self.accuracy_list = metric_data['accuracy']
-        self.loss_list = metric_data['loss']
-        self.recall = metric_data['recall']  # true_positives
-        self.precision = metric_data['precision']
-        self.true_positives = metric_data['true_positives']
-        self.true_negatives = metric_data['true_negatives']
-        self.false_positives = metric_data['false_positives']
-        self.false_negatives = metric_data['false_negatives']
-
-        self.val_accuracy_list = metric_data['val_accuracy']
-        self.val_loss_list = metric_data['val_loss']
-        self.val_recall = metric_data['val_recall']
-        self.val_precision = metric_data['val_precision']
-        self.val_true_positives = metric_data['val_true_positives']
-        self.val_true_negatives = metric_data['val_true_negatives']
-        self.val_false_positives = metric_data['val_false_positives']
-        self.val_false_negatives = metric_data['val_false_negatives']
 
     def loss_graph(self):
 
@@ -160,9 +200,9 @@ class TrainingDataVisualization:
         self.subplot_list.append(self.f1_figure)
 
     def false_positive_graph(self):
-        def false_positive_computation(false_postives, true_negatives):
+        def false_positive_computation(false_positives, true_negatives):
             fp_rate_list = []
-            for (fp_score, tn_score) in zip(false_postives, true_negatives):
+            for (fp_score, tn_score) in zip(false_positives, true_negatives):
                 fp_rate_list.append(fp_score / (fp_score + tn_score))
             return fp_rate_list
 
@@ -269,11 +309,11 @@ class TrainingDataVisualization:
 
     def confusion_matrix(self, class_indices):
 
-        train_z = [[self.true_negatives.iloc[-1], self.false_negatives.iloc[-1]],
-                   [self.true_positives.iloc[-1], self.false_positives.iloc[-1]]]
+        train_z = [[self.last_true_negatives, self.last_false_negatives],
+                   [self.last_true_positives, self.last_false_positives]]
 
-        val_z = [[self.val_true_negatives.iloc[-1], self.val_false_negatives.iloc[-1]],
-                 [self.val_true_positives.iloc[-1], self.val_false_positives.iloc[-1]]]
+        val_z = [[self.last_val_true_negatives, self.last_val_false_negatives],
+                 [self.last_val_true_positives, self.last_val_false_positives]]
 
         x = ['True', 'False']
         y = ['Negative (0)', 'Positive (1)']
@@ -355,3 +395,35 @@ class TrainingDataVisualization:
         plotly.offline.plot(metric_subplot,
                             filename=f'{self.metric_dir}_training_metrics.html',
                             auto_open=False)
+
+
+class EvaluationDataVisualization:
+    def __init__(self, metric_data, metric_dir):
+
+        self.metric_dir = metric_dir
+        self.metric_data = metric_data
+
+        if str(type(metric_data)) == "<class 'list'>":
+            self.loss = metric_data[0]
+            self.accuracy = metric_data[1]
+            self.auc = metric_data[2]
+            self.recall = metric_data[3]
+            self.precision = metric_data[4]
+            self.false_positive = metric_data[5]
+            self.true_negative = metric_data[6]
+            self.false_negative = metric_data[7]
+            self.true_positive = metric_data[8]
+
+        elif str(type(metric_data)) == "<class 'pandas.core.frame.DataFrame'>":
+            self.loss = metric_data['loss']
+            self.accuracy = metric_data['accuracy']
+            self.auc = metric_data['auc']
+            self.recall = metric_data['recall']
+            self.precision = metric_data['precision']
+            self.false_positive = metric_data['false_positives']
+            self.true_negative = metric_data['true_negatives']
+            self.false_negative = metric_data['false_negatives']
+            self.true_positive = metric_data['true_positives']
+
+    def test(self):
+        ic(self.loss)

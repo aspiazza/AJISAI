@@ -1,14 +1,29 @@
 # AJISAI Project README
 
+### The what:
+
+The AJISAI Project can be considered to be a framework or 'Machine Learning Workbench'. It is a directory structure that
+separates the different components of the machine learning training, testing, and visualization process all in separate
+files. These files (located in the Pipeline directory) are all called on as needed by a Nucleus file. The Nucleus file
+can be thought of as the command and control file of a project and executes functions and classes from these other .py
+files. Graphs, logs, and other model information are also all outputted to the Model-Graphs&Logs folder to help evaluate
+the model and view its performance. Directories for data extraction and exploration are also present, although they are
+not necessarily part of the Nucleus pipeline. Directories to save trained models are also present for testing and
+prediction purposes as well as incorporating into ML/DL web applications. Using this kind of framework, I can make any
+kind of machine or deep learning model I want with varying levels of complexity efficiently and professionally.
+
+The Web Application portion of the AJISAI Project contains all the necessary files need to create a ML/DL web
+application like a docker file, requirements.txt, html/css files, and API.
+
 ### Purpose:
 
-The purpose of this project was to create an end-to-end machine learning web application. This was created to gain a
-deeper understanding of Python, Machine Learning, Web Scraping, Plotly Graphing, API Developing, Docker, Cloud
-Environments, HTML/CSS and production worthy code. I plan on using this project as a long-term medium that I continually
-update and use to complete other ML projects in the future. Because of this, I expect there to be many improvements to
-come in the following months/years and additions. These improvements would consist of organizing folder structure,
-cleaning code, adding new models, updating documentation, and automating tasks if need be. Below are some skills I
-utilized in this project:
+The purpose of this project was to create an end-to-end machine learning web application in a professional and organized
+way. This was created to gain a deeper understanding of Python, Machine Learning, Web Scraping, Plotly Graphing, API
+Developing, Docker, Cloud Environments, HTML/CSS and production worthy code. I plan on using this project as a long-term
+medium that I continually update and use to complete other ML projects in the future. Because of this, I expect there to
+be many improvements to come in the following months/years and additions. These improvements would consist of organizing
+folder structure, cleaning code, adding new models, updating documentation, and automating tasks if need be. Below are
+some skills I utilized in this project:
 
 - Python Code
 - Web scraping and Data Extraction
@@ -17,7 +32,7 @@ utilized in this project:
 - Docker Containers
 - Cloud Environment
 - HTML/CSS Web App Development
-- Machine Learning Techniques and Models
+- Machine Learning Techniques and Concepts
 - Clean, Reusable, Production Worthy Code
 
 ### Directory Structure:
@@ -30,7 +45,6 @@ utilized in this project:
             + Logs
             + Metric-Graphs
     + Pipeline
-        + Baseline_Models
         + Callbacks
         + Data_Visual
         + Models
@@ -38,7 +52,7 @@ utilized in this project:
     + Web-Apps
         + Web-App_{model name}
     + X-Misc
-        + Blank{n}.py
+        + scratch_{n}.py
         + Notes.txt
     + Nucleus_{model name}.py
     + Project_Initializer.py
@@ -50,24 +64,19 @@ utilized in this project:
 
 - Data-Exploration
     + glob, numpy, os, pandas, PIL, plotly, random
-      > - Script that extract useful information and output it to model graphs and logs directory
-      > - Used to explore data, stats, correlation coefficients, clustering, etc
+      > - Script that extract useful information from data and output it to plotly html files
+      > - Used to explore and display data, stats, correlation coefficients, clustering, etc
 
 - Extraction-Scripts
     + beautifulsoup, glob, os, random, requests, selenium, shutil
       > - Script that extracts data and organizes it into /F:/Data-Warehouse
-      > - Data can be extracted from web scraping or downloading of datasets
-      > - All data will output to a CSV, Tensorflow Dataframe, json, or images
+      > - Data can be extracted from web scraping or organize downloaded datasets
+      > - All data will output to a CSV, Tensorflow Dataframe, json, or image file
 
 - Model-Graphs&Logs
     + None
       > - Stores metadata, graphs, logs, model images, json files, and CSV files
-      > - Will come from baselines, training, exploration, and prediction processes
-
-- Pipeline\Baseline-Models
-    + Keras, SciKitLearn, Tensorflow, numba, numpy, pandas
-      > - Will contain basic models used to get baseline of data
-      > - Trees, neural nets, machine learning, etc
+      > - Data comes from baseline, training, exploration, and prediction processes
 
 - Pipeline\Callbacks
     + Keras, sys
@@ -82,8 +91,7 @@ utilized in this project:
 
 - Pipeline\Models
     + Keras, SciKitLearn, Tensorflow
-      > - Will contain the actual models and there parameters
-      > - Training and grid tuning of model, testing, and displaying plot model
+      > - Contains the actual models and there parameters
       > - Models will be made using functional API and sequential
       > - Results of training should be outputted to Data Visual directory and logs
       > - Can implement Freezing, Pretrained layers, multiple models, and other techniques
@@ -107,9 +115,6 @@ utilized in this project:
 - X-Misc
     + Whatever Needed
       > - Contains scratch files and notes for development purposes
-
-- X-Pics
-    + None
       > - Contains images for README file
 
 - Nucleus.py
