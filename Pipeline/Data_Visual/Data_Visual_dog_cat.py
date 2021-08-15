@@ -399,31 +399,55 @@ class TrainingDataVisualization:
 
 class EvaluationDataVisualization:
     def __init__(self, metric_data, metric_dir):
-
         self.metric_dir = metric_dir
         self.metric_data = metric_data
 
-        if str(type(metric_data)) == "<class 'list'>":
-            self.loss = metric_data[0]
-            self.accuracy = metric_data[1]
-            self.auc = metric_data[2]
-            self.recall = metric_data[3]
-            self.precision = metric_data[4]
-            self.false_positive = metric_data[5]
-            self.true_negative = metric_data[6]
-            self.false_negative = metric_data[7]
-            self.true_positive = metric_data[8]
+        self.epoch = metric_data['epoch']
+        self.loss = metric_data['loss']
+        self.accuracy = metric_data['accuracy']
+        self.auc = metric_data['auc']
+        self.recall = metric_data['recall']
+        self.precision = metric_data['precision']
+        self.false_positive = metric_data['false_positives']
+        self.true_negative = metric_data['true_negatives']
+        self.false_negative = metric_data['false_negatives']
+        self.true_positive = metric_data['true_positives']
 
-        elif str(type(metric_data)) == "<class 'pandas.core.frame.DataFrame'>":
-            self.loss = metric_data['loss']
-            self.accuracy = metric_data['accuracy']
-            self.auc = metric_data['auc']
-            self.recall = metric_data['recall']
-            self.precision = metric_data['precision']
-            self.false_positive = metric_data['false_positives']
-            self.true_negative = metric_data['true_negatives']
-            self.false_negative = metric_data['false_negatives']
-            self.true_positive = metric_data['true_positives']
+    def eval_barchart(self):
+        def list_to_average(metric):
+            metric_list = []
+            for num in metric:
+                metric_list.append(num)
+            return sum(metric_list) / len(metric_list)
 
-    def test(self):
-        ic(self.loss)
+        def metrics_barchart():
+            x_labels = ['Loss', 'Accuracy', 'AUC', 'Recall', 'Precision']
+
+            y_metric_list = [list_to_average(self.loss), list_to_average(self.accuracy), list_to_average(self.auc),
+                             list_to_average(self.recall), list_to_average(self.precision)]
+
+            evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list))
+            return evaluation_barchart
+
+        def boolean_metrics_barchart():
+            x_labels = ['False Positive', 'True Negative',
+                        'False Negative', 'True Positive']
+
+            y_metric_list = [list_to_average(self.false_positive), list_to_average(self.true_negative),
+                             list_to_average(self.false_negative), list_to_average(self.true_positive)]
+
+            bool_evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list))
+            return bool_evaluation_barchart
+
+        def barchart_subplot():
+            def figures_to_html(figs, filename=f'{self.metric_dir}_evaluation_barchart.html'):
+                dashboard = open(filename, 'w')
+                dashboard.write("<html><head></head><body>" + "\n")
+                for fig in figs:
+                    inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
+                    dashboard.write(inner_html)
+                dashboard.write("</body></html>" + "\n")
+
+            figures_to_html([metrics_barchart(), boolean_metrics_barchart()])
+
+        barchart_subplot()

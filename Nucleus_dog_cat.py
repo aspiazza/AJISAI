@@ -39,7 +39,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=35,
+                                      epochs=50,
                                       callbacks=callback_list)
 
     def graphing(self, csv_file):
@@ -75,17 +75,16 @@ class CatDogModel:
         self.evaluation_history = self.model.evaluate(self.test_gen,
                                                       batch_size=20,
                                                       callbacks=callback_list)
+        print(self.evaluation_history)
 
     # TODO: Graph eval
     def evaluate_graphing(self, csv_file):
-        if csv_file is not None:
-            metric_data = pd.read_csv(csv_file)
-        else:
-            metric_data = self.evaluation_history
+
+        metric_data = pd.read_csv(csv_file)
 
         self.evaluation_data_visualization = datavizDogCat.EvaluationDataVisualization(metric_data,
                                                                                        self.metric_dir)
-        self.evaluation_data_visualization.test()
+        self.evaluation_data_visualization.eval_barchart()
 
     def predict(self, saved_weights_dir):
         if saved_weights_dir is not None:
@@ -96,19 +95,17 @@ class CatDogModel:
         print(self.model.predict(self.test_gen))
         print(self.test_gen.classes)
         print(self.test_gen.class_indices)
-        test_imgs, test_labels = next(self.test_gen)
+        test_images, test_labels = next(self.test_gen)
 
 
 # Executor
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    model_instance.preprocess()
+    # model_instance.preprocess()
     # model_instance.model()
     # model_instance.training(callback_bool=True)
-    # model_instance.graphing(csv_file=None)
-    model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
-    # model_instance.evaluate_graphing(csv_file=None)
-    model_instance.evaluate_graphing(
-        csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
+    model_instance.graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
+    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
+    # model_instance.evaluate_graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
     # model_instance.predict()

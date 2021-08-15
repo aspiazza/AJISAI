@@ -45,7 +45,7 @@ def make_webapp(project_name):  # Function to make Web-App files and directories
             continue
 
 
-def populate_nucleus(project_name):  # TODO: Update as Nucleus gets more accurate to final product
+def populate_nucleus(project_name):  # TODO: Update as Nucleus code progresses
     with open(f'Nucleus_{project_name}.py', 'a') as nucleus_file:
         nucleus_file.write('''
 class placeholder:
