@@ -46,6 +46,7 @@ pipreqs AJISAI-Project\Web-App\
 
     + Hyperparameter Tuning
         > https://towardsdatascience.com/why-is-everyone-at-kaggle-obsessed-with-optuna-for-hyperparameter-tuning-7608fdca337c
+        > https://optuna.org/#code_examples
 
     + Graphs
         > https://towardsdatascience.com/how-did-i-classify-50-chart-types-by-purpose-a6b0aa5b812d
@@ -76,12 +77,7 @@ docker rename {old_name new_name} : Rename a container
 docker exec : Access the container
 
 
-
-Optuna:
-https://optuna.org/#code_examples
-
-
-Explore tensorflow_addons
+Totally overhaul visualization classes using the godsend of a function for the next project
 
 
 Code:

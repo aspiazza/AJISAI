@@ -173,10 +173,15 @@ class TrainingDataVisualization:
 
     def f1_graph(self):
 
-        def f1_score_computation(precision, recall):
+        def f1_score_computation(precision, recall):  # TODO: fix dividing by zero issue
             f1_score_list = []
             for (precision_score, recall_score) in zip(precision, recall):
-                f1_score_list.append(2 * ((precision_score * recall_score) / (precision_score + recall_score)))
+                print(precision_score)
+                if precision_score or recall_score == 0:
+                    f1_score_list.append(0)
+                    continue
+                else:
+                    f1_score_list.append(2 * ((precision_score * recall_score) / (precision_score + recall_score)))
             return f1_score_list
 
         f1_scores = f1_score_computation(self.precision, self.recall)
@@ -307,6 +312,41 @@ class TrainingDataVisualization:
         self.figure_yaxes_list.append("True Negative Rate")
         self.subplot_list.append(self.tnr_figure)
 
+    def subplot_creation(self, row_size, col_size):
+        def row_column_index_creator(index_row_size, index_col_size):
+            row_col_index_list = []
+            index_row_size += 1
+            index_col_size += 1
+            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column
+             in range(1, index_col_size)]
+            return row_col_index_list
+
+        def axes_title_creator(xaxes_list, yaxes_list):
+            x_y_axes = []
+            for (xaxes, yaxes) in zip(xaxes_list, yaxes_list):
+                x_y_axes.append([xaxes, yaxes])
+            return x_y_axes
+
+        row_col_index_list = row_column_index_creator(row_size, col_size)
+        x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
+        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
+
+        for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
+            x_axes = x_y_ax[0]
+            y_axes = x_y_ax[1]
+            row_index = row_col[0]
+            col_index = row_col[1]
+
+            metric_subplot.update_xaxes(title_text=x_axes, row=row_index, col=col_index)
+            metric_subplot.update_yaxes(title_text=y_axes, row=row_index, col=col_index)
+
+            for trace in plot.data:
+                metric_subplot.append_trace(trace, row=row_index, col=col_index)
+
+        plotly.offline.plot(metric_subplot,
+                            filename=f'{self.metric_dir}_training_metrics.html',
+                            auto_open=False)
+
     def confusion_matrix(self, class_indices):
 
         train_z = [[self.last_true_negatives, self.last_false_negatives],
@@ -361,41 +401,6 @@ class TrainingDataVisualization:
 
         figures_to_html([train_confusion_mat, val_confusion_mat])
 
-    def subplot_creation(self, row_size, col_size):
-        def row_column_index_creator(index_row_size, index_col_size):
-            row_col_index_list = []
-            index_row_size += 1
-            index_col_size += 1
-            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column
-             in range(1, index_col_size)]
-            return row_col_index_list
-
-        def axes_title_creator(xaxes_list, yaxes_list):
-            x_y_axes = []
-            for (xaxes, yaxes) in zip(xaxes_list, yaxes_list):
-                x_y_axes.append([xaxes, yaxes])
-            return x_y_axes
-
-        row_col_index_list = row_column_index_creator(row_size, col_size)
-        x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
-        metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
-
-        for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
-            x_axes = x_y_ax[0]
-            y_axes = x_y_ax[1]
-            row_index = row_col[0]
-            col_index = row_col[1]
-
-            metric_subplot.update_xaxes(title_text=x_axes, row=row_index, col=col_index)
-            metric_subplot.update_yaxes(title_text=y_axes, row=row_index, col=col_index)
-
-            for trace in plot.data:
-                metric_subplot.append_trace(trace, row=row_index, col=col_index)
-
-        plotly.offline.plot(metric_subplot,
-                            filename=f'{self.metric_dir}_training_metrics.html',
-                            auto_open=False)
-
 
 class EvaluationDataVisualization:
     def __init__(self, metric_data, metric_dir):
@@ -426,7 +431,19 @@ class EvaluationDataVisualization:
             y_metric_list = [list_to_average(self.loss), list_to_average(self.accuracy), list_to_average(self.auc),
                              list_to_average(self.recall), list_to_average(self.precision)]
 
-            evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list))
+            color = ['pink', 'gold', 'springgreen', 'rgb(29, 105, 150)', 'rgb(228, 26, 28)']
+
+            evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list, marker=dict(color=color)))
+
+            evaluation_barchart.add_annotation(text=f'Evaluation Bar Charts',
+                                               align='left',
+                                               showarrow=False,
+                                               xref='paper',
+                                               yref='paper',
+                                               x=0.5,
+                                               y=1.1,
+                                               bordercolor='black',
+                                               borderwidth=1)
             return evaluation_barchart
 
         def boolean_metrics_barchart():
@@ -436,7 +453,9 @@ class EvaluationDataVisualization:
             y_metric_list = [list_to_average(self.false_positive), list_to_average(self.true_negative),
                              list_to_average(self.false_negative), list_to_average(self.true_positive)]
 
-            bool_evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list))
+            color = ['red', '#00D', 'red', '#00D']
+
+            bool_evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list, marker=dict(color=color)))
             return bool_evaluation_barchart
 
         def barchart_subplot():

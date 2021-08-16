@@ -77,22 +77,16 @@ class CatDogModel:
                                                       callbacks=callback_list)
         print(self.evaluation_history)
 
-    # TODO: Graph eval
     def evaluate_graphing(self, csv_file):
 
         metric_data = pd.read_csv(csv_file)
-
-        self.evaluation_data_visualization = datavizDogCat.EvaluationDataVisualization(metric_data,
-                                                                                       self.metric_dir)
+        self.evaluation_data_visualization = datavizDogCat.EvaluationDataVisualization(metric_data, self.metric_dir)
         self.evaluation_data_visualization.eval_barchart()
 
     def predict(self, saved_weights_dir):
-        if saved_weights_dir is not None:
-            self.model = load_model(saved_weights_dir)
-        else:
-            pass
+        self.model = load_model(saved_weights_dir)
 
-        print(self.model.predict(self.test_gen))
+        print(self.model.predict('F:\\Data-Warehouse\\Dog-Cat-Data\\Image_Vault\\cat.11425.jpg'))
         print(self.test_gen.classes)
         print(self.test_gen.class_indices)
         test_images, test_labels = next(self.test_gen)
@@ -102,10 +96,10 @@ class CatDogModel:
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    # model_instance.preprocess()
+    model_instance.preprocess()
     # model_instance.model()
     # model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
+    # model_instance.graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_training_metrics.csv')
     # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
     # model_instance.evaluate_graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
-    # model_instance.predict()
+    model_instance.predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5')
