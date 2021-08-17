@@ -1,7 +1,7 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
-from Pipeline.Callbacks import Callbacks_dog_cat as CbDogCat
+from Pipeline.Callbacks import Callbacks_dog_cat as cbDogcat
 from keras.models import load_model
 import pandas as pd
 from icecream import ic
@@ -29,9 +29,9 @@ class CatDogModel:
     # TODO: Research and incorporate Optuna
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = CbDogCat.training_callbacks(self.version_model_name, self.log_dir)
+            callback_list = cbDogcat.training_callbacks(self.version_model_name, self.log_dir)
             # Custom callback cannot be appended to callback list so is simply called
-            CbDogCat.model_summary_callback(self.log_dir, self.model)
+            cbDogcat.model_summary_callback(self.log_dir, self.model)
         else:
             callback_list = []
 
@@ -68,7 +68,7 @@ class CatDogModel:
             pass
 
         if callback_bool:
-            callback_list = CbDogCat.evaluation_callbacks(self.log_dir)
+            callback_list = cbDogcat.evaluation_callbacks(self.log_dir)
         else:
             callback_list = []
 
