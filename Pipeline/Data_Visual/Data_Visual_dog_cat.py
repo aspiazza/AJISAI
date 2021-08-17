@@ -3,6 +3,7 @@ from plotly.subplots import make_subplots
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import plotly
+import numpy as np
 from icecream import ic
 
 
@@ -173,15 +174,13 @@ class TrainingDataVisualization:
 
     def f1_graph(self):
 
-        def f1_score_computation(precision, recall):  # TODO: fix dividing by zero issue
+        def f1_score_computation(precision, recall):
             f1_score_list = []
             for (precision_score, recall_score) in zip(precision, recall):
-                print(precision_score)
-                if precision_score or recall_score == 0:
-                    f1_score_list.append(0)
-                    continue
-                else:
+                try:
                     f1_score_list.append(2 * ((precision_score * recall_score) / (precision_score + recall_score)))
+                except ZeroDivisionError:
+                    f1_score_list.append(np.nan)
             return f1_score_list
 
         f1_scores = f1_score_computation(self.precision, self.recall)

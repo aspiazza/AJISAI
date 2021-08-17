@@ -39,7 +39,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=40,
-                                      epochs=50,
+                                      epochs=55,
                                       callbacks=callback_list)
 
     def graphing(self, csv_file):
@@ -75,7 +75,7 @@ class CatDogModel:
         self.evaluation_history = self.model.evaluate(self.test_gen,
                                                       batch_size=20,
                                                       callbacks=callback_list)
-        print(self.evaluation_history)
+        print(f'Evaluation Results: {self.evaluation_history}')
 
     def evaluate_graphing(self, csv_file):
 
@@ -85,6 +85,7 @@ class CatDogModel:
 
     def predict(self, saved_weights_dir):
         self.model = load_model(saved_weights_dir)
+        self.model.compile()
 
         print(self.model.predict('F:\\Data-Warehouse\\Dog-Cat-Data\\Image_Vault\\cat.11425.jpg'))
         print(self.test_gen.classes)
@@ -96,10 +97,10 @@ class CatDogModel:
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    model_instance.preprocess()
+    # model_instance.preprocess()
     # model_instance.model()
     # model_instance.training(callback_bool=True)
-    # model_instance.graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_training_metrics.csv')
+    # model_instance.graphing(csv_file=None)
     # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
     # model_instance.evaluate_graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
     model_instance.predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5')
