@@ -29,11 +29,6 @@ pipreqs AJISAI-Project\Web-App\
     + Generators
         > https://towardsdatascience.com/how-to-use-yield-in-python-5f1fbb864f94
 
-    + TensorFlow Addons
-        > https://www.tensorflow.org/addons
-        > https://www.tensorflow.org/addons/api_docs/python/tfa/metrics/RSquare
-        > https://www.tensorflow.org/guide/keras/custom_callback
-
     + Kaggle Competition
         > https://towardsdatascience.com/my-first-gold-in-kaggle-tips-and-tricks-for-an-nlp-competition-cec48dda5895
         > https://towardsdatascience.com/18-common-python-anti-patterns-i-wish-i-had-known-before-44d983805f0f
@@ -56,20 +51,16 @@ Code:
  vectorizer.transform(test_x)       #To vectorized words
 
 
-. #Normalize data with tensorflow (Categories and numeric)
- CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
-                   'embark_town', 'alone']
-   NUMERIC_COLUMNS = ['age', 'fare']
-   feature_columns = []
+# print(self.test_gen.classes)
+# print(self.test_gen.class_indices)
+# test_images, test_labels = next(self.test_gen)
 
-   for feature_name in CATEGORICAL_COLUMNS:
-        # gets a list of all unique values from given feature column
-        vocabulary = dftrain[feature_name].unique()
-        #Maps categorey with unique values
-        feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary))
 
-   for feature_name in NUMERIC_COLUMNS:
-        feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
+
+HTML Site:
+Bright Green: rgb(5, 182, 105)
+Dark Green: rgb(19, 66, 19)
+Black: rgb(0, 0, 0)
 
 
 # Plotting average image
