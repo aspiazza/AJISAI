@@ -1,28 +1,3 @@
-Graphs to try and make
-. Confusion Matrix
-. Negative Predictive Value
-. False Discovery Rate
-. F Beta Score
-. F2 Score
-. Cohen Kappa
-. Matthews Correlation Coefficient
-. ROC Curve
-. ROC AUC Score
-. Precision-Recall Curve
-. PR AUC | Average Precision
-. Brier Score
-. Cumulative Gain Chart
-. Lift Curve | Lift Chart
-. Kolmogorov-Smirnov Plot
-. Kolmogorov Smirnov Statistics
-. mAP
-
-
-We do not want to miss any fraud transactions. Therefore, we want False-Negative to be as low as possible. In these situations, we can compromise with the low precision, but recall should be high.
-
-In the detection of spam mail, it is okay if any spam mail remains undetected (false negative), but what if we miss any critical mail because it is classified as spam (false positive). In this situation, False Positive should be as low as possible.
-
-
 # AJISAI NOTES
 
 print out requirements.txt:
@@ -46,6 +21,7 @@ pipreqs AJISAI-Project\Web-App\
 
     + Hyperparameter Tuning
         > https://towardsdatascience.com/why-is-everyone-at-kaggle-obsessed-with-optuna-for-hyperparameter-tuning-7608fdca337c
+        > https://optuna.org/#code_examples
 
     + Graphs
         > https://towardsdatascience.com/how-did-i-classify-50-chart-types-by-purpose-a6b0aa5b812d
@@ -53,35 +29,10 @@ pipreqs AJISAI-Project\Web-App\
     + Generators
         > https://towardsdatascience.com/how-to-use-yield-in-python-5f1fbb864f94
 
-    + TensorFlow Addons
-        > https://www.tensorflow.org/addons
-        > https://www.tensorflow.org/addons/api_docs/python/tfa/metrics/RSquare
-        > https://www.tensorflow.org/guide/keras/custom_callback
-
-
-Docker Commands:
-
-docker pull {container_name} : To pull docker image
-
-docker images : Shows images in our local machine
-
-docker ps : List all running containers
-
-docker stop {id} : Stop a container
-
-docker restart {id} : Restart a container
-
-docker rename {old_name new_name} : Rename a container
-
-docker exec : Access the container
-
-
-
-Optuna:
-https://optuna.org/#code_examples
-
-
-Explore tensorflow_addons
+    + Kaggle Competition
+        > https://towardsdatascience.com/my-first-gold-in-kaggle-tips-and-tricks-for-an-nlp-competition-cec48dda5895
+        > https://towardsdatascience.com/18-common-python-anti-patterns-i-wish-i-had-known-before-44d983805f0f
+        > https://towardsdatascience.com/stop-using-pandas-get-dummies-for-feature-encoding-5d2cd07cb4fc
 
 
 Code:
@@ -100,20 +51,16 @@ Code:
  vectorizer.transform(test_x)       #To vectorized words
 
 
-. #Normalize data with tensorflow (Categories and numeric)
- CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck',
-                   'embark_town', 'alone']
-   NUMERIC_COLUMNS = ['age', 'fare']
-   feature_columns = []
+# print(self.test_gen.classes)
+# print(self.test_gen.class_indices)
+# test_images, test_labels = next(self.test_gen)
 
-   for feature_name in CATEGORICAL_COLUMNS:
-        # gets a list of all unique values from given feature column
-        vocabulary = dftrain[feature_name].unique()
-        #Maps categorey with unique values
-        feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary))
 
-   for feature_name in NUMERIC_COLUMNS:
-        feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
+
+HTML Site:
+Bright Green: rgb(5, 182, 105)
+Dark Green: rgb(19, 66, 19)
+Black: rgb(0, 0, 0)
 
 
 # Plotting average image
