@@ -1,5 +1,6 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
+from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as cbDogCat
 from Pipeline.Prediction import Prediction_dog_cat as pdDogCat
@@ -11,6 +12,7 @@ from icecream import ic
 # TODO: Clean code, add comments
 # TODO: Update README as code progresses
 # TODO: Use Numba somehow
+# TODO: Use Optuna somehow
 # Model class
 class CatDogModel:
     def __init__(self, model_name, version, datafile):
@@ -27,7 +29,10 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
-    # TODO: Research and incorporate Optuna
+    def grid_search(self):
+        # gridDogCat
+        pass
+
     def training(self, callback_bool):
         if callback_bool:
             callback_list = cbDogCat.training_callbacks(self.version_model_name, self.log_dir)
