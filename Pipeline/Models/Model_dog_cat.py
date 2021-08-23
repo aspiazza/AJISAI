@@ -21,7 +21,7 @@ def seq_maxpool_cnn(log_dir):
 
     plot_model(model, to_file=f'{log_dir}_{model_name}.png')
 
-    model.compile(optimizer=RMSprop(lr=0.001),
+    model.compile(optimizer=RMSprop(lr=1e-05),
                   loss='binary_crossentropy',
                   metrics=['accuracy', 'AUC', 'Recall', 'Precision',
                            Fp(), Tn(), Fn(), Tp()])
