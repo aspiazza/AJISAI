@@ -1,6 +1,6 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
-from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
+# from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as cbDogCat
 from Pipeline.Prediction import Prediction_dog_cat as pdDogCat
@@ -91,13 +91,13 @@ class CatDogModel:
 
 # Executor
 if __name__ == '__main__':
-    model_instance = CatDogModel(model_name="dog_cat", version="weight_test",
+    model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
-    # model_instance.preprocess()
-    # model_instance.model()
-    # model_instance.training(callback_bool=True)
-    # model_instance.graphing(csv_file=None)
+    model_instance.preprocess()
+    model_instance.model()
+    model_instance.training(callback_bool=True)
+    model_instance.graphing(csv_file=None)
     # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
     # model_instance.evaluate_graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
-    model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5',
-                                 prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    # model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5',
+    #                            prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')

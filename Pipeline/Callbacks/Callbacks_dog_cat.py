@@ -19,10 +19,10 @@ def training_callbacks(version_model_name, log_dir):
         return metric_csv
     callback_list.append(metric_csv_callback())
 
-    def reduce_lr_plateau_callback():  # TODO: Test if this callback works
-        reduce_plat = ReduceLROnPlateau(monitor='val_loss', factor=0.1,
+    def reduce_lr_plateau_callback():
+        reduce_plat = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                         patience=5,
-                                        verbose=0, mode='auto', min_lr=1.0e-6)
+                                        verbose=0, mode='auto', min_lr=0.001)
         return reduce_plat
     callback_list.append(reduce_lr_plateau_callback())
 
@@ -32,7 +32,7 @@ def training_callbacks(version_model_name, log_dir):
         else:
             return lr * tf.math.exp(-0.1)
 
-    # lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     # callback_list.append(lr_callback)
 
     return callback_list
