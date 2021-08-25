@@ -19,10 +19,6 @@ pipreqs AJISAI-Project\Web-App\
     + ML Web App with Flask
         > https://towardsdatascience.com/image-classification-of-pcbs-and-its-web-application-flask-c2b26039924a
 
-    + Hyperparameter Tuning
-        > https://towardsdatascience.com/why-is-everyone-at-kaggle-obsessed-with-optuna-for-hyperparameter-tuning-7608fdca337c
-        > https://optuna.org/#code_examples
-
     + Graphs
         > https://towardsdatascience.com/how-did-i-classify-50-chart-types-by-purpose-a6b0aa5b812d
 

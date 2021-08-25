@@ -28,3 +28,14 @@ def seq_maxpool_cnn(log_dir):
     return model
 
 # Can add multiple models
+
+x = Flatten()(x)
+x = Dense(dict_params['num_dense_nodes'], activation='relu')(x)
+x = Dropout(dict_params['drop_out'])(x)
+x = Dense(dict_params['num_dense_nodes'] // dict_params['dense_nodes_divisor'],
+          activation='relu')(x)
+
+
+
+
+

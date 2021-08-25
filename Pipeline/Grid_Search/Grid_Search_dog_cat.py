@@ -3,19 +3,64 @@ import numpy as np
 import pandas as pd
 from keras.layers import Dense, Conv2D, BatchNormalization
 from keras.layers import MaxPooling2D
+import keras
 from keras.layers import Input, Flatten, Dropout
 from keras.layers import Activation
 from keras.optimizers import Adam
+from keras.models import Sequential
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 from keras.models import Model, load_model
 from keras.utils import to_categorical
 import optuna
 from optuna.samplers import TPESampler
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import balanced_accuracy_score, accuracy_score
 from sklearn.metrics import confusion_matrix, classification_report
 import time
 from pathlib import Path
+
+
+class Objective(object):
+    def __init__(self, training_data, num_epochs, logging_dir, input_shape):
+        self.training_data = training_data
+        self.num_epochs = num_epochs
+        self.logging_dir = logging_dir
+        self.input_shape = input_shape
+
+    def __call__(self, trial):
+        num_filters = trial.suggest_categorical('num_filters', [16, 32, 48, 64])
+        kernel_size = trial.suggest_int('kernel_size', 2, 4)
+        stride_num = trial.suggest_int('strides', 1, 2)
+        activations = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
+        dense_nodes = trial.suggest_categorical('num_dense_divisor', [64, 128, 512, 1024])
+
+        dict_params = {
+            'num_filters': num_filters,
+            'kernel_size': kernel_size,
+            'stride_num': stride_num,
+            'activations': activations,
+            'dense_nodes': dense_nodes
+        }
+
+        model_name = 'optuna_seq_maxpool_cnn'
+        model = keras.Sequential([
+            keras.layers.Conv2D(filters=dict_params['num_filters'],
+                                kernel_size=dict_params['kernel_size'],
+                                activation=dict_params['activations'],
+                                input_shape=self.input_shape),
+            keras.layers.MaxPooling2D(2, 2),
+            keras.layers.Conv2D(filters=dict_params['num_filters'],
+                                kernel_size=dict_params['kernel_size'],
+                                activation=dict_params['activations']),
+            keras.layers.MaxPooling2D(2, 2),
+            keras.layers.Conv2D(filters=dict_params['num_filters'],
+                                kernel_size=dict_params['kernel_size'],
+                                activation=dict_params['activations']),
+            keras.layers.MaxPooling2D(2, 2),
+            keras.layers.Flatten(),
+            keras.layers.Dense(512, activation=dict_params['activations']),
+            keras.layers.Dense(1, activation='sigmoid')],
+            name=model_name)
+
 
 class Objective(object):
     def __init__(self, xcalib, ycalib, dir_save,
@@ -34,10 +79,8 @@ class Objective(object):
         num_cnn_blocks = trial.suggest_int('num_cnn_blocks', 2, 4)
         num_filters = trial.suggest_categorical('num_filters', [16, 32, 48, 64])
         kernel_size = trial.suggest_int('kernel_size', 2, 4)
-        num_dense_nodes = trial.suggest_categorical('num_dense_nodes',
-                                                    [64, 128, 512, 1024])
-        dense_nodes_divisor = trial.suggest_categorical('dense_nodes_divisor',
-                                                        [2, 4, 8])
+        num_dense_nodes = trial.suggest_categorical('num_dense_nodes', [64, 128, 512, 1024])
+        dense_nodes_divisor = trial.suggest_categorical('dense_nodes_divisor', [2, 4, 8])
         batch_size = trial.suggest_categorical('batch_size', [32, 64, 96, 128])
         drop_out = trial.suggest_discrete_uniform('drop_out', 0.05, 0.5, 0.05)
 
@@ -105,6 +148,7 @@ class Objective(object):
         validation_loss = np.min(h.history['val_loss'])
 
         return validation_loss
+
 
 maximum_epochs = 1000
 early_stop_epochs = 10
