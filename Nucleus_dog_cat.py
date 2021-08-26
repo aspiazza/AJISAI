@@ -1,6 +1,6 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
-# from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
+from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as cbDogCat
 from Pipeline.Prediction import Prediction_dog_cat as pdDogCat
@@ -12,7 +12,6 @@ from icecream import ic
 # TODO: Clean code, add comments
 # TODO: Update README as code progresses
 # TODO: Use Numba somehow
-# TODO: Use Optuna somehow
 # Model class
 class CatDogModel:
     def __init__(self, model_name, version, datafile):
@@ -29,9 +28,10 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
-    def grid_search(self):
-        # gridDogCat
-        pass
+    def grid_search(self, saved_model_dir):
+        gridDogCat.optuna_executor(training_data=self.train_gen, validation_data=self.valid_gen,
+                                   num_epochs=55, input_shape=(150, 150, 3),
+                                   save_model_dir=saved_model_dir, log_dir=self.log_dir)
 
     def training(self, callback_bool):
         if callback_bool:
@@ -94,11 +94,12 @@ if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    model_instance.model()
-    model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file=None)
-    model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
-    model_instance.evaluate_graphing(
-        csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
-    model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5',
-                                 prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    # model_instance.model()
+    model_instance.grid_search(saved_model_dir='F:\\Saved-Models\\')
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(csv_file=None)
+    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
+    # model_instance.evaluate_graphing(
+    #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
+    # model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5',
+    #                             prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')

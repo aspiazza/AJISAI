@@ -16,7 +16,7 @@ def seq_maxpool_cnn(log_dir):
         keras.layers.MaxPooling2D(2, 2),
         keras.layers.Flatten(),
         keras.layers.Dense(512, activation='relu'),
-        keras.layers.Dense(1, activation='sigmoid')],
+        keras.layers.Dense(1, activation='softmax')],
         name=model_name)
 
     plot_model(model, to_file=f'{log_dir}_{model_name}.png')
@@ -28,14 +28,3 @@ def seq_maxpool_cnn(log_dir):
     return model
 
 # Can add multiple models
-
-x = Flatten()(x)
-x = Dense(dict_params['num_dense_nodes'], activation='relu')(x)
-x = Dropout(dict_params['drop_out'])(x)
-x = Dense(dict_params['num_dense_nodes'] // dict_params['dense_nodes_divisor'],
-          activation='relu')(x)
-
-
-
-
-
