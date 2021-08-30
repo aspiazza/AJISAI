@@ -24,7 +24,7 @@ def training_callbacks(version_model_name, log_dir):
                                         patience=5,
                                         verbose=0, mode='auto', min_lr=0.001)
         return reduce_plat
-    callback_list.append(reduce_lr_plateau_callback())
+    # callback_list.append(reduce_lr_plateau_callback())
 
     def scheduler(epoch, lr):
         if epoch < 10:
@@ -33,7 +33,7 @@ def training_callbacks(version_model_name, log_dir):
             return lr * tf.math.exp(-0.1)
 
     lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
-    # callback_list.append(lr_callback)
+    callback_list.append(lr_callback)
 
     return callback_list
 

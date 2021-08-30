@@ -65,6 +65,20 @@ Dark Green: rgb(19, 66, 19)
 Black: rgb(0, 0, 0)
 
 
+
+# Learning rate schedule
+    def scheduler(epoch, lr):
+        if epoch < 10:
+            return lr
+        else:
+            return lr * tf.math.exp(-0.1)
+
+    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+    # callback_list.append(lr_callback)
+
+
+
+
 # Plotting average image
 
 import os

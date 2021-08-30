@@ -20,8 +20,8 @@ def train_image_gen(data_directory):
         target_size=(150, 150),
         batch_size=20,
         class_mode='binary',
-        classes=['cat', 'dog']
-    )
+        classes=['cat', 'dog'],
+        shuffle=True)
     return train_iterator
 
 
@@ -34,8 +34,8 @@ def valid_image_gen(data_directory):
         target_size=(150, 150),
         batch_size=20,
         class_mode='binary',
-        classes=['cat', 'dog']
-    )
+        classes=['cat', 'dog'],
+        shuffle=False)
     return valid_iterator
 
 
@@ -49,6 +49,5 @@ def test_image_gen(data_directory):
         batch_size=20,
         class_mode='binary',
         classes=['cat', 'dog'],
-        shuffle=False
-    )
+        shuffle=False)
     return test_iterator

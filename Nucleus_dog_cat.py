@@ -43,9 +43,9 @@ class CatDogModel:
 
         self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
-                                      batch_size=128,
-                                      steps_per_epoch=40,
-                                      epochs=55,
+                                      batch_size=20,
+                                      steps_per_epoch=20,
+                                      epochs=60,
                                       callbacks=callback_list)
 
     def graphing(self, csv_file):
@@ -94,11 +94,11 @@ if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
                                  datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
     model_instance.preprocess()
-    model_instance.model()
-    # model_instance.grid_search(saved_model_dir='F:\\Saved-Models\\Dog-Cat-Models\\')
-    model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file=None)
-    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+    # model_instance.model()
+    model_instance.grid_search(saved_model_dir='F:\\Saved-Models\\Dog-Cat-Models\\')
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(csv_file=None)
+    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\optuna_dog_cat_model.h5',
     #                         callback_bool=True)
     # model_instance.evaluate_graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
