@@ -1,13 +1,18 @@
+import csv
+import os
+import numpy as np
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+import optuna
+from optuna.samplers import TPESampler
 import keras
 from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint, CSVLogger
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
-import numpy as np
-import optuna
-from optuna.samplers import TPESampler
 
 
-class Objective(object):  # TODO: Edit and test
+# TODO: Test
+class Objective(object):
     def __init__(self, training_data, validation_data, num_epochs, input_shape, saved_model_dir, log_dir):
         self.training_data = training_data
         self.validation_data = validation_data
@@ -36,7 +41,6 @@ class Objective(object):  # TODO: Edit and test
 
         dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 512, 1024])
         batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 96, 128])
-        learning_rate = trial.suggest_float('learning_rate', 0.001, 0.1)
 
         dict_params = {
             'num_filters_1': num_filters_1,
@@ -58,7 +62,6 @@ class Objective(object):  # TODO: Edit and test
 
             'dense_nodes': dense_nodes,
             'batch_size': batch_size,
-            'learning_rate': learning_rate
         }
 
         model_name = 'optuna_seq_maxpool_cnn'
@@ -92,7 +95,7 @@ class Objective(object):  # TODO: Edit and test
             keras.layers.Dense(1, activation='sigmoid')],
             name=model_name)
 
-        opt = Adam(lr=dict_params['learning_rate'])
+        opt = Adam(lr=0.01)
         model.compile(loss='binary_crossentropy',
                       optimizer=opt, metrics=['accuracy', 'AUC', 'Recall', 'Precision',
                                               Fp(), Tn(), Fn(), Tp()])
@@ -128,3 +131,23 @@ def optuna_executor(training_data, validation_data, num_epochs, input_shape, sav
 
     df_results = study.trials_dataframe()
     df_results.to_csv(f'{log_dir}_optuna_results.csv')
+
+    def csv_cleaner(log_directory):
+        filepath = Path(f'{log_directory}_optuna_results.csv')
+
+        # Create temporary file
+        with open(filepath, 'r', newline='') as csv_file, NamedTemporaryFile('w', newline='', dir=filepath.parent,
+                                                                             delete=False) as tmp_file:
+            csv_reader = csv.reader(csv_file)
+            csv_writer = csv.writer(tmp_file)
+
+            header = next(csv_reader)  # First copy the header.
+            csv_writer.writerow(header)
+
+            # Copy rows of data leaving out first column.
+            for row in csv_reader:
+                csv_writer.writerow(row[1:])
+
+        os.replace(tmp_file.name, filepath)  # Replace original file with updated version.
+
+    csv_cleaner(log_dir)
