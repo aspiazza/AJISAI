@@ -5,23 +5,22 @@ import os
 
 def train_image_gen(data_directory):
     train_image_generator = ImageDataGenerator(
+        rotation_range=15,
         rescale=1. / 255,
-        rotation_range=10,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
+        shear_range=0.1,
         zoom_range=0.2,
         horizontal_flip=True,
-        fill_mode='nearest')
+        width_shift_range=0.1,
+        height_shift_range=0.1)
 
     train_directory = os.path.join(data_directory, 'Train')
     train_iterator = train_image_generator.flow_from_directory(
         train_directory,
         target_size=(150, 150),
         batch_size=20,
-        class_mode='binary',
-        classes=['cat', 'dog']
-    )
+        class_mode='categorical',
+        classes=['cat', 'dog'],
+        shuffle=True)
     return train_iterator
 
 
@@ -33,9 +32,9 @@ def valid_image_gen(data_directory):
         valid_directory,
         target_size=(150, 150),
         batch_size=20,
-        class_mode='binary',
-        classes=['cat', 'dog']
-    )
+        class_mode='categorical',
+        classes=['cat', 'dog'],
+        shuffle=False)
     return valid_iterator
 
 
@@ -47,8 +46,7 @@ def test_image_gen(data_directory):
         test_directory,
         target_size=(150, 150),
         batch_size=20,
-        class_mode='binary',
+        class_mode='categorical',
         classes=['cat', 'dog'],
-        shuffle=False
-    )
+        shuffle=False)
     return test_iterator

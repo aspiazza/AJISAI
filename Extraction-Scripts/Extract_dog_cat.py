@@ -52,5 +52,5 @@ def move_images():
 
 
 # Executor
-make_dir()
+# make_dir()
 move_images()

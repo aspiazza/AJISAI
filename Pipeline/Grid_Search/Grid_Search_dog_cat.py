@@ -1,134 +1,152 @@
+import csv
 import os
 import numpy as np
-import pandas as pd
-from keras.layers import Dense, Conv2D, BatchNormalization
-from keras.layers import MaxPooling2D
-from keras.layers import Input, Flatten, Dropout
-from keras.layers import Activation
-from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
-from keras.models import Model, load_model
-from keras.utils import to_categorical
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 import optuna
 from optuna.samplers import TPESampler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import balanced_accuracy_score, accuracy_score
-from sklearn.metrics import confusion_matrix, classification_report
-import time
-from pathlib import Path
+import keras
+from keras.optimizers import Adam
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint, CSVLogger
+from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
+
 
 class Objective(object):
-    def __init__(self, xcalib, ycalib, dir_save,
-                 max_epochs, early_stop, learn_rate_epochs,
-                 input_shape, number_of_classes):
-        self.xcalib = xcalib
-        self.ycalib = ycalib
-        self.max_epochs = max_epochs
-        self.early_stop = early_stop
-        self.dir_save = dir_save
-        self.learn_rate_epochs = learn_rate_epochs
+    def __init__(self, training_data, validation_data, num_epochs, input_shape, saved_model_dir, log_dir):
+        self.training_data = training_data
+        self.validation_data = validation_data
+        self.num_epochs = num_epochs
         self.input_shape = input_shape
-        self.number_of_classes = number_of_classes
+        self.saved_model_dir = saved_model_dir
+        self.log_dir = log_dir
 
     def __call__(self, trial):
-        num_cnn_blocks = trial.suggest_int('num_cnn_blocks', 2, 4)
-        num_filters = trial.suggest_categorical('num_filters', [16, 32, 48, 64])
-        kernel_size = trial.suggest_int('kernel_size', 2, 4)
-        num_dense_nodes = trial.suggest_categorical('num_dense_nodes',
-                                                    [64, 128, 512, 1024])
-        dense_nodes_divisor = trial.suggest_categorical('dense_nodes_divisor',
-                                                        [2, 4, 8])
-        batch_size = trial.suggest_categorical('batch_size', [32, 64, 96, 128])
-        drop_out = trial.suggest_discrete_uniform('drop_out', 0.05, 0.5, 0.05)
+        num_filters_1 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
+        num_filters_2 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
+        num_filters_3 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
 
-        dict_params = {'num_cnn_blocks': num_cnn_blocks,
-                       'num_filters': num_filters,
-                       'kernel_size': kernel_size,
-                       'num_dense_nodes': num_dense_nodes,
-                       'dense_nodes_divisor': dense_nodes_divisor,
-                       'batch_size': batch_size,
-                       'drop_out': drop_out}
+        kernel_size_1 = trial.suggest_int('kernel_size', 2, 4)
+        kernel_size_2 = trial.suggest_int('kernel_size', 2, 4)
+        kernel_size_3 = trial.suggest_int('kernel_size', 2, 4)
 
-        # start of cnn coding
-        input_tensor = Input(shape=self.input_shape)
+        stride_num_1 = trial.suggest_int('strides', 1, 2)
+        stride_num_2 = trial.suggest_int('strides', 1, 2)
+        stride_num_3 = trial.suggest_int('strides', 1, 2)
 
-        # 1st cnn block
-        x = BatchNormalization()(input_tensor)
-        x = Activation('relu')(x)
-        x = Conv2D(filters=dict_params['num_filters'],
-                   kernel_size=dict_params['kernel_size'],
-                   strides=1, padding='same')(x)
-        # x = MaxPooling2D()(x)
-        x = Dropout(dict_params['drop_out'])(x)
+        activations_1 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_2 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_3 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_4 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
 
-        # additional cnn blocks
-        for iblock in range(dict_params['num_cnn_blocks'] - 1):
-            x = BatchNormalization()(x)
-            x = Activation('relu')(x)
-            x = Conv2D(filters=dict_params['num_filters'],
-                       kernel_size=dict_params['kernel_size'],
-                       strides=1, padding='same')(x)
-            x = MaxPooling2D()(x)
-            x = Dropout(dict_params['drop_out'])(x)
+        dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 512, 1024])
+        batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 96, 128])
 
-        # mlp
-        x = Flatten()(x)
-        x = Dense(dict_params['num_dense_nodes'], activation='relu')(x)
-        x = Dropout(dict_params['drop_out'])(x)
-        x = Dense(dict_params['num_dense_nodes'] // dict_params['dense_nodes_divisor'],
-                  activation='relu')(x)
-        output_tensor = Dense(self.number_of_classes, activation='softmax')(x)
+        dict_params = {
+            'num_filters_1': num_filters_1,
+            'num_filters_2': num_filters_2,
+            'num_filters_3': num_filters_3,
 
-        # instantiate and compile model
-        cnn_model = Model(inputs=input_tensor, outputs=output_tensor)
-        opt = Adam(lr=0.00025)  # default = 0.001
-        cnn_model.compile(loss='categorical_crossentropy',
-                          optimizer=opt, metrics=['accuracy'])
+            'kernel_size_1': kernel_size_1,
+            'kernel_size_2': kernel_size_2,
+            'kernel_size_3': kernel_size_3,
 
-        # callbacks for early stopping and for learning rate reducer
-        fn = self.dir_save + str(trial.number) + '_cnn.h5'
-        callbacks_list = [EarlyStopping(monitor='val_loss', patience=self.early_stop),
+            'stride_num_1': stride_num_1,
+            'stride_num_2': stride_num_2,
+            'stride_num_3': stride_num_3,
+
+            'activations_1': activations_1,
+            'activations_2': activations_2,
+            'activations_3': activations_3,
+            'activations_4': activations_4,
+
+            'dense_nodes': dense_nodes,
+            'batch_size': batch_size,
+        }
+
+        model_name = 'optuna_seq_maxpool_cnn'
+        model = keras.Sequential([
+            keras.layers.Conv2D(filters=dict_params['num_filters_1'],
+                                kernel_size=dict_params['kernel_size_1'],
+                                activation=dict_params['activations_1'],
+                                strides=dict_params['stride_num_1'],
+                                input_shape=self.input_shape),
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPooling2D(2, 2),
+
+            keras.layers.Conv2D(filters=dict_params['num_filters_2'],
+                                kernel_size=dict_params['kernel_size_2'],
+                                activation=dict_params['activations_2'],
+                                strides=dict_params['stride_num_2']),
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPooling2D(2, 2),
+
+            keras.layers.Conv2D(filters=dict_params['num_filters_3'],
+                                kernel_size=dict_params['kernel_size_3'],
+                                activation=dict_params['activations_3'],
+                                strides=dict_params['stride_num_3']),
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPooling2D(2, 2),
+
+            keras.layers.Flatten(),
+            keras.layers.Dense(dict_params['dense_nodes'], activation=dict_params['activations_4']),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(rate=0.5),
+            keras.layers.Dense(1, activation='sigmoid')],
+            name=model_name)
+
+        opt = Adam(lr=0.01)
+        model.compile(loss='binary_crossentropy',
+                      optimizer=opt, metrics=['accuracy', 'AUC', 'Recall', 'Precision',
+                                              Fp(), Tn(), Fn(), Tp()])
+
+        callbacks_list = [EarlyStopping(monitor='val_loss', patience=5),
                           ReduceLROnPlateau(monitor='val_loss', factor=0.1,
-                                            patience=self.learn_rate_epochs,
+                                            patience=5,
                                             verbose=0, mode='auto', min_lr=1.0e-6),
-                          ModelCheckpoint(filepath=fn,
-                                          monitor='val_loss', save_best_only=True)]
+                          ModelCheckpoint(filepath=f'{self.saved_model_dir}_optuna.h5',
+                                          monitor='val_loss', save_best_only=True),
+                          CSVLogger(f'{self.log_dir}_optuna_CSVLog_training_metrics.csv', append=True, separator=',')]
 
-        # fit the model
-        h = cnn_model.fit(x=self.xcalib, y=self.ycalib,
-                          batch_size=dict_params['batch_size'],
-                          epochs=self.max_epochs,
-                          validation_split=0.25,
-                          shuffle=True, verbose=0,
-                          callbacks=callbacks_list)
+        history = model.fit(x=self.training_data,
+                            batch_size=dict_params['batch_size'],
+                            epochs=self.num_epochs,
+                            validation_data=self.validation_data,
+                            callbacks=[callbacks_list])
 
-        validation_loss = np.min(h.history['val_loss'])
+        validation_loss = np.min(history.history['val_loss'])
 
         return validation_loss
 
-maximum_epochs = 1000
-early_stop_epochs = 10
-learning_rate_epochs = 5
-optimizer_direction = 'minimize'
-number_of_random_points = 25  # random searches to start opt process
-maximum_time = 4 * 60 * 60  # seconds
 
-objective = Objective(x_calib, y_calib, results_directory,
-                      maximum_epochs, early_stop_epochs,
-                      learning_rate_epochs, shape_of_input, num_classes)
+def optuna_executor(training_data, validation_data, num_epochs, input_shape, save_model_dir, log_dir):
+    objective = Objective(training_data=training_data, validation_data=validation_data, num_epochs=num_epochs,
+                          input_shape=input_shape, saved_model_dir=save_model_dir, log_dir=log_dir)
 
-optuna.logging.set_verbosity(optuna.logging.WARNING)
-study = optuna.create_study(direction=optimizer_direction,
-                            sampler=TPESampler(n_startup_trials=number_of_random_points))
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+    study = optuna.create_study(direction='minimize',
+                                sampler=TPESampler(n_startup_trials=25))
 
-study.optimize(objective, timeout=maximum_time)
+    study.optimize(objective, timeout=14400)
 
-# save results
-df_results = study.trials_dataframe()
-df_results.to_pickle(results_directory + 'df_optuna_results.pkl')
-df_results.to_csv(results_directory + 'df_optuna_results.csv')
+    df_results = study.trials_dataframe()
+    df_results.to_csv(f'{log_dir}_optuna_results.csv')
 
-# https://optuna.readthedocs.io/en/v1.3.0/reference/samplers.html
-# https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html
-# https://machinelearningapplied.com/hyperparameter-search-with-optuna-part-3-keras-cnn-classification-and-ensembling/
-# https://optuna.org/#code_examples
+    def csv_cleaner(log_directory):
+        filepath = Path(f'{log_directory}_optuna_results.csv')
+
+        # Create temporary file
+        with open(filepath, 'r', newline='') as csv_file, NamedTemporaryFile('w', newline='', dir=filepath.parent,
+                                                                             delete=False) as tmp_file:
+            csv_reader = csv.reader(csv_file)
+            csv_writer = csv.writer(tmp_file)
+
+            header = next(csv_reader)  # First copy the header.
+            csv_writer.writerow(header)
+
+            # Copy rows of data leaving out first column.
+            for row in csv_reader:
+                csv_writer.writerow(row[1:])
+
+        os.replace(tmp_file.name, filepath)  # Replace original file with updated version.
+
+    csv_cleaner(log_dir)

@@ -1,6 +1,6 @@
 from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
 from Pipeline.Models import Model_dog_cat as modelDogCat
-# from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
+from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
 from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
 from Pipeline.Callbacks import Callbacks_dog_cat as cbDogCat
 from Pipeline.Prediction import Prediction_dog_cat as pdDogCat
@@ -12,12 +12,13 @@ from icecream import ic
 # TODO: Clean code, add comments
 # TODO: Update README as code progresses
 # TODO: Use Numba somehow
-# TODO: Use Optuna somehow
 # Model class
 class CatDogModel:
-    def __init__(self, model_name, version, datafile):
+    def __init__(self, model_name, version, datafile, saved_weights):
         self.datafile = datafile
         self.version_model_name = f'{version}_{model_name}'
+
+        self.saved_weights = f'{saved_weights}\\{self.version_model_name}'
         self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{self.version_model_name}'
         self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{self.version_model_name}'
 
@@ -30,12 +31,13 @@ class CatDogModel:
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
     def grid_search(self):
-        # gridDogCat
-        pass
+        gridDogCat.optuna_executor(training_data=self.train_gen, validation_data=self.valid_gen,
+                                   num_epochs=55, input_shape=(150, 150, 3),
+                                   save_model_dir=self.saved_weights, log_dir=self.log_dir)
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = cbDogCat.training_callbacks(self.version_model_name, self.log_dir)
+            callback_list = cbDogCat.training_callbacks(self.saved_weights, self.log_dir)
             # Custom callback cannot be appended to callback list so is simply called
             cbDogCat.model_summary_callback(self.log_dir, self.model)
         else:
@@ -44,7 +46,7 @@ class CatDogModel:
         self.history = self.model.fit(self.train_gen,
                                       validation_data=self.valid_gen,
                                       batch_size=20,
-                                      steps_per_epoch=40,
+                                      steps_per_epoch=20,
                                       epochs=55,
                                       callbacks=callback_list)
 
@@ -76,7 +78,7 @@ class CatDogModel:
             callback_list = []
 
         model.evaluate(self.test_gen,
-                       batch_size=20,
+                       batch_size=50,
                        callbacks=callback_list)
 
     def evaluate_graphing(self, csv_file):
@@ -92,12 +94,16 @@ class CatDogModel:
 # Executor
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
-                                 datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
+                                 datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
+                                 saved_weights='F:\\Saved-Models\\Dog-Cat-Models')
     model_instance.preprocess()
     model_instance.model()
+    # model_instance.grid_search()
     model_instance.training(callback_bool=True)
     model_instance.graphing(csv_file=None)
-    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5', callback_bool=True)
-    # model_instance.evaluate_graphing(csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
-    # model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\First_Generation_dog_cat.h5',
-    #                            prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+                            callback_bool=True)
+    model_instance.evaluate_graphing(
+        csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
+    model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+                                 prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')

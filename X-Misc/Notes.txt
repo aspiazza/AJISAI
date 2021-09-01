@@ -19,10 +19,6 @@ pipreqs AJISAI-Project\Web-App\
     + ML Web App with Flask
         > https://towardsdatascience.com/image-classification-of-pcbs-and-its-web-application-flask-c2b26039924a
 
-    + Hyperparameter Tuning
-        > https://towardsdatascience.com/why-is-everyone-at-kaggle-obsessed-with-optuna-for-hyperparameter-tuning-7608fdca337c
-        > https://optuna.org/#code_examples
-
     + Graphs
         > https://towardsdatascience.com/how-did-i-classify-50-chart-types-by-purpose-a6b0aa5b812d
 
@@ -33,6 +29,12 @@ pipreqs AJISAI-Project\Web-App\
         > https://towardsdatascience.com/my-first-gold-in-kaggle-tips-and-tricks-for-an-nlp-competition-cec48dda5895
         > https://towardsdatascience.com/18-common-python-anti-patterns-i-wish-i-had-known-before-44d983805f0f
         > https://towardsdatascience.com/stop-using-pandas-get-dummies-for-feature-encoding-5d2cd07cb4fc
+
+    + Optuna
+        > https://optuna.readthedocs.io/en/v1.3.0/reference/samplers.html
+        > https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html
+        > https://machinelearningapplied.com/hyperparameter-search-with-optuna-part-3-keras-cnn-classification-and-ensembling/
+        > https://optuna.org/#code_examples
 
 
 Code:
@@ -61,6 +63,20 @@ HTML Site:
 Bright Green: rgb(5, 182, 105)
 Dark Green: rgb(19, 66, 19)
 Black: rgb(0, 0, 0)
+
+
+
+# Learning rate schedule
+    def scheduler(epoch, lr):
+        if epoch < 10:
+            return lr
+        else:
+            return lr * tf.math.exp(-0.1)
+
+    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+    # callback_list.append(lr_callback)
+
+
 
 
 # Plotting average image
