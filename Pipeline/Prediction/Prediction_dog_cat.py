@@ -21,5 +21,5 @@ class PredictionDogCat:
             input_arr = tf.keras.preprocessing.image.img_to_array(image)
             input_arr = np.array([input_arr])  # Convert single image to a batch.
 
-            prediction = model.predict_classes(input_arr)
+            prediction = np.argmax(model.predict(input_arr), axis=-1)
             print(f'Predicted:  {prediction}\n')

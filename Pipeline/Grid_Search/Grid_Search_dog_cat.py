@@ -11,7 +11,6 @@ from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint, C
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 
 
-# TODO: Test
 class Objective(object):
     def __init__(self, training_data, validation_data, num_epochs, input_shape, saved_model_dir, log_dir):
         self.training_data = training_data
@@ -104,7 +103,7 @@ class Objective(object):
                           ReduceLROnPlateau(monitor='val_loss', factor=0.1,
                                             patience=5,
                                             verbose=0, mode='auto', min_lr=1.0e-6),
-                          ModelCheckpoint(filepath=f'{self.saved_model_dir}optuna_dog_cat_model.h5',
+                          ModelCheckpoint(filepath=f'{self.saved_model_dir}_optuna.h5',
                                           monitor='val_loss', save_best_only=True),
                           CSVLogger(f'{self.log_dir}_optuna_CSVLog_training_metrics.csv', append=True, separator=',')]
 

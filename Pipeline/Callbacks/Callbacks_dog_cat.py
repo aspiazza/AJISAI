@@ -4,12 +4,12 @@ import sys
 from icecream import ic
 
 
-def training_callbacks(version_model_name, log_dir):
+def training_callbacks(saved_weights_dir, log_dir):
     callback_list = []
 
     def model_checkpoint_callback():
         model_checkpoint = ModelCheckpoint(
-            f'F:\\Saved-Models\\{version_model_name}.h5',
+            f'{saved_weights_dir}.h5',
             save_best_only=True)
         return model_checkpoint
 
@@ -22,7 +22,7 @@ def training_callbacks(version_model_name, log_dir):
     callback_list.append(metric_csv_callback())
 
     def reduce_lr_plateau_callback():
-        reduce_plat = ReduceLROnPlateau(monitor='val_accuracy', patience=2, verbose=1, factor=0.5, min_lr=0.00001)
+        reduce_plat = ReduceLROnPlateau(monitor='val_accuracy', patience=5, verbose=1, factor=0.5, min_lr=0.00001)
         return reduce_plat
 
     callback_list.append(reduce_lr_plateau_callback())
@@ -31,7 +31,7 @@ def training_callbacks(version_model_name, log_dir):
         early_stop = EarlyStopping(patience=10)
         return early_stop
 
-    callback_list.append(early_stopping_callback())
+    # callback_list.append(early_stopping_callback())
 
     def scheduler(epoch, lr):
         if epoch < 10:
@@ -39,7 +39,7 @@ def training_callbacks(version_model_name, log_dir):
         else:
             return lr * tf.math.exp(-0.1)
 
-    # lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
     # callback_list.append(lr_callback)
 
     return callback_list

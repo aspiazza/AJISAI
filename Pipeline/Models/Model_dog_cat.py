@@ -1,7 +1,7 @@
 # Model Architectures
 import keras
 from keras.utils import plot_model
-from keras.optimizers import RMSprop
+from keras.optimizers import Adam
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 
 
@@ -32,7 +32,7 @@ def seq_maxpool_cnn(log_dir):
 
     plot_model(model, to_file=f'{log_dir}_{model_name}.png')
 
-    model.compile(optimizer=RMSprop(),
+    model.compile(optimizer=Adam(),
                   loss='categorical_crossentropy',
                   metrics=['accuracy', 'AUC', 'Recall', 'Precision',
                            Fp(), Tn(), Fn(), Tp()])

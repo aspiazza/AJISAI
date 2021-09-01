@@ -14,9 +14,11 @@ from icecream import ic
 # TODO: Use Numba somehow
 # Model class
 class CatDogModel:
-    def __init__(self, model_name, version, datafile):
+    def __init__(self, model_name, version, datafile, saved_weights):
         self.datafile = datafile
         self.version_model_name = f'{version}_{model_name}'
+
+        self.saved_weights = f'{saved_weights}\\{self.version_model_name}'
         self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{self.version_model_name}'
         self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{self.version_model_name}'
 
@@ -28,14 +30,14 @@ class CatDogModel:
     def model(self):
         self.model = modelDogCat.seq_maxpool_cnn(self.log_dir)
 
-    def grid_search(self, saved_model_dir):
+    def grid_search(self):
         gridDogCat.optuna_executor(training_data=self.train_gen, validation_data=self.valid_gen,
                                    num_epochs=55, input_shape=(150, 150, 3),
-                                   save_model_dir=saved_model_dir, log_dir=self.log_dir)
+                                   save_model_dir=self.saved_weights, log_dir=self.log_dir)
 
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = cbDogCat.training_callbacks(self.version_model_name, self.log_dir)
+            callback_list = cbDogCat.training_callbacks(self.saved_weights, self.log_dir)
             # Custom callback cannot be appended to callback list so is simply called
             cbDogCat.model_summary_callback(self.log_dir, self.model)
         else:
@@ -45,7 +47,7 @@ class CatDogModel:
                                       validation_data=self.valid_gen,
                                       batch_size=20,
                                       steps_per_epoch=20,
-                                      epochs=60,
+                                      epochs=55,
                                       callbacks=callback_list)
 
     def graphing(self, csv_file):
@@ -76,7 +78,7 @@ class CatDogModel:
             callback_list = []
 
         model.evaluate(self.test_gen,
-                       batch_size=20,
+                       batch_size=50,
                        callbacks=callback_list)
 
     def evaluate_graphing(self, csv_file):
@@ -92,10 +94,11 @@ class CatDogModel:
 # Executor
 if __name__ == '__main__':
     model_instance = CatDogModel(model_name="dog_cat", version="First_Generation",
-                                 datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir')
+                                 datafile='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
+                                 saved_weights='F:\\Saved-Models\\Dog-Cat-Models')
     model_instance.preprocess()
     model_instance.model()
-    # model_instance.grid_search(saved_model_dir='F:\\Saved-Models\\Dog-Cat-Models\\')
+    # model_instance.grid_search()
     model_instance.training(callback_bool=True)
     model_instance.graphing(csv_file=None)
     model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
