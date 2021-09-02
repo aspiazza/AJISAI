@@ -17,8 +17,10 @@ def make_project(project_name):  # Function to make files and directories
                  f'Data-Exploration\\Explore_{project_name}.py',
                  f'Nucleus_{project_name}.py',
                  f'Pipeline\\Callbacks\\Callbacks_{project_name}.py',
-                 f'Pipeline\\Data_Visual\\Data-Visual_{project_name}.py',
+                 f'Pipeline\\Data_Visual\\Data_Visual_{project_name}.py',
+                 f'Pipeline\\Grid_Search\\Grid_Search_{project_name}.py',
                  f'Pipeline\\Models\\Model_{project_name}.py',
+                 f'Pipeline\\Prediction\\Prediction_{project_name}.py',
                  f'Pipeline\\Preprocess\\Preprocess_{project_name}.py']
 
     for file in file_list:
@@ -28,6 +30,7 @@ def make_project(project_name):  # Function to make files and directories
             continue
 
 
+# TODO: Update as Nucleus code progresses
 def make_webapp(project_name):  # Function to make Web-App files and directories
     web_app_dir = f'Web-Apps\\Web-App_{project_name}'
     os.mkdir(web_app_dir)
@@ -45,43 +48,55 @@ def make_webapp(project_name):  # Function to make Web-App files and directories
             continue
 
 
-def populate_nucleus(project_name):  # TODO: Update as Nucleus code progresses
+def populate_nucleus(project_name):
     with open(f'Nucleus_{project_name}.py', 'a') as nucleus_file:
         nucleus_file.write('''
 class placeholder:
-    def __init__(self, model_name, version, datafile):
+        def __init__(self, model_name, version, datafile, saved_weights):
         self.datafile = datafile
         self.version_model_name = f'{version}_{model_name}'
-        self.log_dir = f'Model-Graphs&Logs\\\Model-Data_{model_name}\\\Logs\\\{self.version_model_name}'
-        self.metric_dir = f'Model-Graphs&Logs\\\Model-Data_{model_name}\\\Metric-Graphs\\\{self.version_model_name}'
+
+        self.saved_weights = f'{saved_weights}\\{self.version_model_name}'
+        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{self.version_model_name}'
+        self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{self.version_model_name}'
 
     def preprocess(self):
         pass
 
     def model(self):
         pass
-        
-    def graphing(self):
+
+    def grid_search(self):
         pass
 
-    def training(self):
+    def training(self, callback_bool):
         pass
-        
-    def evaluation(self):
+
+    def graphing(self, csv_file):
         pass
-        
-    def predict(self):
+
+    def evaluate(self, saved_weights_dir, callback_bool):
+        pass
+
+    def evaluate_graphing(self, csv_file):
+        pass
+
+    @staticmethod
+    def predict(saved_weights_dir, prediction_data):
         pass
 
 
 # Executor
 if __name__ == '__main__':
-    model_instance = placeholder(model_name=placeholder, version=placeholder, datafile=placeholder)
+    model_instance = placeholder(model_name=placeholder, version=placeholder, datafile=placeholder, saved_weights)
     # model_instance.preprocess()
     # model_instance.model()
+    # model_instance.grid_search()
     # model_instance.training(callback_bool=True)
     # model_instance.graphing(csv_file=None)
-    # model_instance.predict()
+    # model_instance.evaluate(saved_weights_dir=None, callback_bool=True)
+    # model_instance.evaluate_graphing(csv_file=None)
+    # model_instance.model_predict(saved_weights_dir=None ,prediction_data=None)
 ''')
 
 

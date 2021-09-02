@@ -6,7 +6,7 @@ import os
 def train_image_gen(data_directory):
     train_image_generator = ImageDataGenerator(
         rotation_range=15,
-        rescale=1. / 255,
+        rescale=1. / 255.0,
         shear_range=0.1,
         zoom_range=0.2,
         horizontal_flip=True,
