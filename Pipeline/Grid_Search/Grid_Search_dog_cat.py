@@ -7,11 +7,11 @@ import optuna
 from optuna.samplers import TPESampler
 import keras
 from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint, CSVLogger
+from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, CSVLogger
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 
 
-class Objective(object):
+class Objective:
     def __init__(self, training_data, validation_data, num_epochs, input_shape, saved_model_dir, log_dir):
         self.training_data = training_data
         self.validation_data = validation_data
@@ -91,16 +91,15 @@ class Objective(object):
             keras.layers.Dense(dict_params['dense_nodes'], activation=dict_params['activations_4']),
             keras.layers.BatchNormalization(),
             keras.layers.Dropout(rate=0.5),
-            keras.layers.Dense(1, activation='sigmoid')],
+            keras.layers.Dense(2, activation='softmax')],
             name=model_name)
 
         opt = Adam(lr=0.01)
-        model.compile(loss='binary_crossentropy',
+        model.compile(loss='categorical_crossentropy',
                       optimizer=opt, metrics=['accuracy', 'AUC', 'Recall', 'Precision',
                                               Fp(), Tn(), Fn(), Tp()])
 
-        callbacks_list = [EarlyStopping(monitor='val_loss', patience=5),
-                          ReduceLROnPlateau(monitor='val_loss', factor=0.1,
+        callbacks_list = [ReduceLROnPlateau(monitor='val_loss', factor=0.1,
                                             patience=5,
                                             verbose=0, mode='auto', min_lr=1.0e-6),
                           ModelCheckpoint(filepath=f'{self.saved_model_dir}_optuna.h5',

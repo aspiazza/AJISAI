@@ -5,14 +5,15 @@
 The AJISAI Project can be considered to be a framework or 'Machine Learning Workbench'. It is a directory structure that
 separates the different components of the machine learning training, testing, and visualization process all in separate
 files. These files (located in the Pipeline directory) are all called on as needed by a Nucleus file. The Nucleus file
-can be thought of as the command and control file of a project and executes functions and classes from these other .py
-files. Graphs, logs, and other model information are also all outputted to the Model-Graphs&Logs folder to help evaluate
-the model and view its performance. Directories for data extraction and exploration are also present, although they are
-not necessarily part of the Nucleus pipeline. Directories to save trained models are also present for testing and
-prediction purposes as well as incorporating into ML/DL web applications. Using this kind of framework, I can make any
-kind of machine or deep learning model I want with varying levels of complexity efficiently and professionally.
+can be thought of as the command and control file of a project and executes functions and classes from these other
+python files. Graphs, logs, and other model information are also all outputted to the Model-Graphs&Logs folder to help
+evaluate the model and view its performance visually. Directories for data extraction and exploration are also present,
+although they are not necessarily part of the Nucleus pipeline. A directory to save trained models is also present for
+testing and prediction purposes as well as incorporating into ML/DL web applications. Using this kind of framework, I
+can make any kind of machine or deep learning model I want with varying levels of complexity, efficiency and
+professionality.
 
-The Web Application portion of the AJISAI Project contains all the necessary files need to create a ML/DL web
+The Web Application portion of the AJISAI Project contains all the necessary files need to create an ML/DL web
 application like a docker file, requirements.txt, html/css files, and API.
 
 ### Purpose:
@@ -34,6 +35,9 @@ some skills I utilized in this project:
 - HTML/CSS Web App Development
 - Machine Learning Techniques and Concepts
 - Clean, Reusable, Production Worthy Code
+- Libraries:
+
+> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, sys, pandas, os, csv, optuna, glob, shutil, and more
 
 ### Directory Structure:
 
@@ -47,13 +51,17 @@ some skills I utilized in this project:
     + Pipeline
         + Callbacks
         + Data_Visual
+        + Grid_Search
         + Models
+        + Prediction
         + Preprocess
     + Web-Apps
         + Web-App_{model name}
     + X-Misc
-        + scratch_{n}.py
+        + Mermaid_Code.txt
+        + ML-Notes.txt
         + Notes.txt
+        + scratch_{n}.py
     + Nucleus_{model name}.py
     + Project_Initializer.py
     + README.md
@@ -63,78 +71,65 @@ some skills I utilized in this project:
 ### What The Directories Contain:
 
 - Data-Exploration
-    + glob, numpy, os, pandas, PIL, plotly, random
-      > - Script that extract useful information from data and output it to plotly html files
-      > - Used to explore and display data, stats, correlation coefficients, clustering, etc
+  > + Script that extract useful information from data and output it to plotly html files
+  > + Used to explore and display data, stats, correlation coefficients, clustering, etc
 
 - Extraction-Scripts
-    + beautifulsoup, glob, os, random, requests, selenium, shutil
-      > - Script that extracts data and organizes it into /F:/Data-Warehouse
-      > - Data can be extracted from web scraping or organize downloaded datasets
-      > - All data will output to a CSV, Tensorflow Dataframe, json, or image file
+  > + Script that extracts data and organizes it into /F:/Data-Warehouse
+  > + Data can be extracted from web scraping or organize downloaded datasets
+  > + All data will output to a CSV, Tensorflow Dataframe, json, or image file
 
 - Model-Graphs&Logs
-    + None
-      > - Stores metadata, graphs, logs, model images, json files, and CSV files
-      > - Data comes from baseline, training, exploration, and prediction processes
+  > + Stores metadata, graphs, logs, model images, json files, and CSV files
+  > + Data comes from baseline, training, exploration, and prediction processes
 
 - Pipeline\Callbacks
-    + Keras, sys
-      > - Will contain functions used for callbacks on model
-      > - Model checkpoints, csv, printing model summaries
+  > + Will contain functions used for callbacks on model
+  > + Model checkpoints, csv, printing model summaries
 
 - Pipeline\Data-Visual
-    + Plotly, SciKitLearn
-      > - Visualization scripts that take in history or files and output graphs in the form of HTML files
-      > - Data Viz will be broken up into different functions within a single custom library
-      > - Will output training, baseline, post-preprocessed, and prediction subplots
+  > + Visualization scripts that take in history or files and output graphs in the form of HTML files
+  > + Data Viz will be broken up into different functions within a single custom library
+  > + Will output training, baseline, post-preprocessed, and prediction subplots
 
 - Pipeline\Models
-    + Keras, SciKitLearn, Tensorflow
-      > - Contains the actual models and there parameters
-      > - Models will be made using functional API and sequential
-      > - Results of training should be outputted to Data Visual directory and logs
-      > - Can implement Freezing, Pretrained layers, multiple models, and other techniques
+  > + Contains the actual models and there parameters
+  > + Models will be made using functional API and sequential
+  > + Results of training should be outputted to Data Visual directory and logs
+  > + Can implement Freezing, Pretrained layers, multiple models, and other techniques
 
 - Pipeline\Preprocess
-    + Keras, SciKitLearn, Tensorflow, numba, numpy, os, pandas
-      > - Data preprocessing component
-      > - Data PP will be broken up into different functions within a single custom library
-      > - Generators, feature engineering, dimensionality reduction, and other functions located here
+  > + Data preprocessing component
+  > + Data PP will be broken up into different functions within a single custom library
+  > + Generators, feature engineering, dimensionality reduction, and other functions located here
 
 - Web-Apps
-    + AWS, Azure, Docker, Fast-API, css, html, jinja, pipreq, plotly, requests, templates
-      > - Contains directories for each model web app
-      > - Create an application with html, python, and css
-      > - Allow user to input data, and model outputs prediction
-      > - Put application in docker container
-      > - Contains docker file to set up container
-      > - Contains requirements.txt to download packages
-      > - Container mounted on a cloud platform
+  > + Contains directories for each model web app
+  > + Create an application with html, python, and css
+  > + Allow user to input data, and model outputs prediction
+  > + Put application in docker container
+  > + Contains docker file to set up container
+  > + Contains requirements.txt to download packages
+  > + Container mounted on a cloud platform
 
 - X-Misc
-    + Whatever Needed
-      > - Contains scratch files and notes for development purposes
-      > - Contains images for README file
+  > + Contains scratch files and notes for development purposes
+  > + Contains images for README file
 
 - Nucleus.py
-    + custom libraries, datetime, keras, numba, os, sys, tensorflow
-      > - A nucleus file executes all functions related to training of model
-      > - Will be a complex class that does all the above steps
-      > - Will call functions to preprocess, train, visualize, tune, and save model/data
+  > + A nucleus file executes all functions related to training of model
+  > + Will be a complex class that does all the above steps
+  > + Will call functions to preprocess, train, visualize, tune, and save model/data
 
 - Project_Initializer.py
-    + os
-      > - Creates all files and directories needed when starting a new project
-      > - Argument that is passed in is name ex. 'dog-cat'
+  > + Creates all files and directories needed when starting a new project
+  > + Argument that is passed in is name ex. 'dog-cat'
 
 - Data-Warehouse
-    + None
-      > - Contains data used in projects
+  > + Contains data used in projects
 
 - Saved-Models
-    + None
-      > - Will contain saved model weights
+  > + Will contain saved model weights
 
 ### Logic Steps:
 
