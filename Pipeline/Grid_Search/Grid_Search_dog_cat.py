@@ -11,7 +11,7 @@ from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, CSVLogger
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 
 
-class Objective:
+class Objective:  # TODO: Test again
     def __init__(self, training_data, validation_data, num_epochs, input_shape, saved_model_dir, log_dir):
         self.training_data = training_data
         self.validation_data = validation_data
@@ -21,6 +21,7 @@ class Objective:
         self.log_dir = log_dir
 
     def __call__(self, trial):
+        # Create study parameters
         num_filters_1 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
         num_filters_2 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
         num_filters_3 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
@@ -41,6 +42,7 @@ class Objective:
         dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 512, 1024])
         batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 96, 128])
 
+        # Add study params to dictionary for organization
         dict_params = {
             'num_filters_1': num_filters_1,
             'num_filters_2': num_filters_2,
@@ -128,9 +130,9 @@ def optuna_executor(training_data, validation_data, num_epochs, input_shape, sav
     study.optimize(objective, timeout=14400)
 
     df_results = study.trials_dataframe()
-    df_results.to_csv(f'{log_dir}_optuna_results.csv')
+    df_results.to_csv(f'{log_dir}_optuna_results.csv')  # Optuna study results
 
-    def csv_cleaner(log_directory):
+    def csv_cleaner(log_directory):  # Function for cleaning Optuna study csv as it outputs with extra column
         filepath = Path(f'{log_directory}_optuna_results.csv')
 
         # Create temporary file

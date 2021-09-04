@@ -37,7 +37,7 @@ some skills I utilized in this project:
 - Clean, Reusable, Production Worthy Code
 - Libraries:
 
-> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, sys, pandas, os, csv, optuna, glob, shutil, and more
+> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, numba, pandas, os, csv, optuna, glob, shutil, and more
 
 ### Directory Structure:
 
@@ -134,20 +134,19 @@ some skills I utilized in this project:
 ### Logic Steps:
 
 > 1. Use web scraping libraries that extract data online and saves to the Data-Warehouse directory
-> 2. Explore data and use visualization libraries to show metadata
-> 3. All within the Nucleus file ->
-> 4. Preprocess data using different techniques and methods
-> 5. Get a baseline of the data and output visualization
-> 6. Create and train model using all available techniques and methods
-> 7. Output logs and visualization of model training and testing results
-> 8. Save model weights and Nucleus file.
-> 9. Create a html/css webpage to implement model in
-> 10. Create a backend api with Fast-API to be able to take in and serve model results
-> 11. Package Web app into Docker container using Docker file
-> 12. Place container on cloud platform
+> 2. Explore data by using visualization libraries to show metadata
+> 3. Preprocess data and make it digestible for the model
+> 4. Create a baseline model/callbacks then visualize results
+> 5. Use Optuna to fine tune model
+> 6. Evaluate model by visualization
+> 7. Use model to predict on data
+> 8. Create web app
+> 9. Incorporate model into app
+> 10. Create a Docker container for the app
+> 11. Place on a cloud service
 
 ### Graph of ML Web-App Creation Pipeline
 
 ![Nucleus Logic](X-Misc/NucleusV2.png)
 
-![Web App Logic](X-Misc/WebApp.png)
+![Web App Logic](X-Misc/WebAppV2.png)

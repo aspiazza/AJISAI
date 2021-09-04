@@ -65,6 +65,7 @@ Models-
     . Convolutional Autoencoder                                                                                 [ ]
     . Progressive Growing GAN                                                                                   [ ]
     . Capsule Neural Networks                                                                                   [ ]
+    . GPT-J                                                                                                     [ ]
 
 
 

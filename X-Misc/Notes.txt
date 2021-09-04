@@ -30,12 +30,10 @@ pipreqs AJISAI-Project\Web-App\
         > https://towardsdatascience.com/18-common-python-anti-patterns-i-wish-i-had-known-before-44d983805f0f
         > https://towardsdatascience.com/stop-using-pandas-get-dummies-for-feature-encoding-5d2cd07cb4fc
 
-    + Optuna
-        > https://optuna.readthedocs.io/en/v1.3.0/reference/samplers.html
-        > https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html
-        > https://machinelearningapplied.com/hyperparameter-search-with-optuna-part-3-keras-cnn-classification-and-ensembling/
-        > https://optuna.org/#code_examples
-
+ISOMap Embeddings: Isomap Embedding — An Awesome Approach to Non-linear Dimensionality Reduction | by Saul Dobilas | Aug, 2021 | Towards Data Science
+Graph NN: Let’s Talk About Graph Neural Network Python Libraries! | by Rohith Teja | Aug, 2021 | Towards Data Science
+Comparing Models: Choose the Best ML Model Based On Visualizations | by Himanshu Sharma | Aug, 2021 | Towards Data Science
+Compendium: Machine & Deep Learning Compendium (mlcompendium.com)
 
 Code:
 
@@ -53,9 +51,9 @@ Code:
  vectorizer.transform(test_x)       #To vectorized words
 
 
-# print(self.test_gen.classes)
-# print(self.test_gen.class_indices)
-# test_images, test_labels = next(self.test_gen)
+print(self.test_gen.classes)
+print(self.test_gen.class_indices)
+test_images, test_labels = next(self.test_gen)
 
 
 
@@ -63,18 +61,6 @@ HTML Site:
 Bright Green: rgb(5, 182, 105)
 Dark Green: rgb(19, 66, 19)
 Black: rgb(0, 0, 0)
-
-
-
-# Learning rate schedule
-    def scheduler(epoch, lr):
-        if epoch < 10:
-            return lr
-        else:
-            return lr * tf.math.exp(-0.1)
-
-    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
-    # callback_list.append(lr_callback)
 
 
 
