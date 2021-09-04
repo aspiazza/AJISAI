@@ -1,10 +1,10 @@
 # Data Visualization
+
 from plotly.subplots import make_subplots
+from plotly import offline
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
-import plotly
 import numpy as np
-from icecream import ic
 
 
 class TrainingDataVisualization:
@@ -83,12 +83,11 @@ class TrainingDataVisualization:
 
         self.metric_dir = metric_dir
         self.subplot_name_list = []
-        self.figure_xaxes_list = []
-        self.figure_yaxes_list = []
+        self.figure_x_axes_list = []
+        self.figure_y_axes_list = []
         self.subplot_list = []
 
     def loss_graph(self):
-
         loss_plots = [go.Scatter(x=self.epoch_list,
                                  y=self.loss_list,
                                  mode='lines',
@@ -102,8 +101,8 @@ class TrainingDataVisualization:
 
         self.loss_figure = go.Figure(data=loss_plots)
         self.subplot_name_list.append('Loss Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("Loss")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("Loss")
         self.subplot_list.append(self.loss_figure)
 
     def error_rate_graph(self):
@@ -130,12 +129,11 @@ class TrainingDataVisualization:
 
         self.error_rate_figure = go.Figure(data=error_rate_plots)
         self.subplot_name_list.append('Error Rate Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("Error Rate")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("Error Rate")
         self.subplot_list.append(self.error_rate_figure)
 
     def recall_graph(self):
-
         recall_plots = [go.Scatter(x=self.epoch_list,
                                    y=self.recall,
                                    mode='lines',
@@ -149,12 +147,11 @@ class TrainingDataVisualization:
 
         self.recall_figure = go.Figure(data=recall_plots)
         self.subplot_name_list.append('Recall Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("Recall")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("Recall")
         self.subplot_list.append(self.recall_figure)
 
     def precision_graph(self):
-
         precision_plots = [go.Scatter(x=self.epoch_list,
                                       y=self.precision,
                                       mode='lines',
@@ -168,8 +165,8 @@ class TrainingDataVisualization:
 
         self.precision_figure = go.Figure(data=precision_plots)
         self.subplot_name_list.append('Precision Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("Precision")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("Precision")
         self.subplot_list.append(self.precision_figure)
 
     def f1_graph(self):
@@ -179,7 +176,7 @@ class TrainingDataVisualization:
             for (precision_score, recall_score) in zip(precision, recall):
                 try:
                     f1_score_list.append(2 * ((precision_score * recall_score) / (precision_score + recall_score)))
-                except ZeroDivisionError:
+                except ZeroDivisionError:  # If F1 score instance is equal to 0
                     f1_score_list.append(np.nan)
             return f1_score_list
 
@@ -199,11 +196,12 @@ class TrainingDataVisualization:
 
         self.f1_figure = go.Figure(data=f1_plots)
         self.subplot_name_list.append('F1 Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("F1 Score")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("F1 Score")
         self.subplot_list.append(self.f1_figure)
 
     def false_positive_graph(self):
+
         def false_positive_computation(false_positives, true_negatives):
             fp_rate_list = []
             for (fp_score, tn_score) in zip(false_positives, true_negatives):
@@ -226,11 +224,12 @@ class TrainingDataVisualization:
 
         self.fpr_figure = go.Figure(data=fpr_plots)
         self.subplot_name_list.append('False Positive Rate Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("False Positive Rate")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("False Positive Rate")
         self.subplot_list.append(self.fpr_figure)
 
     def false_negative_graph(self):
+
         def false_negative_computation(false_negatives, true_positives):
             fn_rate_list = []
             for (fn_score, tp_score) in zip(false_negatives, true_positives):
@@ -253,11 +252,12 @@ class TrainingDataVisualization:
 
         self.fnr_figure = go.Figure(data=fnr_plots)
         self.subplot_name_list.append('False Negative Rate Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("False Negative Rate")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("False Negative Rate")
         self.subplot_list.append(self.fnr_figure)
 
     def true_positive_graph(self):
+
         def true_positive_computation(true_positives, false_negatives):
             tp_rate_list = []
             for (tp_score, fn_score) in zip(true_positives, false_negatives):
@@ -280,11 +280,12 @@ class TrainingDataVisualization:
 
         self.tpr_figure = go.Figure(data=tpr_plots)
         self.subplot_name_list.append('True Positive Rate Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("True Positive Rate")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("True Positive Rate")
         self.subplot_list.append(self.tpr_figure)
 
     def true_negative_graph(self):
+
         def true_negative_computation(true_negatives, false_positives):
             tn_rate_list = []
             for (tn_score, fp_score) in zip(true_negatives, false_positives):
@@ -307,30 +308,31 @@ class TrainingDataVisualization:
 
         self.tnr_figure = go.Figure(data=tnr_plots)
         self.subplot_name_list.append('True Negative Rate Graph')
-        self.figure_xaxes_list.append("Epochs")
-        self.figure_yaxes_list.append("True Negative Rate")
+        self.figure_x_axes_list.append("Epochs")
+        self.figure_y_axes_list.append("True Negative Rate")
         self.subplot_list.append(self.tnr_figure)
 
     def subplot_creation(self, row_size, col_size):
-        def row_column_index_creator(index_row_size, index_col_size):
+
+        def row_column_index_creator(index_row_size, index_col_size):  # Outputs every possible row/col index pair
             row_col_index_list = []
             index_row_size += 1
             index_col_size += 1
-            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column
-             in range(1, index_col_size)]
+            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column in
+             range(1, index_col_size)]
             return row_col_index_list
 
-        def axes_title_creator(xaxes_list, yaxes_list):
-            x_y_axes = []
-            for (xaxes, yaxes) in zip(xaxes_list, yaxes_list):
-                x_y_axes.append([xaxes, yaxes])
-            return x_y_axes
+        def axes_title_creator(x_axes_list, y_axes_list):  # Creates list of x and y axes titles
+            x_y_axes_list = []
+            for (x_axes, y_axes) in zip(x_axes_list, y_axes_list):
+                x_y_axes_list.append([x_axes, y_axes])
+            return x_y_axes_list
 
         row_col_index_list = row_column_index_creator(row_size, col_size)
-        x_y_axes = axes_title_creator(self.figure_xaxes_list, self.figure_yaxes_list)
+        x_y_axes_list = axes_title_creator(self.figure_x_axes_list, self.figure_y_axes_list)
         metric_subplot = make_subplots(rows=row_size, cols=col_size, subplot_titles=self.subplot_name_list)
 
-        for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes):
+        for plot, row_col, x_y_ax in zip(self.subplot_list, row_col_index_list, x_y_axes_list):
             x_axes = x_y_ax[0]
             y_axes = x_y_ax[1]
             row_index = row_col[0]
@@ -342,12 +344,11 @@ class TrainingDataVisualization:
             for trace in plot.data:
                 metric_subplot.append_trace(trace, row=row_index, col=col_index)
 
-        plotly.offline.plot(metric_subplot,
-                            filename=f'{self.metric_dir}_training_metrics.html',
-                            auto_open=False)
+        offline.plot(metric_subplot,
+                     filename=f'{self.metric_dir}_training_metrics.html',
+                     auto_open=False)
 
     def confusion_matrix(self, class_indices):
-
         train_z = [[self.last_true_negatives, self.last_false_negatives],
                    [self.last_true_positives, self.last_false_positives]]
 
@@ -389,7 +390,7 @@ class TrainingDataVisualization:
                                          bordercolor='black',
                                          borderwidth=1)
 
-        # Dope ass function
+        # Takes figures and appends them to single html file
         def figures_to_html(figs, filename=f'{self.metric_dir}_training_confusion_matrix.html'):
             dashboard = open(filename, 'w')
             dashboard.write("<html><head></head><body>" + "\n")
@@ -418,7 +419,8 @@ class EvaluationDataVisualization:
         self.true_positive = metric_data['true_positives']
 
     def eval_barchart(self):
-        def list_to_average(metric):
+
+        def list_to_average(metric):  # Returns average from a list of ints
             metric_list = []
             for num in metric:
                 metric_list.append(num)
@@ -457,15 +459,12 @@ class EvaluationDataVisualization:
             bool_evaluation_barchart = go.Figure(go.Bar(x=x_labels, y=y_metric_list, marker=dict(color=color)))
             return bool_evaluation_barchart
 
-        def barchart_subplot():
-            def figures_to_html(figs, filename=f'{self.metric_dir}_evaluation_barchart.html'):
-                dashboard = open(filename, 'w')
-                dashboard.write("<html><head></head><body>" + "\n")
-                for fig in figs:
-                    inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
-                    dashboard.write(inner_html)
-                dashboard.write("</body></html>" + "\n")
+        def figures_to_html(figs, filename=f'{self.metric_dir}_evaluation_barchart.html'):
+            dashboard = open(filename, 'w')
+            dashboard.write("<html><head></head><body>" + "\n")
+            for fig in figs:
+                inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
+                dashboard.write(inner_html)
+            dashboard.write("</body></html>" + "\n")
 
-            figures_to_html([metrics_barchart(), boolean_metrics_barchart()])
-
-        barchart_subplot()
+        figures_to_html([metrics_barchart(), boolean_metrics_barchart()])

@@ -1,8 +1,10 @@
-# Preprocessing File
+# Data Preprocessing
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 
 
+# Train Generator
 def train_image_gen(data_directory):
     train_image_generator = ImageDataGenerator(
         rotation_range=15,
@@ -24,6 +26,7 @@ def train_image_gen(data_directory):
     return train_iterator
 
 
+# Validation Generator
 def valid_image_gen(data_directory):
     valid_image_generator = ImageDataGenerator(rescale=1. / 255.0)
 
@@ -38,6 +41,7 @@ def valid_image_gen(data_directory):
     return valid_iterator
 
 
+# Test Generator
 def test_image_gen(data_directory):
     test_image_generator = ImageDataGenerator(rescale=1. / 255.0)
 

@@ -1,3 +1,5 @@
+# Data extraction and organization
+
 import random
 import os
 import shutil
@@ -51,6 +53,6 @@ def move_images():
         shutil.move(image, 'F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Test\\Dog')
 
 
-# Executor
+# Call functions
 # make_dir()
-move_images()
+# move_images()

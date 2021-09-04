@@ -1,7 +1,8 @@
+# Callback declaration
+
 from keras.callbacks import CSVLogger, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 import tensorflow as tf
 import sys
-from icecream import ic
 
 
 def training_callbacks(saved_weights_dir, log_dir):
@@ -12,25 +13,21 @@ def training_callbacks(saved_weights_dir, log_dir):
             f'{saved_weights_dir}.h5',
             save_best_only=True)
         return model_checkpoint
-
     callback_list.append(model_checkpoint_callback())
 
     def metric_csv_callback():
         metric_csv = CSVLogger(f'{log_dir}_training_metrics.csv', append=False, separator=',', )
         return metric_csv
-
     callback_list.append(metric_csv_callback())
 
     def reduce_lr_plateau_callback():
         reduce_plat = ReduceLROnPlateau(monitor='val_accuracy', patience=5, verbose=1, factor=0.5, min_lr=0.00001)
         return reduce_plat
-
     callback_list.append(reduce_lr_plateau_callback())
 
     def early_stopping_callback():
         early_stop = EarlyStopping(patience=10)
         return early_stop
-
     # callback_list.append(early_stopping_callback())
 
     def scheduler(epoch, lr):
@@ -38,9 +35,7 @@ def training_callbacks(saved_weights_dir, log_dir):
             return lr
         else:
             return lr * tf.math.exp(-0.1)
-
-    lr_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
-    # callback_list.append(lr_callback)
+    # callback_list.append(tf.keras.callbacks.LearningRateScheduler(scheduler))
 
     return callback_list
 
@@ -67,7 +62,6 @@ def evaluation_callbacks(log_dir):
 
         metric_csv = CSVLogger(f'{log_dir}_evaluation_metrics.csv', append=True, separator=',')
         return metric_csv
-
     callback_list.append(metric_csv_callback())
 
     return callback_list
