@@ -87,6 +87,17 @@ class TrainingDataVisualization:
         self.figure_y_axes_list = []
         self.subplot_list = []
 
+        self.loss_figure = None
+        self.error_rate_figure = None
+        self.precision_figure = None
+        self.recall_figure = None
+        self.recall_figure = None
+        self.f1_figure = None
+        self.fpr_figure = None
+        self.fnr_figure = None
+        self.tpr_figure = None
+        self.tnr_figure = None
+
     def loss_graph(self):
         loss_plots = [go.Scatter(x=self.epoch_list,
                                  y=self.loss_list,
@@ -315,18 +326,18 @@ class TrainingDataVisualization:
     def subplot_creation(self, row_size, col_size):
 
         def row_column_index_creator(index_row_size, index_col_size):  # Outputs every possible row/col index pair
-            row_col_index_list = []
+            row_col_index_list_func = []
             index_row_size += 1
             index_col_size += 1
-            [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column in
+            [row_col_index_list_func.append([row, column]) for row in range(1, index_row_size) for column in
              range(1, index_col_size)]
-            return row_col_index_list
+            return row_col_index_list_func
 
         def axes_title_creator(x_axes_list, y_axes_list):  # Creates list of x and y axes titles
-            x_y_axes_list = []
-            for (x_axes, y_axes) in zip(x_axes_list, y_axes_list):
-                x_y_axes_list.append([x_axes, y_axes])
-            return x_y_axes_list
+            x_y_axes_title_list = []
+            for (x_axes_title, y_axes_title) in zip(x_axes_list, y_axes_list):
+                x_y_axes_title_list.append([x_axes_title, y_axes_title])
+            return x_y_axes_title_list
 
         row_col_index_list = row_column_index_creator(row_size, col_size)
         x_y_axes_list = axes_title_creator(self.figure_x_axes_list, self.figure_y_axes_list)
@@ -360,7 +371,7 @@ class TrainingDataVisualization:
 
         # Turn each item in z into a string for annotation only
         def string_annotation_converter(z_data):
-            z_text = [[str(y) for y in x] for x in z_data]
+            z_text = [[str(y_data) for y_data in x_data] for x_data in z_data]
             return z_text
 
         # set up figure

@@ -37,7 +37,7 @@ some skills I utilized in this project:
 - Clean, Reusable, Production Worthy Code
 - Libraries:
 
-> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, numba, pandas, os, csv, optuna, glob, shutil, and more
+> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, pandas, os, csv, optuna, glob, shutil, and more
 
 ### Directory Structure:
 
@@ -147,6 +147,8 @@ some skills I utilized in this project:
 
 ### Graph of ML Web-App Creation Pipeline
 
-![Nucleus Logic](X-Misc/NucleusV2.png)
+![Nucleus Logic](X-Misc/Nucleus.png)
 
-![Web App Logic](X-Misc/WebAppV2.png)
+### Graph of ML Web-App
+
+![Web App Logic](X-Misc/WebApp.png)

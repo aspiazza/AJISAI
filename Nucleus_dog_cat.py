@@ -10,10 +10,9 @@ from keras.models import load_model
 import pandas as pd
 
 
-# TODO: Update README as code progresses
-# TODO: Use Numba somehow
+# TODO: Update README as code progresses (Mermaid docker file web app)
 # Model class
-class CatDogModel:  # TODO: Implement timeit decorator
+class CatDogModel:
     def __init__(self, version, model_name, data_dir, saved_weights_dir):
         self.data_dir = data_dir
         self.version_model_name = f'{version}_{model_name}'
@@ -21,6 +20,13 @@ class CatDogModel:  # TODO: Implement timeit decorator
         self.model_saved_weights_dir = f'{saved_weights_dir}\\{self.version_model_name}'
         self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{self.version_model_name}'
         self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{self.version_model_name}'
+
+        self.train_gen = None
+        self.valid_gen = None
+        self.test_gen = None
+
+        self.model = None
+        self.history = None
 
     # Data Preprocessing
     def preprocess(self):
@@ -42,19 +48,13 @@ class CatDogModel:  # TODO: Implement timeit decorator
     def training(self, callback_bool):
         if callback_bool:
             callback_list = cbDogCat.training_callbacks(self.model_saved_weights_dir, self.log_dir)
-
             # Custom callback cannot be appended to callback list so is simply called
             cbDogCat.model_summary_callback(self.log_dir, self.model)
-
         else:
             callback_list = []
 
-        self.history = self.model.fit(self.train_gen,
-                                      validation_data=self.valid_gen,
-                                      batch_size=20,
-                                      steps_per_epoch=20,
-                                      epochs=55,
-                                      callbacks=callback_list)
+        self.history = self.model.fit(self.train_gen, validation_data=self.valid_gen, batch_size=20,
+                                      steps_per_epoch=20, epochs=55, callbacks=callback_list)
 
     # Visualization
     def graphing(self, csv_file):
@@ -104,17 +104,18 @@ class CatDogModel:  # TODO: Implement timeit decorator
 
 # Executor
 if __name__ == '__main__':
-    model_instance = CatDogModel(version="First_Generation", model_name="dog_cat",
+    model_instance = CatDogModel(version='First_Generation', model_name='dog_cat',
                                  data_dir='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
                                  saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models')
-    model_instance.preprocess()
-    model_instance.model()
+    # model_instance.preprocess()
+    # model_instance.model()
     # model_instance.grid_search()
-    model_instance.training(callback_bool=True)
-    model_instance.graphing(csv_file=None)
-    model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
-                            callback_bool=True)
-    model_instance.evaluate_graphing(
-        csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
-    model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
-                                 prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    # model_instance.training(callback_bool=True)
+    # model_instance.graphing(
+    #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_training_metrics.csv')
+    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+    #                         callback_bool=True)
+    # model_instance.evaluate_graphing(
+    #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
+    # model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+    #                              prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
