@@ -10,7 +10,6 @@ from keras.models import load_model
 import pandas as pd
 
 
-# TODO: Update README as code progresses (Mermaid docker file web app)
 # Model class
 class CatDogModel:
     def __init__(self, version, model_name, data_dir, saved_weights_dir):
@@ -53,7 +52,7 @@ class CatDogModel:
         else:
             callback_list = []
 
-        self.history = self.model.fit(self.train_gen, validation_data=self.valid_gen, batch_size=20,
+        self.history = self.model.fit(self.train_gen, validation_data=self.valid_gen, batch_size=64,
                                       steps_per_epoch=20, epochs=55, callbacks=callback_list)
 
     # Visualization
@@ -113,7 +112,7 @@ if __name__ == '__main__':
     # model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_training_metrics.csv')
-    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat_optuna.h5',
     #                         callback_bool=True)
     # model_instance.evaluate_graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
