@@ -4,14 +4,13 @@ import numpy as np
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 import optuna
-from optuna.samplers import TPESampler
-import keras
+from keras import layers, Sequential
 from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, CSVLogger
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 
 
-class Objective:  # TODO: Test again
+class Objective:
     def __init__(self, training_data, validation_data, num_epochs, input_shape, saved_model_dir, log_dir):
         self.training_data = training_data
         self.validation_data = validation_data
@@ -66,34 +65,34 @@ class Objective:  # TODO: Test again
         }
 
         model_name = 'optuna_seq_maxpool_cnn'
-        model = keras.Sequential([
-            keras.layers.Conv2D(filters=dict_params['num_filters_1'],
-                                kernel_size=dict_params['kernel_size_1'],
-                                activation=dict_params['activations_1'],
-                                strides=dict_params['stride_num_1'],
-                                input_shape=self.input_shape),
-            keras.layers.BatchNormalization(),
-            keras.layers.MaxPooling2D(2, 2),
+        model = Sequential([
+            layers.Conv2D(filters=dict_params['num_filters_1'],
+                          kernel_size=dict_params['kernel_size_1'],
+                          activation=dict_params['activations_1'],
+                          strides=dict_params['stride_num_1'],
+                          input_shape=self.input_shape),
+            layers.BatchNormalization(),
+            layers.MaxPooling2D(2, 2),
 
-            keras.layers.Conv2D(filters=dict_params['num_filters_2'],
-                                kernel_size=dict_params['kernel_size_2'],
-                                activation=dict_params['activations_2'],
-                                strides=dict_params['stride_num_2']),
-            keras.layers.BatchNormalization(),
-            keras.layers.MaxPooling2D(2, 2),
+            layers.Conv2D(filters=dict_params['num_filters_2'],
+                          kernel_size=dict_params['kernel_size_2'],
+                          activation=dict_params['activations_2'],
+                          strides=dict_params['stride_num_2']),
+            layers.BatchNormalization(),
+            layers.MaxPooling2D(2, 2),
 
-            keras.layers.Conv2D(filters=dict_params['num_filters_3'],
-                                kernel_size=dict_params['kernel_size_3'],
-                                activation=dict_params['activations_3'],
-                                strides=dict_params['stride_num_3']),
-            keras.layers.BatchNormalization(),
-            keras.layers.MaxPooling2D(2, 2),
+            layers.Conv2D(filters=dict_params['num_filters_3'],
+                          kernel_size=dict_params['kernel_size_3'],
+                          activation=dict_params['activations_3'],
+                          strides=dict_params['stride_num_3']),
+            layers.BatchNormalization(),
+            layers.MaxPooling2D(2, 2),
 
-            keras.layers.Flatten(),
-            keras.layers.Dense(dict_params['dense_nodes'], activation=dict_params['activations_4']),
-            keras.layers.BatchNormalization(),
-            keras.layers.Dropout(rate=0.5),
-            keras.layers.Dense(2, activation='softmax')],
+            layers.Flatten(),
+            layers.Dense(dict_params['dense_nodes'], activation=dict_params['activations_4']),
+            layers.BatchNormalization(),
+            layers.Dropout(rate=0.5),
+            layers.Dense(2, activation='softmax')],
             name=model_name)
 
         opt = Adam(lr=0.01)
@@ -125,14 +124,14 @@ def optuna_executor(training_data, validation_data, num_epochs, input_shape, sav
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
     study = optuna.create_study(direction='minimize',
-                                sampler=TPESampler(n_startup_trials=25))
+                                sampler=optuna.samplers.TPESampler(n_startup_trials=25))
 
     study.optimize(objective, timeout=14400)
 
     df_results = study.trials_dataframe()
     df_results.to_csv(f'{log_dir}_optuna_results.csv')  # Optuna study results
 
-    def csv_cleaner(log_directory):  # Function for cleaning Optuna study csv as it outputs with extra column
+    def csv_cleaner(log_directory):
         filepath = Path(f'{log_directory}_optuna_results.csv')
 
         # Create temporary file
@@ -140,9 +139,6 @@ def optuna_executor(training_data, validation_data, num_epochs, input_shape, sav
                                                                              delete=False) as tmp_file:
             csv_reader = csv.reader(csv_file)
             csv_writer = csv.writer(tmp_file)
-
-            header = next(csv_reader)  # First copy the header.
-            csv_writer.writerow(header)
 
             # Copy rows of data leaving out first column.
             for row in csv_reader:

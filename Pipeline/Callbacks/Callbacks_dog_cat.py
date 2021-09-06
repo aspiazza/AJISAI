@@ -1,7 +1,7 @@
 # Callback declaration
 
 from keras.callbacks import CSVLogger, ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
-import tensorflow as tf
+from tensorflow import math
 import sys
 
 
@@ -34,7 +34,7 @@ def training_callbacks(saved_weights_dir, log_dir):
         if epoch < 10:
             return lr
         else:
-            return lr * tf.math.exp(-0.1)
+            return lr * math.exp(-0.1)
     # callback_list.append(tf.keras.callbacks.LearningRateScheduler(scheduler))
 
     return callback_list
@@ -42,7 +42,8 @@ def training_callbacks(saved_weights_dir, log_dir):
 
 def model_summary_callback(log_dir, model):
     class ModelSummaryCallback:
-        def model_summary_creation(self):
+        @staticmethod
+        def model_summary_creation():
             with open(f'{log_dir}_summary.txt', 'w') as summary_file:
                 sys.stdout = summary_file
                 model.summary()
@@ -60,7 +61,7 @@ def evaluation_callbacks(log_dir):
         CSVLogger.on_test_batch_end = CSVLogger.on_epoch_end
         CSVLogger.on_test_end = CSVLogger.on_train_end
 
-        metric_csv = CSVLogger(f'{log_dir}_evaluation_metrics.csv', append=True, separator=',')
+        metric_csv = CSVLogger(f'{log_dir}_evaluation_metrics.csv', append=False, separator=',')
         return metric_csv
     callback_list.append(metric_csv_callback())
 
