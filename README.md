@@ -59,10 +59,8 @@ automating tasks if need be. Below are some skills I utilized in this project:
     + Web-Apps
         + Web-App_{model name}
     + X-Misc
-        + Mermaid_Code.txt
-        + ML-Notes.txt
-        + Notes.txt
-        + scratch_{n}.py
+        + Mermaid-Code.txt
+        + README PNG Files
     + Nucleus_{model name}.py
     + Project_Initializer.py
     + README.md
