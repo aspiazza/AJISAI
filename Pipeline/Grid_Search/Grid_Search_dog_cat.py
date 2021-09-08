@@ -128,7 +128,7 @@ def optuna_executor(training_data, validation_data, num_epochs, input_shape, sav
                                 sampler=optuna.samplers.TPESampler(n_startup_trials=25))
     study.optimize(objective, timeout=14400)
 
-    def dict_to_json(log_directory, dictionary_object):  # TODO: Test
+    def dict_to_json(log_directory, dictionary_object):
         with open(f'{log_directory}_best_params.json', "w") as outfile:
             json.dump(dictionary_object, outfile)
 
