@@ -22,22 +22,22 @@ class Objective:
 
     def __call__(self, trial):
         # Create study parameters
-        num_filters_1 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
-        num_filters_2 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
-        num_filters_3 = trial.suggest_categorical('num_filters', [16, 32, 48, 64, 128, 256])
+        num_filters_1 = trial.suggest_categorical('num_filters_1', [16, 32, 48, 64, 128, 256])
+        num_filters_2 = trial.suggest_categorical('num_filters_2', [16, 32, 48, 64, 128, 256])
+        num_filters_3 = trial.suggest_categorical('num_filters_3', [16, 32, 48, 64, 128, 256])
 
-        kernel_size_1 = trial.suggest_int('kernel_size', 2, 4)
-        kernel_size_2 = trial.suggest_int('kernel_size', 2, 4)
-        kernel_size_3 = trial.suggest_int('kernel_size', 2, 4)
+        kernel_size_1 = trial.suggest_int('kernel_size_1', 2, 4)
+        kernel_size_2 = trial.suggest_int('kernel_size_2', 2, 4)
+        kernel_size_3 = trial.suggest_int('kernel_size_3', 2, 4)
 
-        stride_num_1 = trial.suggest_int('strides', 1, 2)
-        stride_num_2 = trial.suggest_int('strides', 1, 2)
-        stride_num_3 = trial.suggest_int('strides', 1, 2)
+        stride_num_1 = trial.suggest_int('strides_1', 1, 2)
+        stride_num_2 = trial.suggest_int('strides_2', 1, 2)
+        stride_num_3 = trial.suggest_int('strides_3', 1, 2)
 
-        activations_1 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
-        activations_2 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
-        activations_3 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
-        activations_4 = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_1 = trial.suggest_categorical('activation_1', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_2 = trial.suggest_categorical('activation_2', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_3 = trial.suggest_categorical('activation_3', ['relu', 'sigmoid', 'tanh', 'selu'])
+        activations_4 = trial.suggest_categorical('activation_4', ['relu', 'sigmoid', 'tanh', 'selu'])
 
         dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 512, 1024])
         batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 96, 128])
