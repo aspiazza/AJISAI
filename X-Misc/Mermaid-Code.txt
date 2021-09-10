@@ -30,9 +30,13 @@ subgraph Cloud Provider
     id4[css_file]
     id5[API.py]
     id6[requirements.txt]
+    id7[Dockerfile.dockerfile]
     end
 end
 
 {
   "theme": "forest"
 }
+
+
+https://mermaid-js.github.io/mermaid-live-editor/

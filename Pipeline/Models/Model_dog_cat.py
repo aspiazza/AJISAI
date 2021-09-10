@@ -9,23 +9,23 @@ from keras.utils import plot_model
 def seq_maxpool_cnn(log_dir):
     model_name = 'seq_maxpool_cnn'
     model = Sequential([
-        layers.Conv2D(32, kernel_size=3, activation='selu', input_shape=(150, 150, 3)),
+        layers.Conv2D(256, kernel_size=3, activation='relu', input_shape=(150, 150, 3), strides=1),
         layers.BatchNormalization(),
         layers.MaxPooling2D(2, 2),
         layers.Dropout(rate=0.25),
 
-        layers.Conv2D(64, kernel_size=3, activation='selu'),
+        layers.Conv2D(256, kernel_size=3, activation='relu', strides=2),
         layers.BatchNormalization(),
         layers.MaxPooling2D(2, 2),
         layers.Dropout(rate=0.25),
 
-        layers.Conv2D(128, kernel_size=3, activation='selu'),
+        layers.Conv2D(256, kernel_size=3, activation='selu', strides=1),
         layers.BatchNormalization(),
         layers.MaxPooling2D(2, 2),
         layers.Dropout(rate=0.25),
 
         layers.Flatten(),
-        layers.Dense(1024, activation='selu'),
+        layers.Dense(128, activation='selu'),
         layers.BatchNormalization(),
         layers.Dropout(rate=0.5),
         layers.Dense(2, activation='softmax')],
