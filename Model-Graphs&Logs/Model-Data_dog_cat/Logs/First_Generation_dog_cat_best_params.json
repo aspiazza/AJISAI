@@ -1,1 +1,17 @@
-{"num_filters": 32, "kernel_size": 4, "strides": 1, "activation": "selu", "num_dense_nodes": 64, "batch_size": 64}
+{
+  "num_filters_1": 256,
+  "num_filters_2": 256,
+  "num_filters_3": 256,
+  "kernel_size_1": 3,
+  "kernel_size_2": 3,
+  "kernel_size_3": 3,
+  "strides_1": 1,
+  "strides_2": 2,
+  "strides_3": 1,
+  "activation_1": "relu",
+  "activation_2": "relu",
+  "activation_3": "selu",
+  "activation_4": "selu",
+  "num_dense_nodes": 128,
+  "batch_size": 16
+}
