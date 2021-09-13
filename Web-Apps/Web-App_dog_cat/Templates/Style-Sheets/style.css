@@ -1,0 +1,83 @@
+html {
+border: solid;
+border-width: 16px
+}
+
+body {
+background-color: rgb(11,41,17);
+}
+
+p {
+margin-top: 5px;
+margin-left: 10px;
+}
+
+.header_box {
+background-color: rgb(1, 254, 161);
+border: solid;
+border-color: rgb(1, 254, 161);
+font-family: 'consolas';
+font-size: 16px;
+margin-top: -8px;
+border-top-width: 5px;
+}
+
+.online_text{
+font-family: 'consolas';
+text-align: right;
+margin-top: -20px;
+margin-right: 5px;
+margin-bottom: 35px;
+}
+
+.model_title_box {
+background-color: rgb(3, 137, 86);
+border: solid;
+color: rgb(255, 255, 255);
+font-family: 'consolas';
+font-size: 35px;
+margin-bottom: 50px;
+margin-RIGHT: 150px;
+}
+
+.note_text {
+color: rgb(0, 0, 0);
+font-family: 'consolas';
+font-size: 16px;
+margin-bottom: -20px;
+margin-left: 5px;
+}
+
+.note_box {
+border: solid;
+border-color: rgb(1, 254, 161);
+border-top-width: 20px;
+color: rgb(255, 255, 255);
+font-family: 'consolas';
+font-weight: normal;
+font-style: normal;
+}
+
+@font-face {
+    font-family: 'VT323';
+    src: url('Fonts\Retro-Terminal-Font\VT323-Regular.eot');
+    src: url('Fonts\Retro-Terminal-Font\VT323-Regular.eot?#iefix') format('embedded-opentype')
+    src: url('Fonts\Retro-Terminal-Font\VT323-Regular.woff2') format('woff2')
+    src: url('Fonts\Retro-Terminal-Font\VT323-Regular.woff') format('woff')
+    src: url('Fonts\Retro-Terminal-Font\VT323-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sevastopol Interface';
+    src: url('Fonts\Sevastopol-Interface\Sevastopol-Interface.eot');
+    src: url('Fonts\Sevastopol-Interface\Sevastopol-Interface.eot?#iefix') format('embedded-opentype'),
+        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.woff2') format('woff2'),
+        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.woff') format('woff'),
+        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.ttf') format('truetype'),
+        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.svg#Sevastopol-Interface') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
