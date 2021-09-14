@@ -103,7 +103,7 @@ class CatDogModel:
 
 # Executor
 if __name__ == '__main__':
-    model_instance = CatDogModel(version='First_Generation', model_name='dog_cat',
+    model_instance = CatDogModel(version='json_function_test', model_name='dog_cat',
                                  data_dir='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
                                  saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models')
     model_instance.preprocess()

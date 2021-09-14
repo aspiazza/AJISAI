@@ -1,6 +1,6 @@
 html {
 border: solid;
-border-width: 16px
+border-width: 25px
 }
 
 body {
@@ -40,7 +40,41 @@ margin-bottom: 50px;
 margin-RIGHT: 150px;
 }
 
-.note_text {
+.prediction_box{
+border: solid;
+border-color: rgb(1, 254, 161);
+border-top-width: 20px;
+color: rgb(255, 255, 255);
+font-family: 'consolas';
+margin-bottom: 30px;
+}
+
+input[type="file"]{
+display: none;
+}
+
+.custom-file-upload{
+border: 2px solid;
+border-color: rgb(1, 254, 161);
+background-color: rgb(3, 137, 86);
+color: rgb(11,41,17);
+font-size: 30px;
+margin-left: 165px;
+padding: 6px 12px;
+}
+
+.custom-submit-button{
+border: 2px solid;
+border-color: rgb(1, 254, 161);
+background-color: rgb(3, 137, 86);
+color: rgb(11,41,17);
+font-size: 30px;
+margin-left: 230px;
+margin-top: 50px;
+margin-bottom: 30px;
+}
+
+.header_text {
 color: rgb(0, 0, 0);
 font-family: 'consolas';
 font-size: 16px;
@@ -54,8 +88,6 @@ border-color: rgb(1, 254, 161);
 border-top-width: 20px;
 color: rgb(255, 255, 255);
 font-family: 'consolas';
-font-weight: normal;
-font-style: normal;
 }
 
 @font-face {

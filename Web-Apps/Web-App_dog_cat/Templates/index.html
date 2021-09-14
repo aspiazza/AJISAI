@@ -8,35 +8,57 @@
 
 <body>
 <div class="header_box">AJISAI AI: Terminal</div>
-<div class="online_text">................................ONLINE</div>
-<div class="model_title_box">Dog-Cat Convolutional Neural Network</div>
-<div class="prediction_box"> prediction</div>
-<div class="note_text">NOTES:</div>
+<p class="online_text">................................ONLINE</p>
+
+<p class="model_title_box">Dog-Cat Convolutional Neural Network</p>
+
+<p class="header_text">Prediction Module:</p>
+<div class="prediction_box"><p>Select an image of a dog or a cat and the AI will print out a prediction of what he
+    thinks
+    it is.....</p><br>
+
+    <form action="{{url_for('predict')}}" method="post">
+        <label for="image-upload" class="custom-file-upload">Select Image:</label>
+        <input  type="file" id="image-upload" name="img" accept="image/*"><br>
+        <input class="custom-submit-button" type="submit">
+    </form>
+
+</div>
+
+<p>Result: {{ result }}</p>
+
+<p class="header_text">NOTES:</p>
 <div class="note_box">
     <p>This is the Dog-Cat Convolutional Neural Network. Is it a binary classification model used to
         classify dog and cat images. It is the first model I made and could be thought of as a test-child used to see if
         the
         concept I drew up for the AJISAI workbench could work.</p>
 
-    <p>Dataset: Kaggle "Dogs vs. Cats" dataset</p>
+    <p><b>Dataset:</b> Kaggle "Dogs vs. Cats" dataset</p>
 
-    <p>Preprocessing: Used generators to augment images in batches. Augmentation includes shear, zoom, height/width
+    <p><b>Preprocessing:</b> Used generators to augment images in batches. Augmentation includes shear, zoom,
+        height/width
         shift, rescale, and rotation. This was done in batches of 20 on 4000 dog and cat training images</p>
 
-    <p>Model Architecture: A convolutional neural network with 2D-Conv layers, batch normalization, MaxPooling, and
+    <p><b>Model Architecture:</b> A convolutional neural network with 2D-Conv layers, batch normalization, MaxPooling,
+        and
         Dropout layers. These layers then flattened into a dense layer which outputted the results using softmax
         activation. Used Adam optimizer with categorical_crossentropy loss function</p>
 
-    <p>Callbacks: Model checkpoints used to save the best model iteration, CSV logging, reducing LR on a plateau, and a
+    <p><b>Callbacks:</b> Model checkpoints used to save the best model iteration, CSV logging, reducing LR on a plateau,
+        and a
         custom model summary callback to generate a summary of the model</p>
 
-    <p>Techniques: Used Optuna to optimize the model overnight using a TPE sampler. The metric used was to lower the
+    <p><b>Techniques:</b> Used Optuna to optimize the model overnight using a TPE sampler. The metric used was to lower
+        the
         validation loss as much as possible</p>
 
-    <p>Metrics: Accuracy, loss, recall, precision, true NR, true PR, false NR, false PR, f1 score, error rate, and
+    <p><b>Metrics:</b> Accuracy, loss, recall, precision, true NR, true PR, false NR, false PR, f1 score, error rate,
+        and
         validation equivalents. Validation loss was particularly important as I was focusing on generalization</p>
 
-    <p>Performance: Performance was poor at first. Before fine-tuning accuracy was around 60%. After using Optuna, I was
+    <p><b>Performance:</b> Performance was poor at first. Before fine-tuning accuracy was around 60%. After using
+        Optuna, I was
         able to increase validation accuracy up to 89%</p>
 </div>
 </body>
