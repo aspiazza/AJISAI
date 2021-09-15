@@ -1,28 +1,23 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
+from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, File, UploadFile
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 from keras.models import load_model
+from typing import List
 import uvicorn
 from icecream import ic
 
 app = FastAPI()
-templates = Jinja2Templates(directory="Templates/")
+app.mount("/Templates", StaticFiles(directory="Templates"), name="Templates")
 
-model_dir = 'F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat_optuna.h5'
-model = load_model(model_dir)
+# model_dir = 'F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat_optuna.h5'
+# model = load_model(model_dir)
 
 
 @app.get('/')
-def index():
-    return 'You done fucked up bitch'
-
-
-@app.get("/form")
-def form_post(request: Request):
-    result = "Type a number"
-    return templates.TemplateResponse('index.html', context={'request': request, 'result': result})
-
+async def index():
+    return RedirectResponse(url="/Templates/index.html")
 
 if __name__ == '__main__':
     uvicorn.run(app, host='localhost', port=8000)
