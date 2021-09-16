@@ -10,6 +10,7 @@ background-color: rgb(11,41,17);
 p {
 margin-top: 5px;
 margin-left: 10px;
+font-size: 20px;
 }
 
 .header_box {
@@ -38,6 +39,7 @@ font-family: 'consolas';
 font-size: 35px;
 margin-bottom: 50px;
 margin-RIGHT: 150px;
+padding: 10px;
 }
 
 .prediction_box{
@@ -103,12 +105,12 @@ font-family: 'consolas';
 
 @font-face {
     font-family: 'Sevastopol Interface';
-    src: url('Fonts\Sevastopol-Interface\Sevastopol-Interface.eot');
-    src: url('Fonts\Sevastopol-Interface\Sevastopol-Interface.eot?#iefix') format('embedded-opentype'),
-        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.woff2') format('woff2'),
-        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.woff') format('woff'),
-        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.ttf') format('truetype'),
-        url('Fonts\Sevastopol-Interface\Sevastopol-Interface.svg#Sevastopol-Interface') format('svg');
+    src: url('Style-Sheets\\Fonts\\Sevastopol-Interface\\Sevastopol-Interface.eot');
+    src: url('Style-Sheets\\Fonts\\Sevastopol-Interface\\Sevastopol-Interface.eot?#iefix') format('embedded-opentype'),
+        url('Style-Sheets\\Fonts\\Sevastopol-Interface\\Sevastopol-Interface.woff2') format('woff2'),
+        url('Style-Sheets\\Fonts\\Sevastopol-Interface\\Sevastopol-Interface.woff') format('woff'),
+        url('Style-Sheets\\Fonts\\Sevastopol-Interface\\Sevastopol-Interface.ttf') format('truetype'),
+        url('Style-Sheets\\Fonts\\Sevastopol-Interface\\Sevastopol-Interface.svg#Sevastopol-Interface') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
