@@ -135,7 +135,7 @@ def optuna_executor(training_data, validation_data, num_epochs, input_shape, sav
 
     def dict_to_json(log_directory, dictionary_object):
         with open(f'{log_directory}_best_params.json', "w") as outfile:
-            json.dump(dictionary_object, outfile, separators=(",\n ", ": "))
+            json.dump(dictionary_object, outfile, separators=(",\n ", ": "), default=lambda j_obj: j_obj.__name__)
 
     dict_to_json(log_directory=log_dir, dictionary_object=study.best_params)
 

@@ -103,12 +103,12 @@ class CatDogModel:
 
 # Executor
 if __name__ == '__main__':
-    model_instance = CatDogModel(version='First_Generation', model_name='dog_cat',
+    model_instance = CatDogModel(version='json_function_test', model_name='dog_cat',
                                  data_dir='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
                                  saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models')
     model_instance.preprocess()
-    # model_instance.model_init()
-    model_instance.grid_search()
+    model_instance.model_init()
+    # model_instance.grid_search()
     # model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_training_metrics.csv')
@@ -116,5 +116,5 @@ if __name__ == '__main__':
     #                         callback_bool=True)
     # model_instance.evaluate_graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\First_Generation_dog_cat_evaluation_metrics.csv')
-    # model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
-    #                              prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\First_Generation_dog_cat.h5',
+                                 prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
