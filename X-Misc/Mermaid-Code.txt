@@ -23,14 +23,19 @@ graph TD
 # Nucleus Webapp
 graph TD
 subgraph Cloud Provider
-    id1{Saved Model Weight} --> id2[Predictor.py]
+    id1{Saved Model Weight} --> id2[API.py]
     subgraph Docker Container
     id2
-    id3[html_file]
-    id4[css_file]
-    id5[API.py]
-    id6[requirements.txt]
-    id7[Dockerfile.dockerfile]
+    subgraph Template Folder
+    id3[index.html]
+    subgraph Style-Sheets Folder
+    id4[style.css]
+    id5[Fonts]
+    id6[Pixel_NN.png]
+    end
+    end
+    id7[requirements.txt]
+    id8[Dockerfile.dockerfile]
     end
 end
 

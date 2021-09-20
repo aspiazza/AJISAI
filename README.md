@@ -1,5 +1,5 @@
-# AJISAI Project README ![Pixelated NN](X-Misc/Pixel_NN.png)
-
+# AJISAI Project README 
+![Pixelated NN](X-Misc/Pixel_NN.png)
 
 ### The what:
 
@@ -39,7 +39,7 @@ automating tasks if need be. Below are some skills I utilized in this project:
 - Clean, Reusable, Production Worthy Code
 - Libraries:
 
-> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, pandas, os, csv, optuna, glob, shutil, and more
+> Numpy, PIL, CV2, Tensorflow, Sci-Kit-Learn, Keras, Plotly, Fast-API, pandas, os, csv, optuna, glob, shutil, starlette, uvicorn, and more
 
 ### Directory Structure:
 
@@ -92,11 +92,19 @@ automating tasks if need be. Below are some skills I utilized in this project:
   > + Data Viz will be broken up into different functions within a single custom library
   > + Will output training, baseline, post-preprocessed, and prediction subplots
 
+- Pipeline\Grid_Search
+  > + Contains a class that trains the same model contained in the "Models" directory using Optuna
+  > + Logs the best parameters, training results, and other data
+  > + Can be considered the "fine-tune" portion of the project
+
 - Pipeline\Models
   > + Contains the actual models and there parameters
   > + Models will be made using functional API and sequential
   > + Results of training should be outputted to Data Visual directory and logs
   > + Can implement Freezing, Pretrained layers, multiple models, and other techniques
+  
+- Pipeline\Prediction
+  > + Contains a class that uses a given model to predict on data
 
 - Pipeline\Preprocess
   > + Data preprocessing component
