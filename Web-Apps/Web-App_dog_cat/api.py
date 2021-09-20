@@ -1,6 +1,6 @@
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from fastapi import FastAPI, File, UploadFile, Request, Form
+from fastapi import FastAPI, File, UploadFile, BackgroundTasks
 from tensorflow.keras import preprocessing
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -26,9 +26,7 @@ async def index():
 
 @app.post('/prediction_page')
 async def prediction_form(dogcat_img: UploadFile = File(...)):
-    dogcat_img_bytes = dogcat_img.file.read()
-
-    pp_dogcat_image = preprocessing.image.load_img(dogcat_img_bytes, target_size=(150, 150))
+    pp_dogcat_image = Image.open(dogcat_img.file).resize((150, 150), Image.NEAREST).convert("RGB")
     pp_dogcat_image_arr = preprocessing.image.img_to_array(pp_dogcat_image)
     input_arr = np.array([pp_dogcat_image_arr])
     prediction = np.argmax(model.predict(input_arr), axis=-1)
@@ -40,18 +38,21 @@ if __name__ == '__main__':
     uvicorn.run(app, host='localhost', port=8000)
 
 '''
-@app.post('/prediction_page')
-async def prediction_form(dogcat_img: bytes = Form(...)):
-    ic(dogcat_img)
-    ic(type(dogcat_img))
-
-
-@app.post('/prediction_page')
-async def prediction_form(dogcat_img: bytes = Form(...)):
-    dogcat_image_arr = np.array(Image.open(BytesIO(dogcat_img)))
-    image = preprocessing.image.load_img(dogcat_img, target_size=(150, 150))
-    input_arr = preprocessing.image.img_to_array(image)
-    input_arr = np.array([input_arr])  # Convert single image to a batch.
+def predict_image(dogcat_img: ):
+    pp_dogcat_image = Image.open(dogcat_img.file).resize((150, 150), Image.NEAREST).convert("RGB")
+    pp_dogcat_image_arr = preprocessing.image.img_to_array(pp_dogcat_image)
+    input_arr = np.array([pp_dogcat_image_arr])
     prediction = np.argmax(model.predict(input_arr), axis=-1)
+
     print(prediction)
+
+
+@app.get('/')
+async def index():
+    return RedirectResponse(url="/Templates/index.html")
+
+
+@app.post('/prediction_page')
+async def prediction_form(background_tasks: BackgroundTasks, dogcat_img: UploadFile = File(...)):
+    background_tasks.add_task(predict_image, img_response=dogcat_img)
 '''
