@@ -153,10 +153,10 @@ automating tasks if need be. Below are some skills I utilized in this project:
 > 10. Create a Docker container for the app
 > 11. Place on a cloud service
 
-### Graph of ML Web-App Creation Pipeline
+### Graph of ML Web-App Creation Pipeline:
 
 ![Nucleus Logic](X-Misc/Nucleus.png)
 
-### Graph of ML Web-App
+### Graph of ML Web-App:
 
 ![Web App Logic](X-Misc/WebApp.png)
