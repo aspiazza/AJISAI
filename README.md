@@ -1,4 +1,5 @@
-# AJISAI Project README
+# AJISAI Project README ![Pixelated NN](X-Misc/Pixel_NN.png)
+
 
 ### The what:
 
