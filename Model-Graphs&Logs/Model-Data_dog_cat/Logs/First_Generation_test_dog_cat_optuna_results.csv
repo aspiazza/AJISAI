@@ -1,7 +1,0 @@
-number,value,datetime_start,datetime_complete,duration,params_activation_1,params_activation_2,params_activation_3,params_activation_4,params_batch_size,params_kernel_size_1,params_kernel_size_2,params_kernel_size_3,params_num_dense_nodes,params_num_filters_1,params_num_filters_2,params_num_filters_3,params_strides_1,params_strides_2,params_strides_3,state
-0,0.4374476373195648,2021-09-14 07:45:16.464487,2021-09-14 08:12:33.147450,0 days 00:27:16.682963,softmax,<function mish at 0x00000270F39C7550>,tanh,selu,128,2,3,2,32,16,64,256,1,1,1,COMPLETE
-1,0.6845778226852417,2021-09-14 08:12:33.147450,2021-09-14 09:01:19.081286,0 days 00:48:45.933836,sigmoid,relu,sigmoid,tanh,8,5,4,3,1024,512,64,16,1,1,2,COMPLETE
-2,0.5341922044754028,2021-09-14 09:01:19.081286,2021-09-14 10:12:43.148703,0 days 01:11:24.067417,<function mish at 0x00000270F39C7550>,swish,sigmoid,selu,16,4,2,4,1024,32,512,512,1,1,1,COMPLETE
-3,0.5828149914741516,2021-09-14 10:12:43.148703,2021-09-14 10:40:49.346376,0 days 00:28:06.197673,sigmoid,<function mish at 0x00000270F39C7550>,softmax,<function mish at 0x00000270F39C7550>,64,5,3,4,128,32,128,32,1,1,2,COMPLETE
-4,0.6857307553291321,2021-09-14 10:40:49.346376,2021-09-14 11:07:18.138738,0 days 00:26:28.792362,swish,swish,tanh,tanh,64,3,2,4,128,16,48,512,2,1,1,COMPLETE
-5,0.4380301237106323,2021-09-14 11:07:18.138738,2021-09-14 12:02:37.110547,0 days 00:55:18.971809,selu,selu,selu,sigmoid,16,5,4,4,512,512,256,32,1,2,2,COMPLETE
