@@ -1,3 +1,5 @@
+# Auto Fine Tuning
+
 import csv
 import os
 import json
@@ -54,8 +56,8 @@ class Objective:
         activations_6 = trial.suggest_categorical('activation_6', ['relu', 'sigmoid', 'tanh', 'selu',
                                                                    'softmax', 'swish', mish])
 
-        dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 512, 1024])
-        batch_size = trial.suggest_categorical('batch_size', [8, 16, 32, 64, 96, 128, 180, 256])
+        dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 256, 512, 1024])
+        batch_size = trial.suggest_categorical('batch_size', [8, 16, 32, 64, 96, 128, 256])
 
         # Add study params to dictionary for organization
         dict_params = {
@@ -85,7 +87,7 @@ class Objective:
             'activations_6': activations_6,
 
             'dense_nodes': dense_nodes,
-            'batch_size': batch_size,
+            'batch_size': batch_size
         }
 
         model_name = 'optuna_seq_maxpool_cnn'
@@ -94,37 +96,42 @@ class Objective:
                           kernel_size=dict_params['kernel_size_1'],
                           activation=dict_params['activations_1'],
                           strides=dict_params['stride_num_1'],
+                          padding="same",
                           input_shape=self.input_shape),
             layers.BatchNormalization(),
-            layers.MaxPooling2D(2, 2),
+            layers.MaxPooling2D(2, 2, padding="same"),
 
             layers.Conv2D(filters=dict_params['num_filters_2'],
                           kernel_size=dict_params['kernel_size_2'],
                           activation=dict_params['activations_2'],
-                          strides=dict_params['stride_num_2']),
+                          strides=dict_params['stride_num_2'],
+                          padding="same"),
             layers.BatchNormalization(),
-            layers.MaxPooling2D(2, 2),
+            layers.MaxPooling2D(2, 2, padding="same"),
 
             layers.Conv2D(filters=dict_params['num_filters_3'],
                           kernel_size=dict_params['kernel_size_3'],
                           activation=dict_params['activations_3'],
-                          strides=dict_params['stride_num_3']),
+                          strides=dict_params['stride_num_3'],
+                          padding="same"),
             layers.BatchNormalization(),
-            layers.MaxPooling2D(2, 2),
+            layers.MaxPooling2D(2, 2, padding="same"),
 
             layers.Conv2D(filters=dict_params['num_filters_4'],
                           kernel_size=dict_params['kernel_size_4'],
                           activation=dict_params['activations_4'],
-                          strides=dict_params['stride_num_4']),
+                          strides=dict_params['stride_num_4'],
+                          padding="same"),
             layers.BatchNormalization(),
-            layers.MaxPooling2D(2, 2),
+            layers.MaxPooling2D(2, 2, padding="same"),
 
             layers.Conv2D(filters=dict_params['num_filters_5'],
                           kernel_size=dict_params['kernel_size_5'],
                           activation=dict_params['activations_5'],
-                          strides=dict_params['stride_num_5']),
+                          strides=dict_params['stride_num_5'],
+                          padding="same"),
             layers.BatchNormalization(),
-            layers.MaxPooling2D(2, 2),
+            layers.MaxPooling2D(2, 2, padding="same"),
 
             layers.Flatten(),
             layers.Dense(dict_params['dense_nodes'], activation=dict_params['activations_6']),

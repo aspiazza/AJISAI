@@ -1,3 +1,5 @@
+# API for Dog Cat AI Container
+
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI, File, UploadFile
@@ -42,4 +44,4 @@ async def prediction_form(dogcat_img: UploadFile = File(...)):
     return answer
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='localhost', port=8000)
+    uvicorn.run(app, host='127.0.0.1', port=4000)
