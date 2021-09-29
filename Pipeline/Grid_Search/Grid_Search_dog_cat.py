@@ -25,11 +25,11 @@ class Objective:
 
     def __call__(self, trial):
         # Create study parameters
-        num_filters_1 = trial.suggest_categorical('num_filters_1', [16, 32, 48, 64, 128, 256, 512])
-        num_filters_2 = trial.suggest_categorical('num_filters_2', [16, 32, 48, 64, 128, 256, 512])
-        num_filters_3 = trial.suggest_categorical('num_filters_3', [16, 32, 48, 64, 128, 256, 512])
-        num_filters_4 = trial.suggest_categorical('num_filters_4', [16, 32, 48, 64, 128, 256, 512])
-        num_filters_5 = trial.suggest_categorical('num_filters_5', [16, 32, 48, 64, 128, 256, 512])
+        num_filters_1 = trial.suggest_int('num_filters_1', 16, 512)
+        num_filters_2 = trial.suggest_int('num_filters_2', 16, 512)
+        num_filters_3 = trial.suggest_int('num_filters_3', 16, 512)
+        num_filters_4 = trial.suggest_int('num_filters_4', 16, 512)
+        num_filters_5 = trial.suggest_int('num_filters_5', 16, 512)
 
         kernel_size_1 = trial.suggest_int('kernel_size_1', 2, 5)
         kernel_size_2 = trial.suggest_int('kernel_size_2', 2, 5)
@@ -56,9 +56,9 @@ class Objective:
         activations_6 = trial.suggest_categorical('activation_6', ['relu', 'sigmoid', 'tanh', 'selu',
                                                                    'softmax', 'swish', mish])
 
-        dense_nodes = trial.suggest_categorical('num_dense_nodes', [32, 64, 128, 256, 512, 1024])
-        batch_size = trial.suggest_categorical('batch_size', [8, 16, 32, 64, 96, 128, 256])
-        dropout_rate = trial.suggest_categorical('dropout_rate', 0.4, 0.8)
+        dense_nodes = trial.suggest_int('num_dense_nodes', 32, 1024)
+        batch_size = trial.suggest_int('batch_size', 8, 256)
+        dropout_rate = trial.suggest_float('dropout_rate', 0.4, 0.8)
 
         # Add study params to dictionary for organization
         dict_params = {
