@@ -1,4 +1,5 @@
-# AJISAI Project README 
+# AJISAI Project README
+
 ![Pixelated NN](X-Misc/Pixel_NN.png)
 
 ### The what:
@@ -15,17 +16,18 @@ make any kind of machine or deep learning model I want with varying levels of co
 professionality.
 
 The Web Application portion of the AJISAI Project contains all the necessary files needed to create an ML/DL web
-application within a docker container. Will contain a dockerfile, requirements.txt, html file, CSS, API, and other related files. 
+application within a docker container. Will contain a dockerfile, requirements.txt, html file, CSS, API, and other
+related files.
 
 ### Purpose:
 
 The purpose of this project was to create an end-to-end machine learning web application pipeline in a professional and
 organized way. This is a personal project that aims to gain a deeper understanding of Python, Machine Learning, Web
-Scraping, Plotly Graphing, API Developing, Docker, Cloud Environments, HTML/CSS, and production worthy code. I plan on
-using this project as a long-term medium that I continually update and use to complete other ML projects in the future.
-Because of this, I expect there to be many improvements to come in the following months/years and additions. These
-improvements would consist of organizing folder structure, cleaning code, adding new models, updating documentation, and
-automating tasks if need be. Below are some skills I utilized in this project:
+Scraping, Plotly Graphing, API Developing, Docker, Cloud Environments, HTML/CSS, and creating production worthy code. I
+plan on using this project as a long-term medium that I continually update and use to complete other ML projects in the
+future. Because of this, I expect there to be many improvements to come in the following months/years and additions.
+These improvements would consist of organizing folder structure, cleaning code, adding new models, updating
+documentation, and automating tasks if need be. Below are some skills I utilized in this project:
 
 - Python Code
 - Web scraping and Data Extraction
@@ -64,9 +66,9 @@ automating tasks if need be. Below are some skills I utilized in this project:
     + Nucleus_{model name}.py
     + Project_Initializer.py
     + README.md
-- /F:/AI-Containers
-- /F:/Data-Warehouse
-- /F:/Saved-Models
+- F:/AI-Containers
+- F:/Data-Warehouse
+- F:/Saved-Models
 
 ### What The Directories Contain:
 
@@ -102,7 +104,7 @@ automating tasks if need be. Below are some skills I utilized in this project:
   > + Models will be made using functional API and sequential
   > + Results of training should be outputted to Data Visual directory and logs
   > + Can implement Freezing, Pretrained layers, multiple models, and other techniques
-  
+
 - Pipeline\Prediction
   > + Contains a class that uses a given model to predict on data
 

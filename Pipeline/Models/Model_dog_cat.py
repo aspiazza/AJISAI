@@ -10,24 +10,29 @@ from tensorflow_addons.activations import mish
 def seq_maxpool_cnn(log_dir):
     model_name = 'seq_maxpool_cnn'
     model = Sequential([
-        layers.Conv2D(16, kernel_size=3, activation=mish, input_shape=(150, 150, 3), strides=1),
+        layers.Conv2D(16, kernel_size=3, activation=mish, input_shape=(150, 150, 3), strides=1, padding="same"),
         layers.BatchNormalization(),
-        layers.MaxPooling2D(2, 2),
+        layers.MaxPooling2D(2, 2, padding="same"),
         layers.Dropout(rate=0.25),
 
-        layers.Conv2D(64, kernel_size=3, activation=mish, strides=2),
+        layers.Conv2D(64, kernel_size=3, activation=mish, strides=2, padding="same"),
         layers.BatchNormalization(),
-        layers.MaxPooling2D(2, 2),
+        layers.MaxPooling2D(2, 2, padding="same"),
         layers.Dropout(rate=0.25),
 
-        layers.Conv2D(128, kernel_size=3, activation='selu', strides=1),
+        layers.Conv2D(128, kernel_size=3, activation='selu', strides=1, padding="same"),
         layers.BatchNormalization(),
-        layers.MaxPooling2D(2, 2),
+        layers.MaxPooling2D(2, 2, padding="same"),
         layers.Dropout(rate=0.25),
 
-        layers.Conv2D(256, kernel_size=3, activation='selu', strides=1),
+        layers.Conv2D(256, kernel_size=3, activation='selu', strides=1, padding="same"),
         layers.BatchNormalization(),
-        layers.MaxPooling2D(2, 2),
+        layers.MaxPooling2D(2, 2, padding="same"),
+        layers.Dropout(rate=0.25),
+
+        layers.Conv2D(256, kernel_size=3, activation='selu', strides=1, padding="same"),
+        layers.BatchNormalization(),
+        layers.MaxPooling2D(2, 2, padding="same"),
         layers.Dropout(rate=0.25),
 
         layers.Flatten(),

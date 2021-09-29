@@ -24,7 +24,7 @@ p {
     box-shadow: 0px 0px 4px 0px #0ff;
 }
 
-/*Online text on top right*/
+/* Online text on top right */
 .online_text{
     font-family: 'Sevastopol_Interface';
     font-size: 20px;
@@ -50,7 +50,7 @@ p {
     margin-left: 750px;
 }
 
-/*Prediction Window*/
+/* Prediction Window */
 .prediction_box{
     border: solid;
     border-color: rgb(1, 254, 161);
@@ -89,7 +89,7 @@ input[type="file"]{
     margin-bottom: 30px;
 }
 
-/*Text for headers of window*/
+/* Text for headers of window */
 .header_text {
     color: rgb(0, 0, 0);
     font-family: 'Sevastopol_Interface';
@@ -108,7 +108,7 @@ input[type="file"]{
     box-shadow: 0px 0px 4px 0px #0ff;
 }
 
-/*Font for site*/
+/* Font for site */
 @font-face {
     font-family: "Sevastopol_Interface";
     src: url("Fonts/Sevastopol-Interface/Sevastopol-Interface.eot");

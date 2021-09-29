@@ -33,15 +33,18 @@ def predict_image(image):
     return answer
 
 
+# Index page
 @app.get('/')
 async def index():
     return RedirectResponse(url="/Templates/index.html")
 
 
+# Prediction Page
 @app.post('/prediction_page')
 async def prediction_form(dogcat_img: UploadFile = File(...)):
     answer = predict_image(dogcat_img)
     return answer
 
+
 if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=4000)
+    uvicorn.run(app, host='127.0.0.1', port=80)

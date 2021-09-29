@@ -11,8 +11,12 @@ WORKDIR /app
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Open port 4000
-EXPOSE 4000
+# Open port 80
+EXPOSE 80
 
 # Run these commands
-CMD ["uvicorn", "src.api:app", "--host=localhost", "--reload"]
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "80"]
+
+# Run in terminal
+# docker build -t ajisai-dogcat:0.1 .
+# docker run -d --name dogcat-AI -p 80:80 ajisai-dogcat:0.1
