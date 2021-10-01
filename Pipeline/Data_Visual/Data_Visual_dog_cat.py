@@ -424,10 +424,10 @@ class EvaluationDataVisualization:
         self.auc = metric_data['auc']
         self.recall = metric_data['recall']
         self.precision = metric_data['precision']
-        self.false_positive = metric_data['false_positives']
-        self.true_negative = metric_data['true_negatives']
-        self.false_negative = metric_data['false_negatives']
-        self.true_positive = metric_data['true_positives']
+        self.false_positive = metric_data['false_positives_3']
+        self.true_negative = metric_data['true_negatives_3']
+        self.false_negative = metric_data['false_negatives_3']
+        self.true_positive = metric_data['true_positives_3']
 
     def eval_barchart(self):
 

@@ -106,13 +106,13 @@ if __name__ == '__main__':
     model_instance = CatDogModel(version='Last_Generation', model_name='dog_cat',
                                  data_dir='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
                                  saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models')
-    model_instance.preprocess()
-    model_instance.model_init()
-    model_instance.grid_search()
+    # model_instance.preprocess()
+    # model_instance.model_init()
+    # model_instance.grid_search()
     # model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
-    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat.h5',
+    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',
     #                         callback_bool=True)
     # model_instance.evaluate_graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_evaluation_metrics.csv')
