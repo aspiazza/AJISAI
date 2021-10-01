@@ -1,3 +1,5 @@
+# This was the code used to create the images seen in the README. Used https://mermaid-js.github.io/mermaid-live-editor/
+
 # Nucleus Structure
 graph TD
     subgraph Data Organization
@@ -42,6 +44,3 @@ end
 {
   "theme": "forest"
 }
-
-
-https://mermaid-js.github.io/mermaid-live-editor/
