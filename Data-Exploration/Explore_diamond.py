@@ -14,38 +14,57 @@ diamonds_csv = read_csv(csv_directory)
 
 
 def value_count_extractor(csv_data, data_feature):
-    feature = csv_data[data_feature]
-    unique_feature_count = feature.value_counts(normalize=True)
-    feature_percentage_count = unique_feature_count.values
-    feature_data = unique_feature_count.keys()
+    feature = csv_data[data_feature]  # Whole Column
+    unique_feature_count = feature.value_counts(normalize=True)  # Unique features
+    feature_percentage_count = unique_feature_count.values  # Percentage makeup of data
+    feature_data = unique_feature_count.keys()  # Data features
 
     # If data is not a string (int or float)
-    if not isinstance(feature[0], str):
-        percentage = (max(feature) - min(feature)) / 5
-        one_to_twenty_percent = []
-        twenty_to_forty_percent = []
-        forty_to_sixty_percent = []
-        sixty_to_eighty_percent = []
-        eighty_to_hundred_percent = []
+    if not isinstance(feature_data[0], str):
+        percentage = (max(feature_data) - min(feature_data)) / 5
 
-        for data in feature:
-            if data <= min(feature) + (percentage * 1):
-                one_to_twenty_percent.append(data)
+        # Create list of X labels
+        x_label_range_list = []
+        start = min(feature_data)
 
-            elif data <= min(feature) + (percentage * 2):
-                twenty_to_forty_percent.append(data)
+        for num in range(1, 6):
+            end = min(feature_data) + (percentage * num)
 
-            elif data <= min(feature) + (percentage * 3):
-                forty_to_sixty_percent.append(data)
+            x_label_range_list.append(
+                f"{('{:.4f}'.format(start))} - {('{:.4f}'.format(end))}")
 
-            elif data <= min(feature) + (percentage * 4):
-                sixty_to_eighty_percent.append(data)
+            if num == 1:
+                start = min(feature_data) + (percentage * num)
+            else:
+                start = end
+            end += percentage * (num + 1)
 
-            elif data <= min(feature) + (percentage * 5):
-                eighty_to_hundred_percent.append(data)
+        one_to_twenty_percent = 0
+        twenty_to_forty_percent = 0
+        forty_to_sixty_percent = 0
+        sixty_to_eighty_percent = 0
+        eighty_to_hundred_percent = 0
 
-        return len(one_to_twenty_percent), len(twenty_to_forty_percent), len(forty_to_sixty_percent), \
-               len(sixty_to_eighty_percent), len(eighty_to_hundred_percent)
+        for data, makeup in zip(feature_data, feature_percentage_count):
+            if data <= min(feature_data) + (percentage * 1):
+                one_to_twenty_percent += makeup
+
+            elif data <= min(feature_data) + (percentage * 2):
+                twenty_to_forty_percent += makeup
+
+            elif data <= min(feature_data) + (percentage * 3):
+                forty_to_sixty_percent += makeup
+
+            elif data <= min(feature_data) + (percentage * 4):
+                sixty_to_eighty_percent += makeup
+
+            elif data <= min(feature_data) + (percentage * 5):
+                eighty_to_hundred_percent += makeup
+
+        aggregate_list = [one_to_twenty_percent, twenty_to_forty_percent, forty_to_sixty_percent,
+                          sixty_to_eighty_percent, eighty_to_hundred_percent]
+
+        return aggregate_list, x_label_range_list
 
     else:
         unique_feature_count = feature_percentage_count * len(diamonds_csv)
@@ -60,26 +79,19 @@ def correlation_value_extractor(csv_data, data_feature):
     pass
 
 
-table_one_to_twenty_percent, table_twenty_to_forty_percent, table_forty_to_sixty_percent, \
-table_sixty_to_eighty_percent, table_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "table")
+carat_y_values, carat_range_list = value_count_extractor(diamonds_csv, "carat")
 
-carat_one_to_twenty_percent, carat_twenty_to_forty_percent, carat_forty_to_sixty_percent, \
-carat_sixty_to_eighty_percent, carat_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "carat")
+dp_y_values, dp_range_list = value_count_extractor(diamonds_csv, "depth_percent")
 
-dp_one_to_twenty_percent, dp_twenty_to_forty_percent, dp_forty_to_sixty_percent, \
-dp_sixty_to_eighty_percent, dp_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "depth_percent")
+table_y_values, table_range_list = value_count_extractor(diamonds_csv, "table")
 
-length_one_to_twenty_percent, length_twenty_to_forty_percent, length_forty_to_sixty_percent, \
-length_sixty_to_eighty_percent, length_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "length")
+length_y_values, length_range_list = value_count_extractor(diamonds_csv, "length")
 
-width_one_to_twenty_percent, width_twenty_to_forty_percent, width_forty_to_sixty_percent, \
-width_sixty_to_eighty_percent, width_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "width")
+width_y_values, width_range_list = value_count_extractor(diamonds_csv, "width")
 
-depth_one_to_twenty_percent, depth_twenty_to_forty_percent, depth_forty_to_sixty_percent, \
-depth_sixty_to_eighty_percent, depth_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "depth")
+depth_y_values, depth_range_list = value_count_extractor(diamonds_csv, "depth")
 
-price_one_to_twenty_percent, price_twenty_to_forty_percent, price_forty_to_sixty_percent, \
-price_sixty_to_eighty_percent, price_eighty_to_hundred_percent = value_count_extractor(diamonds_csv, "price")
+price_y_values, price_range_list = value_count_extractor(diamonds_csv, "price")
 
 cut_count, cut_categories = value_count_extractor(diamonds_csv, "cut")
 
@@ -91,42 +103,28 @@ exploration_figure = make_subplots(rows=5, cols=2, subplot_titles=(
     'Carat Distribution', 'Depth Percent Distribution', 'Table Size Distribution', 'Length mm Distribution',
     'Width mm Distribution', 'Depth mm Distribution', 'Price mm Distribution'))
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[table_twenty_to_forty_percent, table_forty_to_sixty_percent,
-                                       table_sixty_to_eighty_percent, table_eighty_to_hundred_percent,
-                                       table_eighty_to_hundred_percent]), row=2, col=1)
+exploration_figure.add_trace(go.Bar(x=carat_range_list,
+                                    y=carat_y_values, name="Carat"), row=1, col=1)
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[carat_twenty_to_forty_percent, carat_forty_to_sixty_percent,
-                                       carat_sixty_to_eighty_percent, carat_eighty_to_hundred_percent,
-                                       carat_eighty_to_hundred_percent]), row=1, col=1)
+exploration_figure.add_trace(go.Bar(x=dp_range_list,
+                                    y=dp_y_values, name="Depth Percent"), row=1, col=2)
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[dp_twenty_to_forty_percent, dp_forty_to_sixty_percent,
-                                       dp_sixty_to_eighty_percent, dp_eighty_to_hundred_percent,
-                                       dp_eighty_to_hundred_percent]), row=1, col=2)
+exploration_figure.add_trace(go.Bar(x=table_range_list,
+                                    y=table_y_values, name="Table Size"), row=2, col=1)
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[length_twenty_to_forty_percent, length_forty_to_sixty_percent,
-                                       length_sixty_to_eighty_percent, length_eighty_to_hundred_percent,
-                                       length_eighty_to_hundred_percent]), row=2, col=2)
+exploration_figure.add_trace(go.Bar(x=length_range_list,
+                                    y=length_y_values, name="Length MM"), row=2, col=2)
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[width_twenty_to_forty_percent, width_forty_to_sixty_percent,
-                                       width_sixty_to_eighty_percent, width_eighty_to_hundred_percent,
-                                       width_eighty_to_hundred_percent]), row=3, col=1)
+exploration_figure.add_trace(go.Bar(x=width_range_list,
+                                    y=width_y_values, name="Width MM"), row=3, col=1)
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[depth_twenty_to_forty_percent, depth_forty_to_sixty_percent,
-                                       depth_sixty_to_eighty_percent, depth_eighty_to_hundred_percent,
-                                       depth_eighty_to_hundred_percent]), row=3, col=2)
+exploration_figure.add_trace(go.Bar(x=depth_range_list,
+                                    y=depth_y_values, name="Depth MM"), row=3, col=2)
 
-exploration_figure.add_trace(go.Bar(x=['0 - 20%', '20 - 40%', '40 - 60%', '60 - 80%', '80 - 100%'],
-                                    y=[price_twenty_to_forty_percent, price_forty_to_sixty_percent,
-                                       price_sixty_to_eighty_percent, price_eighty_to_hundred_percent,
-                                       price_eighty_to_hundred_percent]), row=4, col=1)
+exploration_figure.add_trace(go.Bar(x=price_range_list,
+                                    y=price_y_values, name="Price"), row=4, col=1)
 
-exploration_figure.update_layout(height=1000, width=1300, title_text='Feature Distributions')
+exploration_figure.update_layout(height=2000, width=1300, title_text='Feature Distributions')
 
 exploration_figure.show()
 offline.plot(exploration_figure,
