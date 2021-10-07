@@ -2,7 +2,6 @@
 
 import numpy as np
 from pandas import read_csv
-from plotly import offline
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from icecream import ic
@@ -10,9 +9,17 @@ from icecream import ic
 csv_directory = 'F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv'
 metric_graphs_dir = '..\\Model-Graphs&Logs\\Model-Data_diamond\\Metric-Graphs\\Exploration_diamond.html'
 diamonds_csv = read_csv(csv_directory)
+correlation_diamonds_csv = diamonds_csv.drop(['id', 'color', 'cut', 'clarity'], axis=1)
 
-# prints correlation arrays
-diamonds_csv.corr()
+
+def correlation_map_graph():
+    data_correlation = correlation_diamonds_csv.corr()
+    column_headers = correlation_diamonds_csv.columns
+
+    correlation_heatmap_figure = go.Figure(go.Heatmap(z=data_correlation, x=column_headers, y=column_headers))
+    correlation_heatmap_figure.update_layout(title_text='Correlation Heatmap')
+
+    return correlation_heatmap_figure
 
 
 def feature_distribution_graph():
@@ -22,7 +29,7 @@ def feature_distribution_graph():
         feature_percentage_count = unique_feature_count.values  # Percentage makeup of data
         feature_data = unique_feature_count.keys()  # Data features
 
-        # If data is not a string (int or float)
+        # If data is not a string (int or float)     Side-Note: I could have used pd.cut to simplify this
         if not isinstance(feature_data[0], str):
             percentage = (max(feature_data) - min(feature_data)) / 5
 
@@ -120,11 +127,6 @@ def feature_distribution_graph():
     return feature_distribution_figure
 
 
-def correlation_map_graph():
-    def correlation_value_extractor(csv_data, data_feature):
-        pass
-
-
 def figures_to_html(figs, filename):
     dashboard = open(filename, 'w')
     dashboard.write("<html><head></head><body>" + "\n")
@@ -134,5 +136,5 @@ def figures_to_html(figs, filename):
     dashboard.write("</body></html>" + "\n")
 
 
-figure_list = [feature_distribution_graph()]
+figure_list = [feature_distribution_graph(), correlation_map_graph()]
 figures_to_html(figs=figure_list, filename=metric_graphs_dir)
