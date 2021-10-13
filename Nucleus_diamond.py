@@ -6,8 +6,10 @@ from Pipeline.Grid_Search import Grid_Search_diamond as gridDiamond
 from Pipeline.Data_Visual import Data_Visual_diamond as datavizDiamond
 from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Prediction import Prediction_diamond as pdDiamond
-from keras.models import load_model
+# from keras.models import load_model
 import pandas as pd
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestClassifier
 
 
 # Model class
@@ -20,14 +22,21 @@ class DiamondModel:
         self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{version_model_name}'
         self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{version_model_name}'
 
+        self.x_train = None
+        self.x_test = None
+        self.y_train = None
+        self.y_test = None
+        self.preprocessor_pipeline = None
+
     # Data Preprocessing
     def preprocess(self):
-        procDiamond.diamond_preprocess(data_dir=self.data_dir)
-        pass
+        self.x_train, self.x_test, self.y_train, self.y_test, self.preprocessor_pipeline = procDiamond.diamond_preprocess(
+            data_dir=self.data_dir)
 
     # Model Declaration
     def model_init(self):
-        pass
+        self.rf = Pipeline(steps=[('preprocessor', self.preprocessor_pipeline),
+                                  ('classifier', RandomForestClassifier())])
 
     # Optuna Optimization
     def grid_search(self):
@@ -36,7 +45,7 @@ class DiamondModel:
     # Training
     def training(self, callback_bool):
         if callback_bool:
-            pass
+            self.rf.fit(self.x_train, self.y_train)
         else:
             callback_list = []
 
@@ -64,9 +73,9 @@ if __name__ == '__main__':
                                   data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
                                   saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
     model_instance.preprocess()
-    # model_instance.model_init()
+    model_instance.model_init()
     # model_instance.grid_search()
-    # model_instance.training(callback_bool=True)
+    model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
     # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',

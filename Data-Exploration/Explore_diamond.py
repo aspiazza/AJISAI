@@ -20,7 +20,7 @@ def feature_distribution_graph():
 
         # If data is not a string (int or float)
         if not isinstance(feature_data[0], str):
-            data_makeup, bin_list = pd.cut(data_feature, 5, retbins=True)
+            bin_list = pd.cut(data_feature, 5, retbins=True)[1]
 
             # Create list of X labels for ranges
             x_label_range_list = []
@@ -55,19 +55,18 @@ def feature_distribution_graph():
 
             aggregate_list = [one_to_twenty_percent, twenty_to_forty_percent, forty_to_sixty_percent,
                               sixty_to_eighty_percent, eighty_to_hundred_percent]
-
             return aggregate_list, x_label_range_list
 
         else:
             return feature_percentage_count, list(feature_data)
 
     def row_column_index_creator(index_row_size, index_col_size):
-        row_col_index_list = []
+        row_col_list = []
         index_row_size += 1
         index_col_size += 1
-        [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column in
+        [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in
          range(1, index_col_size)]
-        return row_col_index_list
+        return row_col_list
 
     row_col_index_list = row_column_index_creator(index_row_size=5, index_col_size=2)
 
@@ -105,7 +104,7 @@ def categorical_correlation_map_graph():
 
     def cramers_v(feature_crosstab_matrix):
         """
-        calculate Cramers V statistic for categorial-categorial association.
+        calculate Cramers V statistic for categorical-categorical association.
         uses correction from Bergsma and Wicher,
         Journal of the Korean Statistical Society 42 (2013): 323-328
 

@@ -3,6 +3,7 @@
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI, File, UploadFile
+from tensorflow_addons.activations import mish
 from tensorflow.keras import preprocessing
 from fastapi.staticfiles import StaticFiles
 from keras.models import load_model
@@ -15,7 +16,7 @@ app.mount("/Templates", StaticFiles(directory="Templates/"), name="Templates")
 templates = Jinja2Templates(directory="Templates")
 
 # Change to whatever model you prefer so long as its compatible with preprocessing parameters
-model_dir = 'F:\\Saved-Models\\Dog-Cat-Models\\json_function_test_dog_cat_optuna.h5'
+model_dir = 'F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5'
 model = load_model(model_dir)
 
 
