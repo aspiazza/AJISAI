@@ -7,16 +7,19 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from icecream import ic
+from sklearn.ensemble import RandomForestClassifier
 
 
-def diamond_preprocess(data_dir):  # TODO: Error training. Says column is not present or something like that
+def diamond_preprocess(data_dir):
     data = pd.read_csv(data_dir)
     cleaned_data = data.drop(['id', 'depth_percent'], axis=1)  # Features I don't want
 
-    x = cleaned_data.drop('price', axis=1)  # Train data
+    x = cleaned_data.drop(['price'], axis=1)  # Train data
     y = cleaned_data['price']  # Label data
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+    ic(x_train)
+    ic(y_train)
 
     numerical_features = cleaned_data.select_dtypes(include=['int64', 'float64']).columns
     categorical_features = cleaned_data.select_dtypes(include=['object']).columns
@@ -37,4 +40,8 @@ def diamond_preprocess(data_dir):  # TODO: Error training. Says column is not pr
             ('cat', categorical_transformer, categorical_features)
         ])
 
-    return x_train, x_test, y_train, y_test, preprocessor_pipeline
+    rf = Pipeline(steps=[('preprocessor', preprocessor_pipeline),
+                         ('classifier', RandomForestClassifier(verbose=1))])
+    ic(preprocessor_pipeline)
+
+    rf.fit(x_train, y_train)

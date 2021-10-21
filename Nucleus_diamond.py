@@ -73,9 +73,9 @@ if __name__ == '__main__':
                                   data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
                                   saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
     model_instance.preprocess()
-    model_instance.model_init()
+    # model_instance.model_init()
     # model_instance.grid_search()
-    model_instance.training(callback_bool=True)
+    # model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
     # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',
