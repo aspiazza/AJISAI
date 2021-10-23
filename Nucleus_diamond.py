@@ -8,8 +8,6 @@ from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Prediction import Prediction_diamond as pdDiamond
 # from keras.models import load_model
 import pandas as pd
-from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier
 
 
 # Model class
@@ -35,8 +33,7 @@ class DiamondModel:
 
     # Model Declaration
     def model_init(self):
-        self.rf = Pipeline(steps=[('preprocessor', self.preprocessor_pipeline),
-                                  ('classifier', RandomForestClassifier())])
+        pass
 
     # Optuna Optimization
     def grid_search(self):
@@ -45,7 +42,7 @@ class DiamondModel:
     # Training
     def training(self, callback_bool):
         if callback_bool:
-            self.rf.fit(self.x_train, self.y_train)
+            pass
         else:
             callback_list = []
 

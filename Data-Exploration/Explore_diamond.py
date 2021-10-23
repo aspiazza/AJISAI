@@ -1,10 +1,12 @@
 # Data Exploration
 
-from numpy import sqrt
+import numpy as np
 import pandas as pd
 import scipy.stats as ss
+from sklearn.linear_model import LinearRegression
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from icecream import ic
 
 csv_directory = 'F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv'
 metric_graphs_dir = '..\\Model-Graphs&Logs\\Model-Data_diamond\\Metric-Graphs\\Exploration_diamond.html'
@@ -86,6 +88,25 @@ def feature_distribution_graph():
     return feature_distribution_figure
 
 
+def vif_correlation():
+    def calculate_vif(df, features):
+        vif, tolerance = {}, {}
+        # all the features that you want to examine
+        for feature in features:
+            # extract all the other features you will regress against
+            X = [f for f in features if f != feature]
+            X, y = df[X], df[feature]
+            # extract r-squared from the fit
+            r2 = LinearRegression().fit(X, y).score(X, y)
+
+            # calculate tolerance
+            tolerance[feature] = 1 - r2
+            # calculate VIF
+            vif[feature] = 1 / (tolerance[feature])
+        # return VIF DataFrame
+        return pd.DataFrame({'VIF': vif, 'Tolerance': tolerance})
+
+
 def numerical_correlation_map_graph():
     cleaned_diamonds_csv = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
     numerical_features_dataframe = cleaned_diamonds_csv.corr()
@@ -118,7 +139,7 @@ def categorical_correlation_map_graph():
         phi2corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
         r_corr = r - ((r - 1) ** 2) / (n - 1)
         k_corr = k - ((k - 1) ** 2) / (n - 1)
-        correlation_value = sqrt(phi2corr / min((k_corr - 1), (r_corr - 1)))
+        correlation_value = np.sqrt(phi2corr / min((k_corr - 1), (r_corr - 1)))
 
         return correlation_value
 
@@ -140,6 +161,23 @@ def categorical_correlation_map_graph():
     categorical_correlation_heatmap_figure.update_layout(title_text='Categorical Feature Correlation Heatmap')
 
     return categorical_correlation_heatmap_figure
+
+
+def variance_graph():  # TODO: Add a variance barchart
+    data = np.var(diamonds_csv, ddof=1)
+    ic(data)
+    ic(type(data))
+    for i in data:
+        ic(i)
+    pass
+
+
+variance_graph()
+exit()
+
+
+def covariance_graph():  # TODO: Test feasibility
+    pass
 
 
 def figures_to_html(figs, filename):

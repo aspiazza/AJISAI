@@ -6,8 +6,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from icecream import ic
-from sklearn.ensemble import RandomForestClassifier
 
 
 def diamond_preprocess(data_dir):
@@ -18,11 +16,9 @@ def diamond_preprocess(data_dir):
     y = cleaned_data['price']  # Label data
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
-    ic(x_train)
-    ic(y_train)
 
-    numerical_features = cleaned_data.select_dtypes(include=['int64', 'float64']).columns
-    categorical_features = cleaned_data.select_dtypes(include=['object']).columns
+    numerical_features = x_train.select_dtypes(include=['int64', 'float64']).columns
+    categorical_features = x_train.select_dtypes(include=['object']).columns
 
     numerical_transformer = Pipeline(steps=[
         ('imputer', SimpleImputer(strategy='median')),  # Fill in missing data with median
@@ -40,8 +36,4 @@ def diamond_preprocess(data_dir):
             ('cat', categorical_transformer, categorical_features)
         ])
 
-    rf = Pipeline(steps=[('preprocessor', preprocessor_pipeline),
-                         ('classifier', RandomForestClassifier(verbose=1))])
-    ic(preprocessor_pipeline)
-
-    rf.fit(x_train, y_train)
+    return x_train, x_test, y_train, y_test, preprocessor_pipeline
