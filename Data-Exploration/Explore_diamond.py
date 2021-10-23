@@ -1,10 +1,12 @@
 # Data Exploration
 
-from numpy import sqrt
+import numpy as np
 import pandas as pd
 import scipy.stats as ss
+from sklearn.linear_model import LinearRegression
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from icecream import ic
 
 csv_directory = 'F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv'
 metric_graphs_dir = '..\\Model-Graphs&Logs\\Model-Data_diamond\\Metric-Graphs\\Exploration_diamond.html'
@@ -20,7 +22,7 @@ def feature_distribution_graph():
 
         # If data is not a string (int or float)
         if not isinstance(feature_data[0], str):
-            data_makeup, bin_list = pd.cut(data_feature, 5, retbins=True)
+            bin_list = pd.cut(data_feature, 5, retbins=True)[1]
 
             # Create list of X labels for ranges
             x_label_range_list = []
@@ -55,19 +57,18 @@ def feature_distribution_graph():
 
             aggregate_list = [one_to_twenty_percent, twenty_to_forty_percent, forty_to_sixty_percent,
                               sixty_to_eighty_percent, eighty_to_hundred_percent]
-
             return aggregate_list, x_label_range_list
 
         else:
             return feature_percentage_count, list(feature_data)
 
     def row_column_index_creator(index_row_size, index_col_size):
-        row_col_index_list = []
+        row_col_list = []
         index_row_size += 1
         index_col_size += 1
-        [row_col_index_list.append([row, column]) for row in range(1, index_row_size) for column in
+        [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in
          range(1, index_col_size)]
-        return row_col_index_list
+        return row_col_list
 
     row_col_index_list = row_column_index_creator(index_row_size=5, index_col_size=2)
 
@@ -85,6 +86,25 @@ def feature_distribution_graph():
     feature_distribution_figure.update_layout(height=2000, width=1300, title_text='Feature Distributions')
 
     return feature_distribution_figure
+
+
+def vif_correlation():
+    def calculate_vif(df, features):
+        vif, tolerance = {}, {}
+        # all the features that you want to examine
+        for feature in features:
+            # extract all the other features you will regress against
+            X = [f for f in features if f != feature]
+            X, y = df[X], df[feature]
+            # extract r-squared from the fit
+            r2 = LinearRegression().fit(X, y).score(X, y)
+
+            # calculate tolerance
+            tolerance[feature] = 1 - r2
+            # calculate VIF
+            vif[feature] = 1 / (tolerance[feature])
+        # return VIF DataFrame
+        return pd.DataFrame({'VIF': vif, 'Tolerance': tolerance})
 
 
 def numerical_correlation_map_graph():
@@ -105,7 +125,7 @@ def categorical_correlation_map_graph():
 
     def cramers_v(feature_crosstab_matrix):
         """
-        calculate Cramers V statistic for categorial-categorial association.
+        calculate Cramers V statistic for categorical-categorical association.
         uses correction from Bergsma and Wicher,
         Journal of the Korean Statistical Society 42 (2013): 323-328
 
@@ -119,7 +139,7 @@ def categorical_correlation_map_graph():
         phi2corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
         r_corr = r - ((r - 1) ** 2) / (n - 1)
         k_corr = k - ((k - 1) ** 2) / (n - 1)
-        correlation_value = sqrt(phi2corr / min((k_corr - 1), (r_corr - 1)))
+        correlation_value = np.sqrt(phi2corr / min((k_corr - 1), (r_corr - 1)))
 
         return correlation_value
 
@@ -141,6 +161,23 @@ def categorical_correlation_map_graph():
     categorical_correlation_heatmap_figure.update_layout(title_text='Categorical Feature Correlation Heatmap')
 
     return categorical_correlation_heatmap_figure
+
+
+def variance_graph():  # TODO: Add a variance barchart
+    data = np.var(diamonds_csv, ddof=1)
+    ic(data)
+    ic(type(data))
+    for i in data:
+        ic(i)
+    pass
+
+
+variance_graph()
+exit()
+
+
+def covariance_graph():  # TODO: Test feasibility
+    pass
 
 
 def figures_to_html(figs, filename):

@@ -6,7 +6,7 @@ from Pipeline.Grid_Search import Grid_Search_diamond as gridDiamond
 from Pipeline.Data_Visual import Data_Visual_diamond as datavizDiamond
 from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Prediction import Prediction_diamond as pdDiamond
-from keras.models import load_model
+# from keras.models import load_model
 import pandas as pd
 
 
@@ -20,10 +20,16 @@ class DiamondModel:
         self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{version_model_name}'
         self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{version_model_name}'
 
+        self.x_train = None
+        self.x_test = None
+        self.y_train = None
+        self.y_test = None
+        self.preprocessor_pipeline = None
+
     # Data Preprocessing
     def preprocess(self):
-        procDiamond.diamond_preprocess(data_dir=self.data_dir)
-        pass
+        self.x_train, self.x_test, self.y_train, self.y_test, self.preprocessor_pipeline = procDiamond.diamond_preprocess(
+            data_dir=self.data_dir)
 
     # Model Declaration
     def model_init(self):
