@@ -88,25 +88,6 @@ def feature_distribution_graph():
     return feature_distribution_figure
 
 
-def vif_correlation():
-    def calculate_vif(df, features):
-        vif, tolerance = {}, {}
-        # all the features that you want to examine
-        for feature in features:
-            # extract all the other features you will regress against
-            X = [f for f in features if f != feature]
-            X, y = df[X], df[feature]
-            # extract r-squared from the fit
-            r2 = LinearRegression().fit(X, y).score(X, y)
-
-            # calculate tolerance
-            tolerance[feature] = 1 - r2
-            # calculate VIF
-            vif[feature] = 1 / (tolerance[feature])
-        # return VIF DataFrame
-        return pd.DataFrame({'VIF': vif, 'Tolerance': tolerance})
-
-
 def numerical_correlation_map_graph():
     cleaned_diamonds_csv = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
     numerical_features_dataframe = cleaned_diamonds_csv.corr()
@@ -163,21 +144,46 @@ def categorical_correlation_map_graph():
     return categorical_correlation_heatmap_figure
 
 
-def variance_graph():  # TODO: Add a variance barchart
-    data = np.var(diamonds_csv, ddof=1)
-    ic(data)
-    ic(type(data))
-    for i in data:
-        ic(i)
-    pass
+# TODO: Try covariance graphs, Replace Cramers V with ANOVA
+
+def variance_graph():
+    cleaned_data = diamonds_csv.drop(['price', 'color', 'cut', 'clarity'], axis=1)
+    variance_data = np.var(cleaned_data, ddof=1)
+
+    variance_y_list = []
+    [variance_y_list.append(variance_datapoint) for variance_datapoint in variance_data]
+
+    variance_figure = go.Figure(data=[go.Bar(x=cleaned_data.columns, y=variance_y_list, name="Variance Data")])
+    variance_figure.update_layout(title_text='Feature Variance')
+
+    return variance_figure
 
 
-variance_graph()
-exit()
+def covariance_graph():
+    cleaned_data = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
+
+    covariance = np.cov(cleaned_data, bias=True)
+    ic(covariance)
 
 
-def covariance_graph():  # TODO: Test feasibility
-    pass
+
+def vif_correlation_graph():
+    def calculate_vif(df, features):
+        vif, tolerance = {}, {}
+        # all the features that you want to examine
+        for feature in features:
+            # extract all the other features you will regress against
+            X = [f for f in features if f != feature]
+            X, y = df[X], df[feature]
+            # extract r-squared from the fit
+            r2 = LinearRegression().fit(X, y).score(X, y)
+
+            # calculate tolerance
+            tolerance[feature] = 1 - r2
+            # calculate VIF
+            vif[feature] = 1 / (tolerance[feature])
+        # return VIF DataFrame
+        return pd.DataFrame({'VIF': vif, 'Tolerance': tolerance})
 
 
 def figures_to_html(figs, filename):
@@ -189,5 +195,7 @@ def figures_to_html(figs, filename):
     dashboard.write("</body></html>" + "\n")
 
 
-figure_list = [feature_distribution_graph(), numerical_correlation_map_graph(), categorical_correlation_map_graph()]
-figures_to_html(figs=figure_list, filename=metric_graphs_dir)
+temp = [covariance_graph()]
+figure_list = [feature_distribution_graph(), numerical_correlation_map_graph(), categorical_correlation_map_graph(),
+               variance_graph()]
+figures_to_html(figs=temp, filename=metric_graphs_dir)
