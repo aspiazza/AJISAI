@@ -13,6 +13,15 @@ metric_graphs_dir = '..\\Model-Graphs&Logs\\Model-Data_diamond\\Metric-Graphs\\E
 diamonds_csv = pd.read_csv(csv_directory).drop(['id'], axis=1)  # Drop ID column
 
 
+def row_column_index_creator(index_row_size, index_col_size):
+    row_col_list = []
+    index_row_size += 1
+    index_col_size += 1
+    [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in
+     range(1, index_col_size)]
+    return row_col_list
+
+
 def feature_distribution_graph():
     def value_count_extractor(csv_data, feature_name):
         data_feature = csv_data[feature_name]
@@ -62,14 +71,6 @@ def feature_distribution_graph():
         else:
             return feature_percentage_count, list(feature_data)
 
-    def row_column_index_creator(index_row_size, index_col_size):
-        row_col_list = []
-        index_row_size += 1
-        index_col_size += 1
-        [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in
-         range(1, index_col_size)]
-        return row_col_list
-
     row_col_index_list = row_column_index_creator(index_row_size=5, index_col_size=2)
 
     feature_distribution_figure = make_subplots(rows=5, cols=2, subplot_titles=(
@@ -83,7 +84,7 @@ def feature_distribution_graph():
         feature_distribution_figure.add_trace(go.Bar(x=range_list, y=y_values, name=feature), row=row_col[0],
                                               col=row_col[1])
 
-    feature_distribution_figure.update_layout(height=2000, width=1300, title_text='Feature Distributions')
+    feature_distribution_figure.update_layout(height=2000, width=1300, title_text='Feature Distributions', )
 
     return feature_distribution_figure
 
@@ -144,7 +145,7 @@ def categorical_correlation_map_graph():
     return categorical_correlation_heatmap_figure
 
 
-# TODO: Try covariance graphs, Replace Cramers V with ANOVA
+# TODO: Try covariance graphs, Replace Cramers V with ANOVA, VIF
 
 def variance_graph():
     cleaned_data = diamonds_csv.drop(['price', 'color', 'cut', 'clarity'], axis=1)
@@ -162,9 +163,37 @@ def variance_graph():
 def covariance_graph():
     cleaned_data = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
 
-    covariance = np.cov(cleaned_data, bias=True)
-    ic(covariance)
+    row_col_index_list = row_column_index_creator(index_row_size=7, index_col_size=3)
+    covariance_scatter_figure = make_subplots(rows=7, cols=3, subplot_titles=())
 
+    unique_combinations = []
+    column_headers_1 = cleaned_data.columns
+    column_headers_2 = cleaned_data.columns
+
+    for feature_1 in column_headers_1:
+        for feature_2 in column_headers_2:
+            combo = [feature_1, feature_2]
+            reversed_combo = combo[::-1]
+
+            if combo == reversed_combo:
+                continue
+
+            elif combo not in unique_combinations and reversed_combo not in unique_combinations:
+                unique_combinations.append(list(combo))
+            else:
+                continue
+
+    for combo, rol_col in zip(unique_combinations, row_col_index_list):
+        x = cleaned_data[combo[0]]
+        y = cleaned_data[combo[1]]
+
+        covariance_scatter_figure.add_trace(
+            go.Scatter(x=x.head(500), y=y.head(500), name=f'{combo[0]} x {combo[1]}', mode='markers'), row=rol_col[0],
+            col=rol_col[1])
+        covariance_scatter_figure.update_layout(height=2000, width=1300, title_text='Covariance Scatter Plot',
+                                                xaxis_title=combo[0], yaxis_title=combo[1])
+
+    return covariance_scatter_figure
 
 
 def vif_correlation_graph():
@@ -195,7 +224,6 @@ def figures_to_html(figs, filename):
     dashboard.write("</body></html>" + "\n")
 
 
-temp = [covariance_graph()]
 figure_list = [feature_distribution_graph(), numerical_correlation_map_graph(), categorical_correlation_map_graph(),
-               variance_graph()]
-figures_to_html(figs=temp, filename=metric_graphs_dir)
+               variance_graph(), covariance_graph()]
+figures_to_html(figs=figure_list, filename=metric_graphs_dir)
