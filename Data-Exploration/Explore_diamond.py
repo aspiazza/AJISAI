@@ -2,10 +2,10 @@
 
 import numpy as np
 import pandas as pd
-import scipy.stats as ss
-from sklearn.linear_model import LinearRegression
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import scipy.stats as ss
+from sklearn.linear_model import LinearRegression
 from icecream import ic
 
 csv_directory = 'F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv'
@@ -102,7 +102,7 @@ def numerical_correlation_map_graph():
 
 
 def categorical_correlation_map_graph():
-    correlation_diamonds_csv = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
+    correlation_diamonds_csv = diamonds_csv.select_dtypes(['object'])
     column_headers = correlation_diamonds_csv.columns
 
     def cramers_v(feature_crosstab_matrix):
@@ -127,11 +127,12 @@ def categorical_correlation_map_graph():
 
     def cramer_correlation_extractor_iterator(categorical_features_list):
         categorical_correlation_dataframe = pd.DataFrame(columns=[categorical_features_list], index=[column_headers])
-        for categorical_feature in categorical_features_list:
-            for num_feature in column_headers:
-                confusion_matrix = pd.crosstab(diamonds_csv[categorical_feature], diamonds_csv[num_feature])
-                categorical_correlation_dataframe.loc[num_feature, categorical_feature] = cramers_v(
-                    confusion_matrix.values)
+        for first_categorical_feature in categorical_features_list:
+            for second_categorical_feature in column_headers:
+                confusion_matrix = pd.crosstab(diamonds_csv[first_categorical_feature],
+                                               diamonds_csv[second_categorical_feature])
+                categorical_correlation_dataframe.loc[second_categorical_feature,
+                                                      first_categorical_feature] = cramers_v(confusion_matrix.values)
 
         return categorical_correlation_dataframe
 
@@ -145,7 +146,7 @@ def categorical_correlation_map_graph():
     return categorical_correlation_heatmap_figure
 
 
-# TODO: Fix Cramer, add ANOVA, add VIF
+# TODO: Add ANOVA, add VIF
 
 def variance_graph():
     cleaned_data = diamonds_csv.drop(['price', 'color', 'cut', 'clarity'], axis=1)
@@ -186,7 +187,7 @@ def covariance_graph():
     for combo, rol_col in zip(unique_combinations, row_col_index_list):
         x = cleaned_data[combo[0]]
         y = cleaned_data[combo[1]]
-        combo_name = f'{combo[0]} x {combo[1]}'
+        combo_name = f'{combo[0]} x {combo[1]} y'
 
         covariance_scatter_figure.add_trace(
             go.Scatter(x=x.head(500),
@@ -231,5 +232,5 @@ def figures_to_html(figs, filename):
 
 figure_list = [feature_distribution_graph(), numerical_correlation_map_graph(), categorical_correlation_map_graph(),
                variance_graph(), covariance_graph()]
-# figure_list = [covariance_graph()]
+# figure_list = [categorical_correlation_map_graph()]
 figures_to_html(figs=figure_list, filename=metric_graphs_dir)
