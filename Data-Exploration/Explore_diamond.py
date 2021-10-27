@@ -145,7 +145,7 @@ def categorical_correlation_map_graph():
     return categorical_correlation_heatmap_figure
 
 
-# TODO: Try covariance graphs, Replace Cramers V with ANOVA, VIF
+# TODO: Fix Cramer, add ANOVA, add VIF
 
 def variance_graph():
     cleaned_data = diamonds_csv.drop(['price', 'color', 'cut', 'clarity'], axis=1)
@@ -164,7 +164,7 @@ def covariance_graph():
     cleaned_data = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
 
     row_col_index_list = row_column_index_creator(index_row_size=7, index_col_size=3)
-    covariance_scatter_figure = make_subplots(rows=7, cols=3, subplot_titles=())
+    covariance_scatter_figure = make_subplots(rows=7, cols=3)
 
     unique_combinations = []
     column_headers_1 = cleaned_data.columns
@@ -186,12 +186,17 @@ def covariance_graph():
     for combo, rol_col in zip(unique_combinations, row_col_index_list):
         x = cleaned_data[combo[0]]
         y = cleaned_data[combo[1]]
+        combo_name = f'{combo[0]} x {combo[1]}'
 
         covariance_scatter_figure.add_trace(
-            go.Scatter(x=x.head(500), y=y.head(500), name=f'{combo[0]} x {combo[1]}', mode='markers'), row=rol_col[0],
-            col=rol_col[1])
-        covariance_scatter_figure.update_layout(height=2000, width=1300, title_text='Covariance Scatter Plot',
-                                                xaxis_title=combo[0], yaxis_title=combo[1])
+            go.Scatter(x=x.head(500),
+                       y=y.head(500),
+                       name=combo_name,
+                       mode='markers'),
+            row=rol_col[0], col=rol_col[1])
+        covariance_scatter_figure.add_annotation(xref="x domain", yref="y domain", showarrow=False, text=combo_name,
+                                                 x=0.5, y=1.2, row=rol_col[0], col=rol_col[1])
+    covariance_scatter_figure.update_layout(height=2000, width=1300, title_text='Covariance Scatter Plot')
 
     return covariance_scatter_figure
 
@@ -226,4 +231,5 @@ def figures_to_html(figs, filename):
 
 figure_list = [feature_distribution_graph(), numerical_correlation_map_graph(), categorical_correlation_map_graph(),
                variance_graph(), covariance_graph()]
+# figure_list = [covariance_graph()]
 figures_to_html(figs=figure_list, filename=metric_graphs_dir)
