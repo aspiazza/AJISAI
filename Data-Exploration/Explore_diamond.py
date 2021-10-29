@@ -6,7 +6,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import scipy.stats as ss
 from sklearn.linear_model import LinearRegression
-from icecream import ic
 
 csv_directory = 'F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv'
 metric_graphs_dir = '..\\Model-Graphs&Logs\\Model-Data_diamond\\Metric-Graphs\\Exploration_diamond.html'
@@ -20,6 +19,15 @@ def row_column_index_creator(index_row_size, index_col_size):
     [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in
      range(1, index_col_size)]
     return row_col_list
+
+
+def figures_to_html(figs, filename):
+    dashboard = open(filename, 'w')
+    dashboard.write("<html><head></head><body>" + "\n")
+    for fig in figs:
+        inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
+        dashboard.write(inner_html)
+    dashboard.write("</body></html>" + "\n")
 
 
 def feature_distribution_graph():
@@ -146,9 +154,7 @@ def categorical_correlation_map_graph():
     return categorical_correlation_heatmap_figure
 
 
-# TODO: Add ANOVA, add VIF
-
-def variance_graph():
+def variance_graph():  # Numerical x Numerical
     cleaned_data = diamonds_csv.drop(['price', 'color', 'cut', 'clarity'], axis=1)
     variance_data = np.var(cleaned_data, ddof=1)
 
@@ -161,7 +167,7 @@ def variance_graph():
     return variance_figure
 
 
-def covariance_graph():
+def covariance_graph():  # Categorical x Categorical
     cleaned_data = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
 
     row_col_index_list = row_column_index_creator(index_row_size=7, index_col_size=3)
@@ -203,34 +209,34 @@ def covariance_graph():
 
 
 def vif_correlation_graph():
+    cleaned_data = diamonds_csv.drop(['color', 'cut', 'clarity'], axis=1)
+
     def calculate_vif(df, features):
         vif, tolerance = {}, {}
         # all the features that you want to examine
         for feature in features:
             # extract all the other features you will regress against
-            X = [f for f in features if f != feature]
-            X, y = df[X], df[feature]
+            x = [f for f in features if f != feature]
+            x, y = df[x], df[feature]
             # extract r-squared from the fit
-            r2 = LinearRegression().fit(X, y).score(X, y)
-
+            r2 = LinearRegression().fit(x, y).score(x, y)
             # calculate tolerance
             tolerance[feature] = 1 - r2
             # calculate VIF
             vif[feature] = 1 / (tolerance[feature])
         # return VIF DataFrame
-        return pd.DataFrame({'VIF': vif, 'Tolerance': tolerance})
+        return vif
 
+    numerical_features = ['price', 'width', 'length', 'depth', 'carat', 'depth_percent', 'table']
+    vif_data = calculate_vif(cleaned_data, numerical_features)
+    vif_data = list(vif_data.values())
 
-def figures_to_html(figs, filename):
-    dashboard = open(filename, 'w')
-    dashboard.write("<html><head></head><body>" + "\n")
-    for fig in figs:
-        inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
-        dashboard.write(inner_html)
-    dashboard.write("</body></html>" + "\n")
+    vif_figure = go.Figure(data=[go.Bar(x=numerical_features, y=vif_data, name='VIF Data')])
+    vif_figure.update_layout(title_text='VIF Barchart')
+
+    return vif_figure
 
 
 figure_list = [feature_distribution_graph(), numerical_correlation_map_graph(), categorical_correlation_map_graph(),
-               variance_graph(), covariance_graph()]
-# figure_list = [categorical_correlation_map_graph()]
+               variance_graph(), covariance_graph(), vif_correlation_graph()]
 figures_to_html(figs=figure_list, filename=metric_graphs_dir)
