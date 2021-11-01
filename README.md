@@ -2,28 +2,28 @@
 
 ![Pixelated NN](X-Misc/Pixel_NN.png)
 
-### The what:
+### The What:
 
-The AJISAI Project can be considered to be a framework or 'Machine Learning Workbench'. It is a directory structure that
-separates the different components of the machine learning training, testing, and visualization process all in separate
-files. These files (located in the Pipeline directory) are all called on as needed by a Nucleus file. The Nucleus file
-can be thought of as the command and control file of a project and executes functions and classes from these other
-python files. Graphs, logs, and other model information are also all outputted to the Model-Graphs&Logs folder to help
-evaluate the model and view its performance visually. Directories for data extraction and exploration are also present,
-although they are not necessarily part of the Nucleus pipeline. A directory to save trained models is also present for
-testing and prediction purposes as well as incorporating into ML/DL web applications. Using this kind of pipeline, I can
-make any kind of machine or deep learning model I want with varying levels of complexity, efficiency and
-professionality.
+The AJISAI Project can be considered to be a personal framework or 'Machine Learning Workbench'. It is a directory
+structure that separates the different components of the machine learning training, testing, and visualization process
+all in separate files. These files (located in the Pipeline directory) are all called on as needed by a Nucleus file.
+The Nucleus file can be thought of as the command and control file of a project and executes functions and classes from
+these other python files. Graphs, logs, and other model information are also all outputted to the Model-Graphs&Logs
+folder to help evaluate the model and view its performance visually. Directories for data extraction and exploration are
+also present, although they are not necessarily part of the Nucleus pipeline. A directory to save trained models is also
+present for testing and prediction purposes as well as incorporating into ML/DL web applications. Using this kind of
+pipeline, I can make any kind of machine or deep learning model I want with varying levels of complexity, efficiency and
+in a professional manner.
 
 The Web Application portion of the AJISAI Project contains all the necessary files needed to create an ML/DL web
 application within a docker container. Will contain a dockerfile, requirements.txt, html file, CSS, API, and other
 related files.
 
-### Purpose:
+### The Why:
 
 The purpose of this project was to create an end-to-end machine learning web application pipeline in a professional and
 organized way. This is a personal project that aims to gain a deeper understanding of Python, Machine Learning, Web
-Scraping, Plotly Graphing, API Developing, Docker, Cloud Environments, HTML/CSS, and creating production worthy code. I
+Scraping, Plotly Graphing, API Development, Docker, Cloud Environments, HTML/CSS, and creating production worthy code. I
 plan on using this project as a long-term medium that I continually update and use to complete other ML projects in the
 future. Because of this, I expect there to be many improvements to come in the following months/years and additions.
 These improvements would consist of organizing folder structure, cleaning code, adding new models, updating
@@ -155,7 +155,7 @@ documentation, and automating tasks if need be. Below are some skills I utilized
 > 6. Evaluate model by visualization
 > 7. Use model to predict on data
 > 8. Create web app
-> 9. Incorporate model into app
+> 9. Incorporate model into website
 > 10. Create a Docker container for the app
 > 11. Place on a cloud service
 

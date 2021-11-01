@@ -6,6 +6,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from icecream import ic
 
 
 def diamond_preprocess(data_dir):
@@ -36,4 +37,7 @@ def diamond_preprocess(data_dir):
             ('cat', categorical_transformer, categorical_features)
         ])
 
-    return x_train, x_test, y_train, y_test, preprocessor_pipeline
+    x_train = preprocessor_pipeline.fit(x_train)
+    x_test = preprocessor_pipeline.fit(x_test)
+
+    return x_train, x_test, y_train, y_test

@@ -1,16 +1,17 @@
 # Nucleus File
 
 from Pipeline.Preprocess import Preprocess_diamond as procDiamond
+from Pipeline.Baseline import Baseline_diamond as baseDiamond
+from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Models import Model_diamond as modelDiamond
 from Pipeline.Grid_Search import Grid_Search_diamond as gridDiamond
 from Pipeline.Data_Visual import Data_Visual_diamond as datavizDiamond
-from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Prediction import Prediction_diamond as pdDiamond
 # from keras.models import load_model
 import pandas as pd
 
 
-# Model class
+# Model class  TODO: Update README to include baseline directory and update mermaid code
 class DiamondModel:
     def __init__(self, version, model_name, data_dir, saved_weights_dir):
         self.data_dir = data_dir
@@ -28,8 +29,13 @@ class DiamondModel:
 
     # Data Preprocessing
     def preprocess(self):
-        self.x_train, self.x_test, self.y_train, self.y_test, self.preprocessor_pipeline = procDiamond.diamond_preprocess(
-            data_dir=self.data_dir)
+        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
+
+    # Model Baselines
+    def baseline(self):
+        baseDiamond.flaml_baseline(self.x_train, self.y_train, self.log_dir)
+        # baseDiamond.flaml_baseline(self.x_train, self.y_train, self.log_dir)
+        pass
 
     # Model Declaration
     def model_init(self):
@@ -70,6 +76,7 @@ if __name__ == '__main__':
                                   data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
                                   saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
     model_instance.preprocess()
+    model_instance.baseline()
     # model_instance.model_init()
     # model_instance.grid_search()
     # model_instance.training(callback_bool=True)
