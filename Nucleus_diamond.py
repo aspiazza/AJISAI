@@ -27,19 +27,20 @@ class DiamondModel:
         self.y_test = None
         self.preprocessor_pipeline = None
 
+        self.model = None
+
     # Data Preprocessing
-    def preprocess(self):
-        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
+    def preprocess(self, data_type):
+        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir,
+                                                                                              data_type=data_type)
 
     # Model Baselines
     def baseline(self):
         baseDiamond.flaml_baseline(self.x_train, self.y_train, self.log_dir)
-        # baseDiamond.flaml_baseline(self.x_train, self.y_train, self.log_dir)
-        pass
 
     # Model Declaration
     def model_init(self):
-        pass
+        self.model = modelDiamond.deep_diamond(self.log_dir)
 
     # Optuna Optimization
     def grid_search(self):
@@ -75,9 +76,9 @@ if __name__ == '__main__':
     model_instance = DiamondModel(version='First_Generation', model_name='diamond',
                                   data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
                                   saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
-    model_instance.preprocess()
-    model_instance.baseline()
-    # model_instance.model_init()
+    model_instance.preprocess('dataframe')
+    # model_instance.baseline()
+    model_instance.model_init()
     # model_instance.grid_search()
     # model_instance.training(callback_bool=True)
     # model_instance.graphing(
