@@ -1,4 +1,4 @@
-# Project Initializer  TODO: Add baseline files if I am using them
+# Project Initializer
 
 import os
 

@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 
-def diamond_preprocess(data_dir, data_type):
+def diamond_preprocess(data_dir):
     data = pd.read_csv(data_dir)
     cleaned_data = data.drop(['id', 'depth_percent'], axis=1)  # Features I don't want
 
@@ -47,15 +47,9 @@ def diamond_preprocess(data_dir, data_type):
     target_pipeline.fit(y_train)
 
     # Apply the pipeline to the training and test data
-    if data_type.lower() == 'dataframe':
-        pp_x_train = pd.DataFrame(preprocessor_pipeline.transform(x_train))
-        pp_x_test = pd.DataFrame(preprocessor_pipeline.transform(x_test))
-        pp_y_train = pd.DataFrame(target_pipeline.transform(y_train))
-        pp_y_test = pd.DataFrame(target_pipeline.transform(y_test))
-    else:  # Numpy array
-        pp_x_train = preprocessor_pipeline.transform(x_train)
-        pp_x_test = preprocessor_pipeline.transform(x_test)
-        pp_y_train = target_pipeline.transform(y_train)
-        pp_y_test = target_pipeline.transform(y_test)
+    pp_x_train = pd.DataFrame(preprocessor_pipeline.transform(x_train))
+    pp_x_test = pd.DataFrame(preprocessor_pipeline.transform(x_test))
+    pp_y_train = pd.DataFrame(target_pipeline.transform(y_train))
+    pp_y_test = pd.DataFrame(target_pipeline.transform(y_test))
 
     return pp_x_train, pp_x_test, pp_y_train, pp_y_test
