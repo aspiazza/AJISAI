@@ -1,10 +1,10 @@
 # Nucleus File
 
 from Pipeline.Preprocess import Preprocess_diamond as procDiamond
+from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Models import Model_diamond as modelDiamond
 from Pipeline.Grid_Search import Grid_Search_diamond as gridDiamond
 from Pipeline.Data_Visual import Data_Visual_diamond as datavizDiamond
-from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
 from Pipeline.Prediction import Prediction_diamond as pdDiamond
 # from keras.models import load_model
 import pandas as pd
@@ -26,14 +26,16 @@ class DiamondModel:
         self.y_test = None
         self.preprocessor_pipeline = None
 
+        self.model = None
+        self.history = None
+
     # Data Preprocessing
     def preprocess(self):
-        self.x_train, self.x_test, self.y_train, self.y_test, self.preprocessor_pipeline = procDiamond.diamond_preprocess(
-            data_dir=self.data_dir)
+        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
 
     # Model Declaration
     def model_init(self):
-        pass
+        self.model = modelDiamond.deep_diamond(self.log_dir)
 
     # Optuna Optimization
     def grid_search(self):
@@ -42,9 +44,12 @@ class DiamondModel:
     # Training
     def training(self, callback_bool):
         if callback_bool:
-            pass
+            callback_list = []
         else:
             callback_list = []
+
+        self.history = self.model.fit(self.x_train, self.y_train, batch_size=1,
+                                      steps_per_epoch=10, epochs=100)
 
     # Visualization
     def graphing(self, csv_file):
@@ -72,7 +77,7 @@ if __name__ == '__main__':
     model_instance.preprocess()
     # model_instance.model_init()
     # model_instance.grid_search()
-    # model_instance.training(callback_bool=True)
+    model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
     # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',

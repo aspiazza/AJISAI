@@ -1,9 +1,9 @@
 # Model Declaration
 
 from keras import Sequential, layers
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
-from keras.utils import plot_model
+from tensorflow.keras.utils import plot_model
 from tensorflow_addons.activations import mish
 
 
