@@ -32,6 +32,9 @@ class DiamondModel:
     # Data Preprocessing
     def preprocess(self):
         self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
+        print(len(self.x_train))
+        print(len(self.x_test))
+        exit()
 
     # Model Declaration
     def model_init(self):
@@ -48,8 +51,8 @@ class DiamondModel:
         else:
             callback_list = []
 
-        self.history = self.model.fit(self.x_train, self.y_train, batch_size=1,
-                                      steps_per_epoch=10, epochs=100)
+        self.history = self.model.fit(x=self.x_train, y=self.y_train,
+                                      batch_size=1, steps_per_epoch=10, epochs=100)
 
     # Visualization
     def graphing(self, csv_file):
@@ -75,7 +78,7 @@ if __name__ == '__main__':
                                   data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
                                   saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
     model_instance.preprocess()
-    # model_instance.model_init()
+    model_instance.model_init()
     # model_instance.grid_search()
     model_instance.training(callback_bool=True)
     # model_instance.graphing(
