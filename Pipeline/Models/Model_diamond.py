@@ -1,6 +1,5 @@
 # Model Declaration
 
-# from keras.models import Model
 from keras import layers, Model, Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.utils import plot_model
@@ -17,30 +16,9 @@ def deep_diamond(log_dir):
     output = layers.Dense(1, activation="linear")(hidden3)
     model = Model(inputs=[input_layer], outputs=[output], name=model_name)
 
-    plot_model(model, to_file=f'{log_dir}__{model_name}.png')  # Save model structure image
+    plot_model(model, to_file=f'{log_dir}_{model_name}.png')  # Save model structure image
 
-    model.compile(optimizer=Adam(),
+    model.compile(optimizer=Adam(learning_rate=0.01),
                   loss='mae',
                   metrics=['mae'])
     return model
-
-
-'''def deep_diamond(log_dir):
-    model_name = 'deep_diamond'
-    model = Sequential([
-        layers.Input(shape=(8,)),
-        layers.Dense(36, activation="elu"),
-        layers.Dropout(rate=0.2),
-        layers.Dense(18, activation="elu"),
-        layers.Dropout(rate=0.2),
-        layers.Dense(8, activation="elu"),
-        layers.Dense(1, activation="sigmoid")
-    ])
-
-    plot_model(model, to_file=f'{log_dir}__{model_name}.png')  # Save model structure image
-
-    model.compile(optimizer=Adam(),
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy', 'AUC', 'Recall', 'Precision',
-                           Fp(), Tn(), Fn(), Tp()])
-    return model'''

@@ -6,7 +6,7 @@ from Pipeline.Models import Model_diamond as modelDiamond
 from Pipeline.Grid_Search import Grid_Search_diamond as gridDiamond
 from Pipeline.Data_Visual import Data_Visual_diamond as datavizDiamond
 from Pipeline.Prediction import Prediction_diamond as pdDiamond
-# from keras.models import load_model
+from keras.models import load_model
 import pandas as pd
 
 
@@ -32,9 +32,6 @@ class DiamondModel:
     # Data Preprocessing
     def preprocess(self):
         self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
-        print(len(self.x_train))
-        print(len(self.x_test))
-        exit()
 
     # Model Declaration
     def model_init(self):
@@ -47,12 +44,13 @@ class DiamondModel:
     # Training
     def training(self, callback_bool):
         if callback_bool:
-            callback_list = []
+            callback_list = cbDiamond.training_callbacks(self.model_saved_weights_dir, self.log_dir)
+            cbDiamond.model_summary_callback(self.log_dir, self.model)
         else:
             callback_list = []
 
-        self.history = self.model.fit(x=self.x_train, y=self.y_train,
-                                      batch_size=1, steps_per_epoch=10, epochs=100)
+        self.history = self.model.fit(x=self.x_train, y=self.y_train, validation_data=(self.x_test, self.y_test),
+                                      batch_size=150, epochs=100, callbacks=callback_list)
 
     # Visualization
     def graphing(self, csv_file):
