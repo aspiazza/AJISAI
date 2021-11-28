@@ -1,4 +1,8 @@
 # Nucleus File
+# TODO: Deal with correlation in data (Use Ridge or Lasso. Remove features)
+# TODO: Deal with imbalances in data
+# TODO: Stratified k-fold val
+# TODO: Resample data? Up sample/down sample
 
 from Pipeline.Preprocess import Preprocess_diamond as procDiamond
 from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
@@ -31,7 +35,11 @@ class DiamondModel:
 
     # Data Preprocessing
     def preprocess(self):
-        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
+        # self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
+        # self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.strat_diamond_preprocess(
+        #   data_dir=self.data_dir)
+        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.feat_removal_diamond_preprocess(
+            data_dir=self.data_dir)
 
     # Model Declaration
     def model_init(self):
@@ -72,7 +80,7 @@ class DiamondModel:
 
 # Executor
 if __name__ == '__main__':
-    model_instance = DiamondModel(version='First_Generation', model_name='diamond',
+    model_instance = DiamondModel(version='feature_removal', model_name='diamond',
                                   data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
                                   saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
     model_instance.preprocess()
