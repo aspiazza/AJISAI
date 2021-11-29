@@ -1,8 +1,7 @@
 # Nucleus File
 # TODO: Deal with correlation in data (Use Ridge or Lasso. Remove features)
-# TODO: Deal with imbalances in data
+# TODO: Deal with imbalances in data. Resample data? Up sample/down sample
 # TODO: Stratified k-fold val
-# TODO: Resample data? Up sample/down sample
 
 from Pipeline.Preprocess import Preprocess_diamond as procDiamond
 from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
@@ -35,11 +34,11 @@ class DiamondModel:
 
     # Data Preprocessing
     def preprocess(self):
-        # self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
+        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.diamond_preprocess(data_dir=self.data_dir)
         # self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.strat_diamond_preprocess(
         #   data_dir=self.data_dir)
-        self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.feat_removal_diamond_preprocess(
-            data_dir=self.data_dir)
+        # self.x_train, self.x_test, self.y_train, self.y_test = procDiamond.feat_removal_diamond_preprocess(
+        #     data_dir=self.data_dir)
 
     # Model Declaration
     def model_init(self):
@@ -57,8 +56,8 @@ class DiamondModel:
         else:
             callback_list = []
 
-        self.history = self.model.fit(x=self.x_train, y=self.y_train, validation_data=(self.x_test, self.y_test),
-                                      batch_size=150, epochs=100, callbacks=callback_list)
+        self.history = self.model.fit(x=self.x_train, y=self.y_train, validation_split=0.15,
+                                      batch_size=15, epochs=100, callbacks=callback_list)
 
     # Visualization
     def graphing(self, csv_file):

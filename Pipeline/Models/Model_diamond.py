@@ -20,5 +20,5 @@ def deep_diamond(log_dir):
 
     model.compile(optimizer=Adam(learning_rate=0.01),
                   loss='mae',
-                  metrics=['mae'])
+                  metrics=['mae', 'mse'])
     return model

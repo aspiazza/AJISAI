@@ -123,11 +123,6 @@ def strat_diamond_preprocess(data_dir):
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=99)
 
-    skf = StratifiedKFold(n_splits=5)
-    for train_index, test_index in skf.split(x, y):
-        x_train, x_test = x[train_index], x[test_index]
-        y_train, y_test = y[train_index], y[test_index]
-
     # Reshape for single feature df
     y_train = y_train.values.reshape(-1, 1)
     y_test = y_test.values.reshape(-1, 1)
