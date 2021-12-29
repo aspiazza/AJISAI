@@ -7,7 +7,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from icecream import ic
 
 
 def diamond_preprocess(data_dir):
@@ -60,25 +59,18 @@ def diamond_preprocess(data_dir):
 def feat_removal_diamond_preprocess(data_dir):
     data = pd.read_csv(data_dir)
     cleaned_data = data.drop(['id', 'depth_percent', 'length'], axis=1)  # Features I don't want
-    ic(cleaned_data.loc[9])
 
     x = cleaned_data.drop(['price'], axis=1)  # Train data
-    ic(x.loc[9])
     y = cleaned_data['price'].copy()  # Label data
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=99)
-    ic(x_train.head(9))
-    ic(y_train.head(9))
 
     # Reshape for single feature df
     y_train = y_train.values.reshape(-1, 1)
     y_test = y_test.values.reshape(-1, 1)
-    ic(y_train[9])
 
     numerical_features = x_train.select_dtypes(include=['int64', 'float64']).columns.tolist()
-    ic(numerical_features)
     categorical_features = x_train.select_dtypes(include=['object']).columns.tolist()
-    ic(categorical_features)
 
     numerical_transformer = Pipeline(steps=[
         ('imputer', SimpleImputer(strategy='median')),  # Fill in missing data with median
@@ -107,9 +99,6 @@ def feat_removal_diamond_preprocess(data_dir):
     pp_x_test = pd.DataFrame(preprocessor_pipeline.transform(x_test))
     pp_y_train = pd.DataFrame(target_pipeline.transform(y_train))
     pp_y_test = pd.DataFrame(target_pipeline.transform(y_test))
-    ic(pp_x_train.head(9))
-    ic(pp_y_train.head(9))
-    exit()
 
     return pp_x_train, pp_x_test, pp_y_train, pp_y_test
 

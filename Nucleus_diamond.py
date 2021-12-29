@@ -79,9 +79,9 @@ class DiamondModel:
 
 # Executor
 if __name__ == '__main__':
-    model_instance = DiamondModel(version='feature_removal', model_name='diamond',
-                                  data_dir='F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
-                                  saved_weights_dir='F:\\Saved-Models\\Diamond-Models')
+    model_instance = DiamondModel(version='first_gen', model_name='diamond',
+                                  data_dir='D:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv',
+                                  saved_weights_dir='D:\\Saved-Models\\Diamond-Models')
     model_instance.preprocess()
     model_instance.model_init()
     # model_instance.grid_search()
