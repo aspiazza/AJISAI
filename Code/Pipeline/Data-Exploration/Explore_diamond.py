@@ -8,7 +8,7 @@ from scipy.stats import chi2_contingency
 from sklearn.linear_model import LinearRegression
 
 csv_directory = 'F:\\Data-Warehouse\\Diamonds-Data\\diamonds.csv'
-metric_graphs_dir = '..\\Model-Graphs&Logs\\Model-Data_diamond\\Metric-Graphs\\Exploration_diamond.html'
+metric_graphs_dir = '../Model-Graphs&Logs/Model-Data_diamond/Metric-Graphs/Exploration_diamond.html'
 diamonds_csv = pd.read_csv(csv_directory).drop(['id'], axis=1)  # Drop ID column
 
 
@@ -17,8 +17,7 @@ def row_column_index_creator(index_row_size, index_col_size):
     row_col_list = []
     index_row_size += 1
     index_col_size += 1
-    [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in
-     range(1, index_col_size)]
+    [row_col_list.append([row, column]) for row in range(1, index_row_size) for column in range(1, index_col_size)]
     return row_col_list
 
 

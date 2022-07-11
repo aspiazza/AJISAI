@@ -2,8 +2,8 @@
 FROM python:3.8.12-slim-buster
 
 # Copy folders and files to app folder
-COPY ./App /app/src
-COPY ./requirements.txt /app
+COPY App /app/src
+COPY requirements.txt /app
 
 # Change work directory
 WORKDIR /app

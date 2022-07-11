@@ -1,6 +1,6 @@
 # AJISAI Project README
 
-![Pixelated NN](X-Misc/Pixel_NN.png)
+![Pixelated NN](Pixel_NN.png)
 
 ### The What:
 
@@ -66,9 +66,9 @@ documentation, and automating tasks if need be. Below are some skills I utilized
     + Nucleus_{model name}.py
     + Project_Initializer.py
     + README.md
-- F:/AI-Containers
-- F:/Data-Warehouse
-- F:/Saved-Models
+- D:/AI-Containers
+- D:/Data-Warehouse
+- D:/Saved-Models
 
 ### What The Directories Contain:
 
@@ -161,8 +161,8 @@ documentation, and automating tasks if need be. Below are some skills I utilized
 
 ### Graph of ML Web-App Creation Pipeline:
 
-![Nucleus Logic](X-Misc/Nucleus.png)
+![Nucleus Logic](Nucleus.png)
 
 ### Graph of ML Web-App:
 
-![Web App Logic](X-Misc/WebApp.png)
+![Web App Logic](WebApp.png)

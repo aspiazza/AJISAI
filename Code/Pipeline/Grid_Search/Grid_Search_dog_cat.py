@@ -8,9 +8,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 import optuna
 from keras import layers, Sequential
-from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, CSVLogger
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
+from tensorflow.keras.optimizers import Adam
 from tensorflow_addons.activations import mish
 
 

@@ -1,11 +1,11 @@
 # Nucleus File
 
-from Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
-from Pipeline.Models import Model_dog_cat as modelDogCat
-from Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
-from Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
-from Pipeline.Callbacks import Callbacks_dog_cat as cbDogCat
-from Pipeline.Prediction import Prediction_dog_cat as pdDogCat
+from Code.Pipeline.Preprocess import Preprocess_dog_cat as procDogCat
+from Code.Pipeline.Models import Model_dog_cat as modelDogCat
+from Code.Pipeline.Grid_Search import Grid_Search_dog_cat as gridDogCat
+from Code.Pipeline.Data_Visual import Data_Visual_dog_cat as datavizDogCat
+from Code.Pipeline.Callbacks import Callbacks_dog_cat as cbDogCat
+from Code.Pipeline.Prediction import Prediction_dog_cat as pdDogCat
 from keras.models import load_model
 import pandas as pd
 
@@ -13,12 +13,12 @@ import pandas as pd
 # Model class
 class CatDogModel:
     def __init__(self, version, model_name, data_dir, saved_weights_dir):
+        version_model_name = f'{version}_{model_name}'
         self.data_dir = data_dir
-        self.version_model_name = f'{version}_{model_name}'
 
-        self.model_saved_weights_dir = f'{saved_weights_dir}\\{self.version_model_name}'
-        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{self.version_model_name}'
-        self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{self.version_model_name}'
+        self.model_saved_weights_dir = f'{saved_weights_dir}\\{version_model_name}'
+        self.log_dir = f'Code/Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{version_model_name}'
+        self.metric_dir = f'Code/Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{version_model_name}'
 
         self.train_gen = None
         self.valid_gen = None
@@ -103,18 +103,18 @@ class CatDogModel:
 
 # Executor
 if __name__ == '__main__':
-    model_instance = CatDogModel(version='Last_Generation', model_name='dog_cat',
-                                 data_dir='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
-                                 saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models')
-    # model_instance.preprocess()
-    # model_instance.model_init()
+    model_instance = CatDogModel(version='f_beta_test', model_name='dog_cat',
+                                 data_dir='D:\\Data-Warehouse\\Dog-Cat-Data\\training_dir',
+                                 saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models')
+    model_instance.preprocess()
+    model_instance.model_init()
     # model_instance.grid_search()
-    # model_instance.training(callback_bool=True)
+    model_instance.training(callback_bool=True)
     # model_instance.graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_training_metrics.csv')
-    # model_instance.evaluate(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',
+    # model_instance.evaluate(saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat_optuna.h5',
     #                         callback_bool=True)
     # model_instance.evaluate_graphing(
     #     csv_file='Model-Graphs&Logs\\Model-Data_dog_cat\\Logs\\Last_Generation_dog_cat_evaluation_metrics.csv')
-    # model_instance.model_predict(saved_weights_dir='F:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat.h5',
-    #                              prediction_data='F:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')
+    # model_instance.model_predict(saved_weights_dir='D:\\Saved-Models\\Dog-Cat-Models\\Last_Generation_dog_cat.h5',
+    #                              prediction_data='D:\\Data-Warehouse\\Dog-Cat-Data\\training_dir\\Predict')

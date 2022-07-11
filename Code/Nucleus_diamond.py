@@ -3,14 +3,9 @@
 # TODO: Deal with imbalances in data. Resample data? Up sample/down sample
 # TODO: Stratified k-fold val
 
-from Pipeline.Preprocess import Preprocess_diamond as procDiamond
-from Pipeline.Callbacks import Callbacks_diamond as cbDiamond
-from Pipeline.Models import Model_diamond as modelDiamond
-from Pipeline.Grid_Search import Grid_Search_diamond as gridDiamond
-from Pipeline.Data_Visual import Data_Visual_diamond as datavizDiamond
-from Pipeline.Prediction import Prediction_diamond as pdDiamond
-from keras.models import load_model
-import pandas as pd
+from Code.Pipeline.Preprocess import Preprocess_diamond as procDiamond
+from Code.Pipeline.Callbacks import Callbacks_diamond as cbDiamond
+from Code.Pipeline.Models import Model_diamond as modelDiamond
 
 
 # Model class
@@ -20,8 +15,8 @@ class DiamondModel:
         version_model_name = f'{version}_{model_name}'
 
         self.model_saved_weights_dir = f'{saved_weights_dir}\\{version_model_name}'
-        self.log_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{version_model_name}'
-        self.metric_dir = f'Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{version_model_name}'
+        self.log_dir = f'Code/Model-Graphs&Logs\\Model-Data_{model_name}\\Logs\\{version_model_name}'
+        self.metric_dir = f'Code/Model-Graphs&Logs\\Model-Data_{model_name}\\Metric-Graphs\\{version_model_name}'
 
         self.x_train = None
         self.x_test = None

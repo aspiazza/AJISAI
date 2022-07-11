@@ -5,6 +5,7 @@ from tensorflow.keras.optimizers import Adam
 from keras.metrics import FalsePositives as Fp, TrueNegatives as Tn, FalseNegatives as Fn, TruePositives as Tp
 from tensorflow.keras.utils import plot_model
 from tensorflow_addons.activations import mish
+from tensorflow_addons.metrics import FBetaScore
 
 
 def seq_maxpool_cnn(log_dir):
@@ -47,5 +48,5 @@ def seq_maxpool_cnn(log_dir):
     model.compile(optimizer=Adam(),
                   loss='categorical_crossentropy',
                   metrics=['accuracy', 'AUC', 'Recall', 'Precision',
-                           Fp(), Tn(), Fn(), Tp()])
+                           Fp(), Tn(), Fn(), Tp(), FBetaScore(num_classes=2)])
     return model
