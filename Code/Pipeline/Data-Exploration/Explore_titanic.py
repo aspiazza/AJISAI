@@ -1,6 +1,6 @@
 # Data Exploration
 
-from numpy import sqrt, var
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -20,6 +20,48 @@ def figures_to_html(figs, filename):
         inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
         dashboard.write(inner_html)
     dashboard.write("</body></html>" + "\n")
+
+
+# Correlation calc for multi-datatypes
+def correlation_ratio(categories, measurements):
+    fcat, _ = pd.factorize(categories)
+    cat_num = np.max(fcat) + 1
+    y_avg_array = np.zeros(cat_num)
+    n_array = np.zeros(cat_num)
+    for i in range(0, cat_num):
+        cat_measures = measurements[np.argwhere(fcat == i).flatten()]
+        n_array[i] = len(cat_measures)
+        y_avg_array[i] = np.average(cat_measures)
+    y_total_avg = np.sum(np.multiply(y_avg_array, n_array)) / np.sum(n_array)
+    numerator = np.sum(np.multiply(n_array, np.power(np.subtract(y_avg_array, y_total_avg), 2)))
+    denominator = np.sum(np.power(np.subtract(measurements, y_total_avg), 2))
+    if numerator == 0:
+        eta = 0.0
+    else:
+        eta = np.sqrt(numerator / denominator)
+    return eta
+
+
+# Correlation calc for categorical data
+def cramers_v(feature_crosstab_matrix):
+    """
+    calculate Cramers V statistic for categorical-categorical association.
+    uses correction from Bergsma and Wicher,
+    Journal of the Korean Statistical Society 42 (2013): 323-328
+
+    Take two features (One of them categorical) and put them in a pd.crosstab()
+    function to produce a correlation coefficient
+    """
+    chi2 = chi2_contingency(feature_crosstab_matrix)[0]
+    n = feature_crosstab_matrix.sum()
+    phi2 = chi2 / n
+    r, k = feature_crosstab_matrix.shape
+    phi2corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
+    r_corr = r - ((r - 1) ** 2) / (n - 1)
+    k_corr = k - ((k - 1) ** 2) / (n - 1)
+    correlation_value = np.sqrt(phi2corr / min((k_corr - 1), (r_corr - 1)))
+
+    return correlation_value
 
 
 def feature_count_graph():
@@ -48,7 +90,7 @@ def feature_count_graph():
 
     # Age
     y_age_range_list = []
-    age_col = df['Age'].dropna()
+    age_col = df['Age']
     age_bin_list_x = pd.cut(age_col, 5)
     age_bin_list_y = pd.cut(age_col, 5, retbins=True)[1]
     age_x = pd.value_counts(age_bin_list_y).index.tolist()
@@ -66,7 +108,7 @@ def feature_count_graph():
 
     # Fare
     y_fare_range_list = []
-    fare_col = df['Fare'].dropna()
+    fare_col = df['Fare']
     fare_bin_list_x = pd.cut(fare_col, 5)
     fare_bin_list_y = pd.cut(fare_col, 5, retbins=True)[1]
     fare_x = pd.value_counts(fare_bin_list_y).index.tolist()
@@ -87,16 +129,42 @@ def feature_count_graph():
 
 
 # Correlation between numerical features
-def numerical_correlation_map_graph():
-    numerical_titanic_csv = df.drop(['PassengerId', 'Name'], axis=1)  # .dropna()
-    numerical_features_correlation = numerical_titanic_csv.corr()
-    column_headers = numerical_titanic_csv.columns
+def num_correlation_map_graph():
+    cleaned_titanic_csv = df.select_dtypes(['number'])
+    column_headers = cleaned_titanic_csv.columns
+    features_correlation = cleaned_titanic_csv.corr()
 
-    numerical_correlation_heatmap_figure = go.Figure(
-        go.Heatmap(z=numerical_features_correlation, x=column_headers, y=column_headers))
-    numerical_correlation_heatmap_figure.update_layout(title_text='Numerical Feature Correlation Heatmap')
+    correlation_heatmap_figure = go.Figure(
+        go.Heatmap(z=features_correlation, x=column_headers, y=column_headers))
+    correlation_heatmap_figure.update_layout(title_text='Numerical Feature Correlation Heatmap')
 
-    return numerical_correlation_heatmap_figure
+    return correlation_heatmap_figure
 
 
-figures_to_html(figs=[feature_count_graph()], filename=metric_graphs_dir)
+# Correlation between numerical features
+def cat_correlation_map_graph():
+    cleaned_titanic_csv = df.select_dtypes(['object'])
+    column_headers = cleaned_titanic_csv.columns
+    categorical_correlation_dataframe = pd.DataFrame(columns=[column_headers],
+                                                     index=[column_headers])  # Create dataframe
+
+    for first_categorical_feature in column_headers:
+        for second_categorical_feature in column_headers:
+            confusion_matrix = pd.crosstab(cleaned_titanic_csv[first_categorical_feature],
+                                           cleaned_titanic_csv[second_categorical_feature])
+            print(confusion_matrix.values)
+            exit()
+
+            categorical_correlation_dataframe.loc[second_categorical_feature,
+                                                  first_categorical_feature] = cramers_v(confusion_matrix.values)
+    print(categorical_correlation_dataframe.head())
+    exit()
+    categorical_correlation_heatmap_figure = go.Figure(
+        go.Heatmap(z=categorical_correlation_dataframe, x=column_headers, y=column_headers))
+    categorical_correlation_heatmap_figure.update_layout(title_text='Categorical Feature Correlation Heatmap')
+
+    return categorical_correlation_heatmap_figure
+
+
+figures_to_html(figs=[feature_count_graph(), num_correlation_map_graph(), cat_correlation_map_graph()],
+                filename=metric_graphs_dir)
